@@ -29,7 +29,7 @@ public class TrustWalletTickerService implements TickerService {
             Gson gson) {
         this.httpClient = httpClient;
         this.gson = gson;
-        buildApiClient(TRUST_API_URL);
+        buildApiClient("https://api.trustwalletapp.com/");
     }
 
     private void buildApiClient(String baseUrl) {
