@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Trust</string>
+    <string name="app_name">CAT Wallet</string>
     <string name="balance">Balance</string>
     <string name="title_send">Send</string>
     <string name="title_request">My Address</string>
