@@ -135,6 +135,7 @@
     <string name="title_item_detail">Item Detail</string>
     <string name="title_my_address">My Address</string>
     <string name="title_my_tokens">My Tokens</string>
+    <string name="title_edit_tokens">Tokens</string>
     <string name="title_activity_send">Send</string>
     <string name="title_activity_confirmation">Confirm</string>
     <string name="title_transaction_details">Transaction Details</string>
