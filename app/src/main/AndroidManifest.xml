@@ -51,7 +51,9 @@
         <activity
             android:name=".ui.TokensActivity"
             android:label="@string/title_my_tokens" />
-
+        <activity
+            android:name=".ui.EditTokensActivity"
+            android:label="@string/title_edit_tokens" />
         <activity
             android:name=".ui.SendActivity"
             android:label="@string/title_activity_send" />
