@@ -22,6 +22,24 @@ public class Transaction implements Parcelable {
     public final String input;
     public final TransactionOperation[] operations;
     public final String error;
+    public final boolean isPending;
+
+	public Transaction(
+			String hash,
+			String error,
+			String blockNumber,
+			long timeStamp,
+			int nonce,
+			String from,
+			String to,
+			String value,
+			String gas,
+			String gasPrice,
+			String input,
+			String gasUsed,
+			TransactionOperation[] operations) {
+		this(hash, error, blockNumber, timeStamp, nonce, from, to, value, gas, gasPrice, input, gasUsed, operations, false);
+	}
 
     public Transaction(
             String hash,
@@ -36,7 +54,8 @@ public class Transaction implements Parcelable {
 			String gasPrice,
 			String input,
 			String gasUsed,
-            TransactionOperation[] operations) {
+            TransactionOperation[] operations,
+			boolean isPending) {
         this.hash = hash;
         this.error = error;
         this.blockNumber = blockNumber;
@@ -50,6 +69,7 @@ public class Transaction implements Parcelable {
 		this.input = input;
 		this.gasUsed = gasUsed;
 		this.operations = operations;
+		this.isPending = isPending;
 	}
 
 	protected Transaction(Parcel in) {
@@ -71,6 +91,7 @@ public class Transaction implements Parcelable {
             operations = Arrays.copyOf(parcelableArray, parcelableArray.length, TransactionOperation[].class);
         }
 		this.operations = operations;
+        this.isPending = in.readByte() != 0;
 	}
 
 	public static final Creator<Transaction> CREATOR = new Creator<Transaction>() {
@@ -105,5 +126,6 @@ public class Transaction implements Parcelable {
 		dest.writeString(input);
 		dest.writeString(gasUsed);
 		dest.writeParcelableArray(operations, flags);
+		dest.writeByte((byte) (isPending ? 1 : 0));
 	}
 }

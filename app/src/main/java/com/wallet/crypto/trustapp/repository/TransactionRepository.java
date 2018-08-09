@@ -3,6 +3,7 @@ package com.wallet.crypto.trustapp.repository;
 import com.wallet.crypto.trustapp.entity.NetworkInfo;
 import com.wallet.crypto.trustapp.entity.ServiceException;
 import com.wallet.crypto.trustapp.entity.Transaction;
+import com.wallet.crypto.trustapp.entity.TransactionOperation;
 import com.wallet.crypto.trustapp.entity.Wallet;
 import com.wallet.crypto.trustapp.service.AccountKeystoreService;
 import com.wallet.crypto.trustapp.service.BlockExplorerClientType;
@@ -16,6 +17,12 @@ import org.web3j.protocol.http.HttpService;
 import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
@@ -28,6 +35,7 @@ public class TransactionRepository implements TransactionRepositoryType {
 	private final AccountKeystoreService accountKeystoreService;
 	private final TransactionLocalSource transactionLocalSource;
 	private final BlockExplorerClientType blockExplorerClient;
+	private final List<Transaction> pendingTransactions;
 
 	public TransactionRepository(
 			EthereumNetworkRepositoryType networkRepository,
@@ -39,6 +47,7 @@ public class TransactionRepository implements TransactionRepositoryType {
 		this.accountKeystoreService = accountKeystoreService;
 		this.blockExplorerClient = blockExplorerClient;
 		this.transactionLocalSource = inMemoryCache;
+		this.pendingTransactions = new ArrayList<>();
 
 		this.networkRepository.addOnChangeDefaultNetwork(this::onNetworkChanged);
 	}
@@ -51,6 +60,35 @@ public class TransactionRepository implements TransactionRepositoryType {
                 e.onNext(transactions);
             }
             transactions = blockExplorerClient.fetchTransactions(wallet.address).blockingFirst();
+
+            // Dedup the transactions from pending transaction.
+			Set<String> set = new HashSet<>();
+			for (int i = 0; i < transactions.length; i++) {
+				Transaction transaction = transactions[i];
+				set.add(transaction.hash);
+			}
+			Iterator<Transaction> iterator = pendingTransactions.iterator();
+			while (iterator.hasNext()) {
+				Transaction pendingTransaction = iterator.next();
+				if (set.contains(pendingTransaction.hash)) {
+					iterator.remove();
+				}
+			}
+
+			// build new transactions
+			Transaction[] newTransactions = new Transaction[pendingTransactions.size() + transactions.length];
+			int index = 0;
+			for (int i = pendingTransactions.size() - 1; i >= 0; i--) {
+				newTransactions[index] = pendingTransactions.get(i);
+				index++;
+			}
+			for (int i = 0; i < transactions.length; i++) {
+				newTransactions[index] = transactions[i];
+				index++;
+			}
+
+
+			transactions = newTransactions;
             transactionLocalSource.clear();
             transactionLocalSource.putTransactions(wallet, transactions);
             e.onNext(transactions);
@@ -89,6 +127,22 @@ public class TransactionRepository implements TransactionRepositoryType {
 					.send();
 			if (raw.hasError()) {
 				throw new ServiceException(raw.getError().getMessage());
+			} else {
+				pendingTransactions.add(new Transaction(
+						raw.getTransactionHash(),
+						"",
+						"?",
+						new Date().getTime() / 1000,
+						0,
+						from.address,
+						toAddress,
+						subunitAmount + "",
+						gasLimit.toString(),
+						gasPrice.divide(new BigInteger("1000000000")).toString(),
+						"",
+						gasLimit.toString(),
+						new TransactionOperation[0],
+						true));
 			}
 			return raw.getTransactionHash();
 		})).subscribeOn(Schedulers.io());
