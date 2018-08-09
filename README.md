@@ -3,9 +3,7 @@
 [![Build Status](https://travis-ci.org/TrustWallet/trust-wallet-android.svg?branch=master)](https://travis-ci.org/TrustWallet/trust-wallet-android)
 [![License](https://img.shields.io/badge/license-GPL3-green.svg?style=flat)](https://github.com/fastlane/fastlane/blob/master/LICENSE)
 
-[<img src="https://raw.githubusercontent.com/TrustWallet/trust-wallet-android-source/master/resources/android_cover.png">](https://play.google.com/store/apps/details?id=com.wallet.crypto.trustapp)
-
-[<img src=https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png height="88">](https://play.google.com/store/apps/details?id=com.wallet.crypto.trustapp)
+[<img src="https://raw.githubusercontent.com/TrustWallet/trust-wallet-android-source/master/resources/android_cover.png">]
 
 Welcome to CAT Wallet's open source Android app!
 
@@ -29,7 +27,7 @@ kind and considerate human beings who learn and grow from giving and receiving
 positive, constructive feedback. We reserve the right to delete or ban any
 behavior violating this base foundation of respect.
 
-#Credit
+##Credit
 CAT Wallet is a fork of the [Trust Wallet](https://github.com/TrustWallet/trust-wallet-android-source/)
 
 
