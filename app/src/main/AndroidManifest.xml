@@ -57,6 +57,10 @@
         <activity
             android:name=".ui.SendActivity"
             android:label="@string/title_activity_send" />
+        <activity
+            android:name=".ui.BrowserActivity"
+            android:label="@string/title_browser"
+            android:windowSoftInputMode="adjustNothing"/>
 
         <activity
             android:name=".ui.ConfirmationActivity"
