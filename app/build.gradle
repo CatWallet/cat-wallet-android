@@ -20,7 +20,7 @@ android {
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
     defaultConfig {
-        applicationId "com.catwallet.catwallet"
+        applicationId "com.cat.wallet.trust"
         minSdkVersion 18
         targetSdkVersion 26
         versionCode 1
