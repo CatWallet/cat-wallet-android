@@ -25,6 +25,12 @@ import dagger.android.AndroidInjection;
 
 public class SettingsFragment extends PreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+    // social
+    public static final String TWITTER_USERNAME = "catwallet";
+    public static final String TELEGRAM_USERNAME = "catwallet";
+    public static final String FACEBOOK_USERNAME = "catwallet";
+
     @Inject
     EthereumNetworkRepositoryType ethereumNetworkRepository;
     @Inject
@@ -83,19 +89,26 @@ public class SettingsFragment extends PreferenceFragment
             try {
                 // get the Twitter app if possible
                 getActivity().getPackageManager().getPackageInfo("com.twitter.android", 0);
-                intent = new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?user_id=911011433147654144"));
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=" + TWITTER_USERNAME));
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             } catch (Exception e) {
                 // no Twitter app, revert to browser
-                intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/trustwalletapp"));
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/" + TWITTER_USERNAME));
             }
+            startActivity(intent);
+            return false;
+        });
+
+        final Preference telegram = findPreference("pref_telegram");
+        telegram.setOnPreferenceClickListener(preference -> {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://telegram.me/" + TELEGRAM_USERNAME));
             startActivity(intent);
             return false;
         });
 
         final Preference facebook = findPreference("pref_facebook");
         facebook.setOnPreferenceClickListener(preference -> {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/trustwalletapp"));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/" + FACEBOOK_USERNAME));
             startActivity(intent);
             return false;
         });
