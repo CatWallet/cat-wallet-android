@@ -6,6 +6,8 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.ActionBar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +19,8 @@ import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.wallet.crypto.trustapp.C;
 import com.wallet.crypto.trustapp.R;
+import com.wallet.crypto.trustapp.entity.NetworkInfo;
+import com.wallet.crypto.trustapp.entity.Wallet;
 import com.wallet.crypto.trustapp.ui.barcode.BarcodeCaptureActivity;
 import com.wallet.crypto.trustapp.util.BalanceUtils;
 import com.wallet.crypto.trustapp.util.QRURLParser;
@@ -26,6 +30,7 @@ import com.wallet.crypto.trustapp.viewmodel.SendViewModelFactory;
 import org.ethereum.geth.Address;
 
 import java.math.BigInteger;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -59,6 +64,7 @@ public class SendActivity extends BaseActivity {
         setContentView(R.layout.activity_send);
         toolbar();
 
+
         viewModel = ViewModelProviders.of(this, sendViewModelFactory)
                 .get(SendViewModel.class);
 
@@ -87,6 +93,11 @@ public class SendActivity extends BaseActivity {
             Intent intent = new Intent(getApplicationContext(), BarcodeCaptureActivity.class);
             startActivityForResult(intent, BARCODE_READER_REQUEST_CODE);
         });
+
+        setTitle(getString(R.string.unknown_balance_with_symbol));
+        setSubtitle("");
+        viewModel.defaultWalletBalance().observe(this, this::onBalanceChanged);
+        Log.e("checkBalance","end");
     }
 
     @Override
@@ -174,4 +185,29 @@ public class SendActivity extends BaseActivity {
             return false;
         }
     }
+
+    private void onBalanceChanged(Map<String, String> balance) {
+        ActionBar actionBar = getSupportActionBar();
+        NetworkInfo networkInfo = viewModel.defaultNetwork().getValue();
+        Wallet wallet = viewModel.defaultWallet().getValue();
+        if (actionBar == null || networkInfo == null || wallet == null) {
+            return;
+        }
+        if (TextUtils.isEmpty(balance.get(C.USD_SYMBOL))) {
+            actionBar.setTitle(balance.get(networkInfo.symbol) + " " + networkInfo.symbol);
+            actionBar.setSubtitle("");
+        } else {
+            actionBar.setTitle("$" + balance.get(C.USD_SYMBOL));
+            actionBar.setSubtitle(balance.get(networkInfo.symbol) + " " + networkInfo.symbol);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setTitle(getString(R.string.unknown_balance_without_symbol));
+        setSubtitle("");
+        viewModel.prepare();
+    }
+
 }
