@@ -11,8 +11,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
@@ -73,14 +75,17 @@ public class SendActivity extends BaseActivity {
         amountInputLayout = findViewById(R.id.amount_input_layout);
         amountText = findViewById(R.id.send_amount);
 
+
         contractAddress = getIntent().getStringExtra(C.EXTRA_CONTRACT_ADDRESS);
         decimals = getIntent().getIntExtra(C.EXTRA_DECIMALS, C.ETHER_DECIMALS);
         symbol = getIntent().getStringExtra(C.EXTRA_SYMBOL);
         symbol = symbol == null ? C.ETH_SYMBOL : symbol;
         sendingTokens = getIntent().getBooleanExtra(C.EXTRA_SENDING_TOKENS, false);
 
-        setTitle(getString(R.string.title_send) + " " + symbol);
+        //setTitle(getString(R.string.title_send) + " " + symbol);
         amountInputLayout.setHint(getString(R.string.hint_amount) + " " + symbol);
+
+
 
         // Populate to address if it has been passed forward
         String toAddress = getIntent().getStringExtra(C.EXTRA_ADDRESS);
@@ -94,11 +99,10 @@ public class SendActivity extends BaseActivity {
             startActivityForResult(intent, BARCODE_READER_REQUEST_CODE);
         });
 
-        setTitle(getString(R.string.unknown_balance_with_symbol));
-        setSubtitle("");
+        BalanceUtils.changeDisplayBalance("","",findViewById(android.R.id.content));
         viewModel.defaultWalletBalance().observe(this, this::onBalanceChanged);
-        Log.e("checkBalance","end");
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -194,19 +198,20 @@ public class SendActivity extends BaseActivity {
             return;
         }
         if (TextUtils.isEmpty(balance.get(C.USD_SYMBOL))) {
-            actionBar.setTitle(balance.get(networkInfo.symbol) + " " + networkInfo.symbol);
-            actionBar.setSubtitle("");
+            //actionBar.setTitle(balance.get(networkInfo.symbol) + " " + networkInfo.symbol);
+            //actionBar.setSubtitle("");
+            BalanceUtils.changeDisplayBalance(balance.get(networkInfo.symbol) + " " + networkInfo.symbol, "", findViewById(android.R.id.content));
         } else {
-            actionBar.setTitle("$" + balance.get(C.USD_SYMBOL));
-            actionBar.setSubtitle(balance.get(networkInfo.symbol) + " " + networkInfo.symbol);
+            //actionBar.setTitle("$" + balance.get(C.USD_SYMBOL));
+            //actionBar.setSubtitle(balance.get(networkInfo.symbol) + " " + networkInfo.symbol);
+            BalanceUtils.changeDisplayBalance("$" + balance.get(C.USD_SYMBOL), balance.get(networkInfo.symbol) + " " + networkInfo.symbol, findViewById(android.R.id.content));
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        setTitle(getString(R.string.unknown_balance_without_symbol));
-        setSubtitle("");
+        BalanceUtils.changeDisplayBalance(getString(R.string.unknown_balance_without_symbol),"",findViewById(android.R.id.content));
         viewModel.prepare();
     }
 
