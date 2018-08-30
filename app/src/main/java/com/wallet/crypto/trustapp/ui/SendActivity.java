@@ -6,17 +6,23 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.ActionBar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.wallet.crypto.trustapp.C;
 import com.wallet.crypto.trustapp.R;
+import com.wallet.crypto.trustapp.entity.NetworkInfo;
+import com.wallet.crypto.trustapp.entity.Wallet;
 import com.wallet.crypto.trustapp.ui.barcode.BarcodeCaptureActivity;
 import com.wallet.crypto.trustapp.util.BalanceUtils;
 import com.wallet.crypto.trustapp.util.QRURLParser;
@@ -26,6 +32,7 @@ import com.wallet.crypto.trustapp.viewmodel.SendViewModelFactory;
 import org.ethereum.geth.Address;
 
 import java.math.BigInteger;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -59,6 +66,7 @@ public class SendActivity extends BaseActivity {
         setContentView(R.layout.activity_send);
         toolbar();
 
+
         viewModel = ViewModelProviders.of(this, sendViewModelFactory)
                 .get(SendViewModel.class);
 
@@ -67,14 +75,17 @@ public class SendActivity extends BaseActivity {
         amountInputLayout = findViewById(R.id.amount_input_layout);
         amountText = findViewById(R.id.send_amount);
 
+
         contractAddress = getIntent().getStringExtra(C.EXTRA_CONTRACT_ADDRESS);
         decimals = getIntent().getIntExtra(C.EXTRA_DECIMALS, C.ETHER_DECIMALS);
         symbol = getIntent().getStringExtra(C.EXTRA_SYMBOL);
         symbol = symbol == null ? C.ETH_SYMBOL : symbol;
         sendingTokens = getIntent().getBooleanExtra(C.EXTRA_SENDING_TOKENS, false);
 
-        setTitle(getString(R.string.title_send) + " " + symbol);
+        //setTitle(getString(R.string.title_send) + " " + symbol);
         amountInputLayout.setHint(getString(R.string.hint_amount) + " " + symbol);
+
+
 
         // Populate to address if it has been passed forward
         String toAddress = getIntent().getStringExtra(C.EXTRA_ADDRESS);
@@ -87,7 +98,11 @@ public class SendActivity extends BaseActivity {
             Intent intent = new Intent(getApplicationContext(), BarcodeCaptureActivity.class);
             startActivityForResult(intent, BARCODE_READER_REQUEST_CODE);
         });
+
+        BalanceUtils.changeDisplayBalance("","",findViewById(android.R.id.content));
+        viewModel.defaultWalletBalance().observe(this, this::onBalanceChanged);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -174,4 +189,30 @@ public class SendActivity extends BaseActivity {
             return false;
         }
     }
+
+    private void onBalanceChanged(Map<String, String> balance) {
+        ActionBar actionBar = getSupportActionBar();
+        NetworkInfo networkInfo = viewModel.defaultNetwork().getValue();
+        Wallet wallet = viewModel.defaultWallet().getValue();
+        if (actionBar == null || networkInfo == null || wallet == null) {
+            return;
+        }
+        if (TextUtils.isEmpty(balance.get(C.USD_SYMBOL))) {
+            //actionBar.setTitle(balance.get(networkInfo.symbol) + " " + networkInfo.symbol);
+            //actionBar.setSubtitle("");
+            BalanceUtils.changeDisplayBalance(balance.get(networkInfo.symbol) + " " + networkInfo.symbol, "", findViewById(android.R.id.content));
+        } else {
+            //actionBar.setTitle("$" + balance.get(C.USD_SYMBOL));
+            //actionBar.setSubtitle(balance.get(networkInfo.symbol) + " " + networkInfo.symbol);
+            BalanceUtils.changeDisplayBalance("$" + balance.get(C.USD_SYMBOL), balance.get(networkInfo.symbol) + " " + networkInfo.symbol, findViewById(android.R.id.content));
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        BalanceUtils.changeDisplayBalance(getString(R.string.unknown_balance_without_symbol),"",findViewById(android.R.id.content));
+        viewModel.prepare();
+    }
+
 }
