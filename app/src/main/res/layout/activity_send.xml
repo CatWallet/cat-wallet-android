@@ -38,6 +38,20 @@
                     android:layout_height="wrap_content"
                     />
             </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/paste_button"
+                style="@style/Widget.AppCompat.Button"
+                android:layout_width="59dp"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/scan_barcode_button"
+                android:layout_alignTop="@+id/to_input_layout"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="49dp"
+                android:background="?attr/selectableItemBackground"
+                android:onClick="pasteFromClipboard"
+                android:text="Paste"
+                android:textColor="@android:color/holo_blue_dark" />
             <ImageButton
                 android:id="@+id/scan_barcode_button"
                 android:src="@mipmap/qr_code_icon"

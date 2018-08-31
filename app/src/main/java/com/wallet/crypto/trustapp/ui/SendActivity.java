@@ -1,6 +1,10 @@
 package com.wallet.crypto.trustapp.ui;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.ClipData;
+import android.content.ClipDescription;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.inputmethodservice.Keyboard;
@@ -190,6 +194,29 @@ public class SendActivity extends BaseActivity {
     public void setToMaxTransferAmount(View view){
         updateFromInputETH(MaxTransferETH);
         updateFromInputUSD(MaxTransferUSD);
+    }
+
+    //when lick paste_button
+    public void pasteFromClipboard(View view){
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        String pasteData = "";
+
+        // If it does contain data, decide if you can handle the data.
+        if (!(clipboard.hasPrimaryClip())) {
+
+        } else if (!(clipboard.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN))) {
+
+            // since the clipboard has data but it is not plain text
+
+        } else {
+
+            //since the clipboard contains plain text.
+            ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
+
+            // Gets the clipboard as text.
+            pasteData = item.getText().toString();
+            toAddressText.setText(pasteData);
+        }
     }
 
     public void getGasSettings(GasSettings gasSettings){
