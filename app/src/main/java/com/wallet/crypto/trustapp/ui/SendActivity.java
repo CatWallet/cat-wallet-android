@@ -124,29 +124,12 @@ public class SendActivity extends BaseActivity {
 
         Button max_amount_button = findViewById(R.id.max_button);
 
-//        max_amount_button.setOnClickListener(view -> {
-//            Intent intent = new Intent(getApplicationContext(), BarcodeCaptureActivity.class);
-//            startActivityForResult(intent, BARCODE_READER_REQUEST_CODE);
-//        });
 
 
         BalanceUtils.changeDisplayBalance("","",findViewById(android.R.id.content));
-//        amountText.addTextChangedListener(new TextWatcher() {
-//            void afterTextChanged(Editable s) {
-//                currencyAmountText.setText(amountText.getText().toString());
-//            };
-//        });
-//        currencyAmountText.addTextChangedListener(new TextWatcher() {
-//            void afterTextChanged(Editable s) {
-//                amountText.setText(currencyAmountText.getText().toString());
-//            };
-//        });
 
-        //Log.i("gasSettings",gasSettings.toString());
-        //viewModel.gasSettings().observe(this, this::onGasSettings);
+
         viewModel.defaultWalletBalance().observe(this, this::onBalanceChanged);
-        //viewModel.gasSettings().observe(this, this::onGasSettings);
-        //gasSettings = gasSettings == null? viewModel.gasSettings().getValue() : gasSettings.setValue(fetchGasSettingsInteract.fetch(false));
         viewModel.gasSettings().observe(this, this::getGasSettings);
         viewModel.defaultWalletBalance().observe(this, this::setMaxTransferAmount);
 
@@ -286,8 +269,7 @@ public class SendActivity extends BaseActivity {
         if (!isValidAmount(amount)) {
             amountInputLayout.setError(getString(R.string.error_invalid_amount));
             inputValid = false;
-        }
-        if (new BigDecimal(amount).compareTo(new BigDecimal(MaxTransferETH)) == 1 ) {
+        }else if (new BigDecimal(amount).compareTo(new BigDecimal(MaxTransferETH)) == 1 ) {
             amountInputLayout.setError(getString(R.string.error_insufficient_funds));
             currencyInputLayout.setError(getString(R.string.error_insufficient_funds));
             inputValid = false;
@@ -347,16 +329,6 @@ public class SendActivity extends BaseActivity {
             BalanceUtils.changeDisplayBalance("$" + balance.get(C.USD_SYMBOL), balance.get(networkInfo.symbol) + " " + networkInfo.symbol, findViewById(android.R.id.content));
         }
     }
-
-//    private void onGasSettings(GasSettings gasSettings) {
-//        String gasPrice = BalanceUtils.weiToGwei(gasSettings.gasPrice) + " " + C.GWEI_UNIT;
-//        gasPriceText.setText(gasPrice);
-//        gasLimitText.setText(gasSettings.gasLimit.toString());
-//
-//        String networkFee = BalanceUtils.weiToEth(gasSettings
-//                .gasPrice.multiply(gasSettings.gasLimit)).toPlainString() + " " + C.ETH_SYMBOL;
-//        networkFeeText.setText(networkFee);
-//    }
 
     @Override
     protected void onResume() {
