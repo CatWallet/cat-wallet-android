@@ -80,6 +80,7 @@ public class SendActivity extends BaseActivity {
     private String GasPrice;
     private GasSettings gasSettings;
     private String tickerPrice;
+    private BigDecimal networkFee;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -221,24 +222,45 @@ public class SendActivity extends BaseActivity {
 
     public void getGasSettings(GasSettings gasSettings){
         this.gasSettings = gasSettings;
+        networkFee = BalanceUtils.weiToEth(gasSettings.gasPrice.multiply(gasSettings.gasLimit));// + " " + C.ETH_SYMBOL
     }
     public void setMaxTransferAmount(Map<String, String> balance){
         networkInfo = viewModel.defaultNetwork().getValue();
         tickerPrice = balance.get(symbol+"To"+currencySymbol);
         //String gasPrice = BalanceUtils.weiToGwei(gasSettings.gasPrice);// + " " + C.GWEI_UNIT
-        BigDecimal networkFee = BalanceUtils.weiToEth(gasSettings.gasPrice.multiply(gasSettings.gasLimit));// + " " + C.ETH_SYMBOL
+
         MaxTransferETH = new BigDecimal(balance.get(networkInfo.symbol)).subtract(networkFee).toPlainString();
         MaxTransferUSD = BalanceUtils.ethToUsd(tickerPrice, MaxTransferETH, INPUT_DISPLAY_EDITTEXT_AMOUNT_SCALE);
+        //network fee may larger than users balance. Here We decide to display it directly.
+        //if(networkFee.compareTo(new BigDecimal(balance.get(networkInfo.symbol))) < 0){
+        //      MaxTransferETH = new BigDecimal(balance.get(networkInfo.symbol)).subtract(networkFee).toPlainString();
+        //      MaxTransferUSD = BalanceUtils.ethToUsd(tickerPrice, MaxTransferETH, INPUT_DISPLAY_EDITTEXT_AMOUNT_SCALE);
+        //  }else{
+        //      MaxTransferETH = new BigDecimal(balance.get(networkInfo.symbol)).toPlainString();
+        //      MaxTransferUSD = BalanceUtils.ethToUsd(tickerPrice, MaxTransferETH, INPUT_DISPLAY_EDITTEXT_AMOUNT_SCALE);
+        //  }
     }
 
+
+
+
     public void updateFromInputETH(String ETHAmount){
-        String USDAmount =  BalanceUtils.ethToUsd(tickerPrice, ETHAmount, INPUT_DISPLAY_EDITTEXT_AMOUNT_SCALE);
-        currencyAmountText.setText(USDAmount);
+        if(ETHAmount != null && ETHAmount.length()>0 && new BigDecimal(ETHAmount).compareTo(new BigDecimal("0")) > 0 ){
+            String USDAmount =  BalanceUtils.ethToUsd(tickerPrice, ETHAmount, INPUT_DISPLAY_EDITTEXT_AMOUNT_SCALE);
+            currencyAmountText.setText(USDAmount);
+        }else{
+            currencyAmountText.setText("0");
+        }
+
     }
 
     public void updateFromInputUSD(String USDAmount){
-        String ETHAmount = BalanceUtils.usdToEth(tickerPrice, USDAmount, INPUT_DISPLAY_EDITTEXT_AMOUNT_SCALE);
-        amountText.setText(ETHAmount);
+        if(USDAmount != null && USDAmount.length()>0 && new BigDecimal(USDAmount).compareTo(new BigDecimal("0")) > 0 ) {
+            String ETHAmount = BalanceUtils.usdToEth(tickerPrice, USDAmount, INPUT_DISPLAY_EDITTEXT_AMOUNT_SCALE);
+            amountText.setText(ETHAmount);
+        }else{
+            amountText.setText("0");
+        }
     }
 
     @Override
@@ -296,12 +318,7 @@ public class SendActivity extends BaseActivity {
         if (!isValidAmount(amount)) {
             amountInputLayout.setError(getString(R.string.error_invalid_amount));
             inputValid = false;
-        }else if (new BigDecimal(amount).compareTo(new BigDecimal(MaxTransferETH)) == 1 ) {
-            amountInputLayout.setError(getString(R.string.error_insufficient_funds));
-            currencyInputLayout.setError(getString(R.string.error_insufficient_funds));
-            inputValid = false;
         }
-
 
         final String currencyAmount = currencyAmountText.getText().toString();
         if (!isValidAmount(currencyAmount)) {
