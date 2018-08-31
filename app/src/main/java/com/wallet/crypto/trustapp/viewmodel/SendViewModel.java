@@ -5,9 +5,11 @@ import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 
 import com.wallet.crypto.trustapp.R;
+import com.wallet.crypto.trustapp.entity.GasSettings;
 import com.wallet.crypto.trustapp.entity.NetworkInfo;
 import com.wallet.crypto.trustapp.entity.Transaction;
 import com.wallet.crypto.trustapp.entity.Wallet;
+import com.wallet.crypto.trustapp.interact.FetchGasSettingsInteract;
 import com.wallet.crypto.trustapp.interact.FindDefaultNetworkInteract;
 import com.wallet.crypto.trustapp.interact.FindDefaultWalletInteract;
 import com.wallet.crypto.trustapp.interact.GetDefaultWalletBalance;
@@ -30,14 +32,18 @@ public class SendViewModel extends BaseViewModel {
     private final MutableLiveData<Map<String, String>> defaultWalletBalance = new MutableLiveData<>();
     private final FindDefaultNetworkInteract findDefaultNetworkInteract;
     private final FindDefaultWalletInteract findDefaultWalletInteract;
+    private final FetchGasSettingsInteract fetchGasSettingsInteract;
+    private final MutableLiveData<GasSettings> gasSettings = new MutableLiveData<>();
 
 
     SendViewModel(ConfirmationRouter confirmationRouter, GetDefaultWalletBalance getDefaultWalletBalance,
-                  FindDefaultNetworkInteract findDefaultNetworkInteract, FindDefaultWalletInteract findDefaultWalletInteract) {
+                  FindDefaultNetworkInteract findDefaultNetworkInteract, FindDefaultWalletInteract findDefaultWalletInteract,
+                  FetchGasSettingsInteract fetchGasSettingsInteract) {
         this.confirmationRouter = confirmationRouter;
         this.findDefaultNetworkInteract = findDefaultNetworkInteract;
         this.getDefaultWalletBalance = getDefaultWalletBalance;
         this.findDefaultWalletInteract = findDefaultWalletInteract;
+        this.fetchGasSettingsInteract = fetchGasSettingsInteract;
     }
 
     public LiveData<NetworkInfo> defaultNetwork() {
@@ -80,7 +86,19 @@ public class SendViewModel extends BaseViewModel {
 
     private void onDefaultWallet(Wallet wallet) {
         defaultWallet.setValue(wallet);
+        if (gasSettings.getValue() == null) {
+            onGasSettings(fetchGasSettingsInteract.fetch(true));
+        }
         getBalance();
+    }
+
+
+    private void onGasSettings(GasSettings gasSettings) {
+        this.gasSettings.setValue(gasSettings);
+    }
+
+    public MutableLiveData<GasSettings> gasSettings() {
+        return gasSettings;
     }
 
 }

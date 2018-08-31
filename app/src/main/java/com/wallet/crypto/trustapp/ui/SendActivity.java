@@ -3,15 +3,19 @@ package com.wallet.crypto.trustapp.ui;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Point;
+import android.inputmethodservice.Keyboard;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -21,8 +25,10 @@ import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.wallet.crypto.trustapp.C;
 import com.wallet.crypto.trustapp.R;
+import com.wallet.crypto.trustapp.entity.GasSettings;
 import com.wallet.crypto.trustapp.entity.NetworkInfo;
 import com.wallet.crypto.trustapp.entity.Wallet;
+import com.wallet.crypto.trustapp.service.TrustWalletTickerService;
 import com.wallet.crypto.trustapp.ui.barcode.BarcodeCaptureActivity;
 import com.wallet.crypto.trustapp.util.BalanceUtils;
 import com.wallet.crypto.trustapp.util.QRURLParser;
@@ -31,6 +37,7 @@ import com.wallet.crypto.trustapp.viewmodel.SendViewModelFactory;
 
 import org.ethereum.geth.Address;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Map;
 
@@ -45,17 +52,30 @@ public class SendActivity extends BaseActivity {
     SendViewModel viewModel;
 
     private static final int BARCODE_READER_REQUEST_CODE = 1;
+    private static final int INPUT_DISPLAY_EDITTEXT_AMOUNT_SCALE = 15;
 
     private EditText toAddressText;
     private EditText amountText;
+    private EditText currencyAmountText;
 
     // In case we're sending tokens
     private boolean sendingTokens = false;
     private String contractAddress;
     private int decimals;
     private String symbol;
+    private String currencySymbol;
     private TextInputLayout toInputLayout;
     private TextInputLayout amountInputLayout;
+    private TextInputLayout currencyInputLayout;
+
+    NetworkInfo networkInfo;
+
+    private String MaxTransferETH;
+    private String MaxTransferUSD;
+    private String GasNum;
+    private String GasPrice;
+    private GasSettings gasSettings;
+    private String tickerPrice;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,17 +94,20 @@ public class SendActivity extends BaseActivity {
         toAddressText = findViewById(R.id.send_to_address);
         amountInputLayout = findViewById(R.id.amount_input_layout);
         amountText = findViewById(R.id.send_amount);
-
+        currencyInputLayout = findViewById(R.id.currency_amount_input_layout);
+        currencyAmountText = findViewById(R.id.send_amount_currency);
 
         contractAddress = getIntent().getStringExtra(C.EXTRA_CONTRACT_ADDRESS);
         decimals = getIntent().getIntExtra(C.EXTRA_DECIMALS, C.ETHER_DECIMALS);
         symbol = getIntent().getStringExtra(C.EXTRA_SYMBOL);
         symbol = symbol == null ? C.ETH_SYMBOL : symbol;
+        currencySymbol = getIntent().getStringExtra(C.USD_SYMBOL);
+        currencySymbol = currencySymbol == null ? C.USD_SYMBOL : currencySymbol;
         sendingTokens = getIntent().getBooleanExtra(C.EXTRA_SENDING_TOKENS, false);
 
         //setTitle(getString(R.string.title_send) + " " + symbol);
-        amountInputLayout.setHint(getString(R.string.hint_amount) + " " + symbol);
-
+        amountInputLayout.setHint(getString(R.string.hint_amount));
+        currencyInputLayout.setHint(getString(R.string.hint_currency_amount));
 
 
         // Populate to address if it has been passed forward
@@ -99,10 +122,97 @@ public class SendActivity extends BaseActivity {
             startActivityForResult(intent, BARCODE_READER_REQUEST_CODE);
         });
 
+        Button max_amount_button = findViewById(R.id.max_button);
+
+
+
         BalanceUtils.changeDisplayBalance("","",findViewById(android.R.id.content));
+
+
         viewModel.defaultWalletBalance().observe(this, this::onBalanceChanged);
+        viewModel.gasSettings().observe(this, this::getGasSettings);
+        viewModel.defaultWalletBalance().observe(this, this::setMaxTransferAmount);
+
+        amountText.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                if(getCurrentFocus().getId() == amountText.getId()) {
+                    if(s.length() != 0) {
+                        updateFromInputETH(amountText.getText().toString());
+                    }else{
+                        updateFromInputETH("0");
+                    }
+                }
+
+            }
+        });
+
+        currencyAmountText.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                if(getCurrentFocus().getId() == currencyAmountText.getId()) {
+                    if(s.length() != 0){
+                        updateFromInputUSD(currencyAmountText.getText().toString());
+                    }else{
+                        updateFromInputUSD("0");
+                    }
+
+                }
+            }
+        });
     }
 
+    //when click max_button
+    public void setToMaxTransferAmount(View view){
+        updateFromInputETH(MaxTransferETH);
+        updateFromInputUSD(MaxTransferUSD);
+    }
+
+    public void getGasSettings(GasSettings gasSettings){
+        this.gasSettings = gasSettings;
+    }
+    public void setMaxTransferAmount(Map<String, String> balance){
+        networkInfo = viewModel.defaultNetwork().getValue();
+        tickerPrice = balance.get(symbol+"To"+currencySymbol);
+        //String gasPrice = BalanceUtils.weiToGwei(gasSettings.gasPrice);// + " " + C.GWEI_UNIT
+        BigDecimal networkFee = BalanceUtils.weiToEth(gasSettings.gasPrice.multiply(gasSettings.gasLimit));// + " " + C.ETH_SYMBOL
+        MaxTransferETH = new BigDecimal(balance.get(networkInfo.symbol)).subtract(networkFee).toPlainString();
+        MaxTransferUSD = BalanceUtils.ethToUsd(tickerPrice, MaxTransferETH, INPUT_DISPLAY_EDITTEXT_AMOUNT_SCALE);
+    }
+
+    public void updateFromInputETH(String ETHAmount){
+        String USDAmount =  BalanceUtils.ethToUsd(tickerPrice, ETHAmount, INPUT_DISPLAY_EDITTEXT_AMOUNT_SCALE);
+        currencyAmountText.setText(USDAmount);
+    }
+
+    public void updateFromInputUSD(String USDAmount){
+        String ETHAmount = BalanceUtils.usdToEth(tickerPrice, USDAmount, INPUT_DISPLAY_EDITTEXT_AMOUNT_SCALE);
+        amountText.setText(ETHAmount);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -159,7 +269,19 @@ public class SendActivity extends BaseActivity {
         if (!isValidAmount(amount)) {
             amountInputLayout.setError(getString(R.string.error_invalid_amount));
             inputValid = false;
+        }else if (new BigDecimal(amount).compareTo(new BigDecimal(MaxTransferETH)) == 1 ) {
+            amountInputLayout.setError(getString(R.string.error_insufficient_funds));
+            currencyInputLayout.setError(getString(R.string.error_insufficient_funds));
+            inputValid = false;
         }
+
+
+        final String currencyAmount = currencyAmountText.getText().toString();
+        if (!isValidAmount(currencyAmount)) {
+            currencyInputLayout.setError(getString(R.string.error_invalid_amount));
+            inputValid = false;
+        }
+
 
         if (!inputValid) {
             return;
