@@ -3,6 +3,7 @@ package com.wallet.crypto.trustapp.viewmodel;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
+import com.wallet.crypto.trustapp.interact.FetchGasSettingsInteract;
 import com.wallet.crypto.trustapp.interact.FindDefaultNetworkInteract;
 import com.wallet.crypto.trustapp.interact.FindDefaultWalletInteract;
 import com.wallet.crypto.trustapp.interact.GetDefaultWalletBalance;
@@ -16,20 +17,23 @@ public class SendViewModelFactory implements ViewModelProvider.Factory {
     private final GetDefaultWalletBalance getDefaultWalletBalance;
     private final FindDefaultNetworkInteract findDefaultNetworkInteract;
     private final FindDefaultWalletInteract findDefaultWalletInteract;
+    private FetchGasSettingsInteract fetchGasSettingsInteract;
 
     public SendViewModelFactory(ConfirmationRouter confirmationRouter,
                                 GetDefaultWalletBalance getDefaultWalletBalance,
                                 FindDefaultNetworkInteract findDefaultNetworkInteract,
-                                FindDefaultWalletInteract findDefaultWalletInteract) {
+                                FindDefaultWalletInteract findDefaultWalletInteract,
+                                FetchGasSettingsInteract fetchGasSettingsInteract) {
         this.confirmationRouter = confirmationRouter;
         this.getDefaultWalletBalance = getDefaultWalletBalance;
         this.findDefaultNetworkInteract = findDefaultNetworkInteract;
         this.findDefaultWalletInteract = findDefaultWalletInteract;
+        this.fetchGasSettingsInteract = fetchGasSettingsInteract;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T) new SendViewModel(confirmationRouter, getDefaultWalletBalance, findDefaultNetworkInteract, findDefaultWalletInteract);
+        return (T) new SendViewModel(confirmationRouter, getDefaultWalletBalance, findDefaultNetworkInteract, findDefaultWalletInteract, fetchGasSettingsInteract);
     }
 }
