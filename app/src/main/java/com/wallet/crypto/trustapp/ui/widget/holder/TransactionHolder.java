@@ -70,10 +70,10 @@ public class TransactionHolder extends BinderViewHolder<Transaction> implements 
         if (operation == null || operation.contract == null) {
             // default to ether transaction
             fill(transaction.error, transaction.from, transaction.to, networkSymbol, transaction.value,
-                    ETHER_DECIMALS);
+                    ETHER_DECIMALS, transaction.isPending);
         } else {
             fill(transaction.error, operation.from, operation.to, operation.contract.symbol, operation.value,
-                    operation.contract.decimals);
+                    operation.contract.decimals, transaction.isPending);
         }
     }
 
@@ -83,9 +83,20 @@ public class TransactionHolder extends BinderViewHolder<Transaction> implements 
             String to,
             String symbol,
             String valueStr,
-            long decimals) {
+            long decimals,
+            boolean isPending) {
         boolean isSent = from.toLowerCase().equals(defaultAddress);
-        type.setText(isSent ? getString(R.string.sent) : getString(R.string.received));
+
+        String typeText;
+        if (isPending) {
+            typeText = getString(R.string.pending);
+        } else if (isSent) {
+            typeText = getString(R.string.sent);
+        } else {
+            typeText = getString(R.string.received);
+        }
+
+        type.setText(typeText);
         if (!TextUtils.isEmpty(error)) {
             typeIcon.setImageResource(R.drawable.ic_error_outline_black_24dp);
         } else if (isSent) {

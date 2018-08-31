@@ -1,5 +1,11 @@
 package com.wallet.crypto.trustapp.util;
 
+import android.view.View;
+import android.widget.TextView;
+
+import com.wallet.crypto.trustapp.R;
+
+import org.web3j.abi.datatypes.Int;
 import org.web3j.utils.Convert;
 
 import java.math.BigDecimal;
@@ -20,10 +26,22 @@ public class BalanceUtils {
         return eth_scaled.toString();
     }
 
-    public static String ethToUsd(String priceUsd, String ethBalance) {
+    public static String ethToUsd(String priceUsd, String ethBalance, int scale) {
+        if(ethBalance.equals("0") || ethBalance.equals("")){
+            return "";
+        }
         BigDecimal usd = new BigDecimal(ethBalance).multiply(new BigDecimal(priceUsd));
-        usd = usd.setScale(2, RoundingMode.CEILING);
+        usd = usd.setScale(scale, RoundingMode.CEILING);
         return usd.toString();
+    }
+
+    public static String usdToEth(String priceUsd, String usd, int scale) {
+        if(usd.equals("0") || usd.equals("")){
+            return "";
+        }
+        BigDecimal eth = new BigDecimal(usd).divide(new BigDecimal(priceUsd), RoundingMode.CEILING);
+        eth = eth.setScale(scale, RoundingMode.CEILING);
+        return eth.toString();
     }
 
     public static String EthToWei(String eth) throws Exception {
@@ -71,5 +89,19 @@ public class BalanceUtils {
     public static BigDecimal subunitToBase(BigInteger subunitAmount, int decimals) {
         assert(decimals >= 0);
         return new BigDecimal(subunitAmount).divide(BigDecimal.valueOf(10).pow(decimals));
+    }
+
+    public static void changeDisplayBalance(String currency, String ether, View view){
+        TextView currencyBalance = view.findViewById(R.id.currency_balance);
+        TextView etherBalance = view.findViewById(R.id.ether_balance);
+        currencyBalance.setVisibility(View.VISIBLE);
+        etherBalance.setVisibility(View.VISIBLE);
+        if(currency.isEmpty() || currency.equals("") || currency == null){
+            currencyBalance.setText("--");
+            etherBalance.setText("--");
+        }else{
+            currencyBalance.setText(currency);
+            etherBalance.setText(ether);
+        }
     }
 }

@@ -51,10 +51,16 @@
         <activity
             android:name=".ui.TokensActivity"
             android:label="@string/title_my_tokens" />
-
+        <activity
+            android:name=".ui.EditTokensActivity"
+            android:label="@string/title_edit_tokens" />
         <activity
             android:name=".ui.SendActivity"
             android:label="@string/title_activity_send" />
+        <activity
+            android:name=".ui.BrowserActivity"
+            android:label="@string/title_browser"
+            android:windowSoftInputMode="adjustNothing"/>
 
         <activity
             android:name=".ui.ConfirmationActivity"
@@ -73,9 +79,9 @@
             android:name=".ui.GasSettingsActivity"
             android:label="@string/title_send_settings" />
 
-        <meta-data
+         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="74d3fa8b5038a154c0c05555d27112a0d4a80d68" />
+            android:value="9f930980e74fbe994d3c64e6055c86bc4735b39e" />
     </application>
 
 </manifest>

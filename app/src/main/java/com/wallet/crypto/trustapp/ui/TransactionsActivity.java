@@ -27,6 +27,7 @@ import com.wallet.crypto.trustapp.entity.NetworkInfo;
 import com.wallet.crypto.trustapp.entity.Transaction;
 import com.wallet.crypto.trustapp.entity.Wallet;
 import com.wallet.crypto.trustapp.ui.widget.adapter.TransactionsAdapter;
+import com.wallet.crypto.trustapp.util.BalanceUtils;
 import com.wallet.crypto.trustapp.util.RootUtil;
 import com.wallet.crypto.trustapp.viewmodel.BaseNavigationActivity;
 import com.wallet.crypto.trustapp.viewmodel.TransactionsViewModel;
@@ -62,8 +63,8 @@ public class TransactionsActivity extends BaseNavigationActivity implements View
         setContentView(R.layout.activity_transactions);
 
         toolbar();
-        setTitle(getString(R.string.unknown_balance_with_symbol));
-        setSubtitle("");
+
+        BalanceUtils.changeDisplayBalance("","",findViewById(android.R.id.content));
         initBottomNavigation();
         dissableDisplayHomeAsUp();
 
@@ -99,8 +100,7 @@ public class TransactionsActivity extends BaseNavigationActivity implements View
     protected void onResume() {
         super.onResume();
 
-        setTitle(getString(R.string.unknown_balance_without_symbol));
-        setSubtitle("");
+        BalanceUtils.changeDisplayBalance(getString(R.string.unknown_balance_without_symbol),"",findViewById(android.R.id.content));
         adapter.clear();
         viewModel.prepare();
         checkRoot();
@@ -178,11 +178,13 @@ public class TransactionsActivity extends BaseNavigationActivity implements View
             return;
         }
         if (TextUtils.isEmpty(balance.get(C.USD_SYMBOL))) {
-            actionBar.setTitle(balance.get(networkInfo.symbol) + " " + networkInfo.symbol);
-            actionBar.setSubtitle("");
+            //actionBar.setTitle(balance.get(networkInfo.symbol) + " " + networkInfo.symbol);
+            //actionBar.setSubtitle("");
+            BalanceUtils.changeDisplayBalance(balance.get(networkInfo.symbol) + " " + networkInfo.symbol, "", findViewById(android.R.id.content));
         } else {
-            actionBar.setTitle("$" + balance.get(C.USD_SYMBOL));
-            actionBar.setSubtitle(balance.get(networkInfo.symbol) + " " + networkInfo.symbol);
+            //actionBar.setTitle("$" + balance.get(C.USD_SYMBOL));
+            //actionBar.setSubtitle(balance.get(networkInfo.symbol) + " " + networkInfo.symbol);
+            BalanceUtils.changeDisplayBalance("$" + balance.get(C.USD_SYMBOL), balance.get(networkInfo.symbol) + " " + networkInfo.symbol, findViewById(android.R.id.content));
         }
     }
 

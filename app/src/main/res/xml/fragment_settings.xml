@@ -47,10 +47,9 @@
             </Preference>
 
             <Preference
+                android:key="pref_telegram"
                 android:title="@string/telegram"
                 android:icon="@mipmap/settings_telegram">
-                <intent android:action="android.intent.action.VIEW"
-                    android:data="https://t.me/joinchat/AAMtrQ_wtd918mm_mU0BRQ" />
             </Preference>
 
             <Preference
@@ -77,23 +76,17 @@
                 android:title="@string/title_email" />
 
             <Preference
-                android:key="pref_donate"
-                android:icon="@mipmap/settings_donate"
-                android:title="@string/title_donate">
-            </Preference>
-
-            <Preference
                 android:title="@string/title_privacy_policy"
                 android:icon="@mipmap/settings_privacy_policy">
                 <intent android:action="android.intent.action.VIEW"
-                    android:data="https://trustwalletapp.com/privacy-policy.html" />
+                    android:data="https://support.catwallet.com/portal/kb/articles/privacy-policy" />
             </Preference>
 
             <Preference
                 android:title="@string/title_terms"
                 android:icon="@mipmap/settings_terms">
                 <intent android:action="android.intent.action.VIEW"
-                    android:data="https://trustwalletapp.com/terms.html" />
+                    android:data="https://support.catwallet.com/portal/kb/articles/terms-of-use" />
             </Preference>
 
             <Preference

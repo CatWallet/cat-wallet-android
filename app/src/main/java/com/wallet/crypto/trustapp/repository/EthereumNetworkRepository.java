@@ -24,7 +24,7 @@ public class EthereumNetworkRepository implements EthereumNetworkRepositoryType 
 
 	private final NetworkInfo[] NETWORKS = new NetworkInfo[] {
 			new NetworkInfo(ETHEREUM_NETWORK_NAME, ETH_SYMBOL,
-                    "https://mainnet.infura.io/llyrtzQ3YhkdESt2Fzrk",
+                    "https://mainnet.infura.io/TejPKvmSjVukp9t0U4IJ",
                     "https://api.trustwalletapp.com/",
                     "https://etherscan.io/",1, true),
             new NetworkInfo(CLASSIC_NETWORK_NAME, ETC_SYMBOL,
@@ -35,11 +35,11 @@ public class EthereumNetworkRepository implements EthereumNetworkRepositoryType 
                     "https://core.poa.network",
                     "https://poa.trustwalletapp.com","poa", 99, false),
 			new NetworkInfo(KOVAN_NETWORK_NAME, ETH_SYMBOL,
-                    "https://kovan.infura.io/llyrtzQ3YhkdESt2Fzrk",
+                    "https://kovan.infura.io/TejPKvmSjVukp9t0U4IJ",
                     "https://kovan.trustwalletapp.com/",
                     "https://kovan.etherscan.io", 42, false),
 			new NetworkInfo(ROPSTEN_NETWORK_NAME, ETH_SYMBOL,
-                    "https://ropsten.infura.io/llyrtzQ3YhkdESt2Fzrk",
+                    "https://ropsten.infura.io/TejPKvmSjVukp9t0U4IJ",
                     "https://ropsten.trustwalletapp.com/",
                     "https://ropsten.etherscan.io",3, false),
 	};
