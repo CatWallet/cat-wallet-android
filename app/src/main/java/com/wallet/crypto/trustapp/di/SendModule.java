@@ -1,9 +1,11 @@
 package com.wallet.crypto.trustapp.di;
 
+import com.wallet.crypto.trustapp.interact.FetchGasSettingsInteract;
 import com.wallet.crypto.trustapp.interact.FindDefaultNetworkInteract;
 import com.wallet.crypto.trustapp.interact.FindDefaultWalletInteract;
 import com.wallet.crypto.trustapp.interact.GetDefaultWalletBalance;
 import com.wallet.crypto.trustapp.repository.EthereumNetworkRepositoryType;
+import com.wallet.crypto.trustapp.repository.PreferenceRepositoryType;
 import com.wallet.crypto.trustapp.repository.WalletRepositoryType;
 import com.wallet.crypto.trustapp.router.ConfirmationRouter;
 import com.wallet.crypto.trustapp.viewmodel.SendViewModelFactory;
@@ -15,8 +17,8 @@ import dagger.Provides;
 class SendModule {
     @Provides
     SendViewModelFactory provideSendViewModelFactory(ConfirmationRouter confirmationRouter,  GetDefaultWalletBalance getDefaultWalletBalance,
-                                                     FindDefaultNetworkInteract findDefaultNetworkInteract, FindDefaultWalletInteract findDefaultWalletInteract) {
-        return new SendViewModelFactory(confirmationRouter, getDefaultWalletBalance, findDefaultNetworkInteract, findDefaultWalletInteract);
+                                                     FindDefaultNetworkInteract findDefaultNetworkInteract, FindDefaultWalletInteract findDefaultWalletInteract, FetchGasSettingsInteract fetchGasSettingsInteract) {
+        return new SendViewModelFactory(confirmationRouter, getDefaultWalletBalance, findDefaultNetworkInteract, findDefaultWalletInteract, fetchGasSettingsInteract);
     }
 
     @Provides
@@ -39,5 +41,10 @@ class SendModule {
     @Provides
     FindDefaultWalletInteract provideFindDefaultWalletInteract(WalletRepositoryType walletRepository) {
         return new FindDefaultWalletInteract(walletRepository);
+    }
+
+    @Provides
+    FetchGasSettingsInteract provideFetchGasSettingsInteract(PreferenceRepositoryType preferenceRepositoryType) {
+        return new FetchGasSettingsInteract(preferenceRepositoryType);
     }
 }

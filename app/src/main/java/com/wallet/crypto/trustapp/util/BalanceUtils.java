@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 import com.wallet.crypto.trustapp.R;
 
+import org.web3j.abi.datatypes.Int;
 import org.web3j.utils.Convert;
 
 import java.math.BigDecimal;
@@ -25,10 +26,22 @@ public class BalanceUtils {
         return eth_scaled.toString();
     }
 
-    public static String ethToUsd(String priceUsd, String ethBalance) {
+    public static String ethToUsd(String priceUsd, String ethBalance, int scale) {
+        if(ethBalance.equals("0") || ethBalance.equals("")){
+            return "";
+        }
         BigDecimal usd = new BigDecimal(ethBalance).multiply(new BigDecimal(priceUsd));
-        usd = usd.setScale(2, RoundingMode.CEILING);
+        usd = usd.setScale(scale, RoundingMode.CEILING);
         return usd.toString();
+    }
+
+    public static String usdToEth(String priceUsd, String usd, int scale) {
+        if(usd.equals("0") || usd.equals("")){
+            return "";
+        }
+        BigDecimal eth = new BigDecimal(usd).divide(new BigDecimal(priceUsd), RoundingMode.CEILING);
+        eth = eth.setScale(scale, RoundingMode.CEILING);
+        return eth.toString();
     }
 
     public static String EthToWei(String eth) throws Exception {
