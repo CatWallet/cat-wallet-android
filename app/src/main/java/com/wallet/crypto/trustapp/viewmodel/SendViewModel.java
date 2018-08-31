@@ -87,7 +87,7 @@ public class SendViewModel extends BaseViewModel {
     private void onDefaultWallet(Wallet wallet) {
         defaultWallet.setValue(wallet);
         if (gasSettings.getValue() == null) {
-            onGasSettings(fetchGasSettingsInteract.fetch(true));
+            onGasSettings(fetchGasSettingsInteract.fetch(false));
         }
         getBalance();
     }
