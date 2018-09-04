@@ -28,19 +28,26 @@ public class BalanceUtils {
 
     public static String ethToUsd(String priceUsd, String ethBalance, int scale) {
         if(ethBalance == null || ethBalance.equals("0") || ethBalance.equals("") || ethBalance.equals(".")){
-            return "";
+            return "0";
         }
-        BigDecimal usd = new BigDecimal(ethBalance).multiply(new BigDecimal(priceUsd));
-        usd = usd.setScale(scale, RoundingMode.CEILING);
+
+        if(priceUsd == null) return "";
+
+        BigDecimal usd = new BigDecimal(ethBalance).multiply(new BigDecimal(priceUsd)).setScale(scale);
+        //usd = usd.setScale(scale, RoundingMode.CEILING);
         return usd.toString();
     }
 
     public static String usdToEth(String priceUsd, String usd, int scale) {
         if(usd == null || usd.equals("0") || usd.equals("") || usd.equals(".")){
-            return "";
+            return "0";
         }
-        BigDecimal eth = new BigDecimal(usd).divide(new BigDecimal(priceUsd), RoundingMode.HALF_DOWN);
-        eth = eth.setScale(scale, RoundingMode.CEILING);
+
+        if(priceUsd == null) return "";
+
+         //eth = eth.setScale(scale, RoundingMode.HALF_DOWN);
+        BigDecimal eth = new BigDecimal(usd).divide(new BigDecimal(priceUsd), RoundingMode.CEILING).setScale(scale);
+
         return eth.toString();
     }
 
