@@ -161,6 +161,7 @@ public class SendActivity extends BaseActivity {
                     }
                 }
 
+
             }
         });
 
@@ -245,7 +246,7 @@ public class SendActivity extends BaseActivity {
 
 
     public void updateFromInputETH(String ETHAmount){
-        if(ETHAmount != null && ETHAmount.length()>0 && new BigDecimal(ETHAmount).compareTo(new BigDecimal("0")) > 0 ){
+        if(ETHAmount != null && !ETHAmount.equals(".") &&ETHAmount.length()>0 && new BigDecimal(ETHAmount).compareTo(new BigDecimal("0")) > 0 ){
             String USDAmount =  BalanceUtils.ethToUsd(tickerPrice, ETHAmount, INPUT_DISPLAY_EDITTEXT_AMOUNT_SCALE);
             currencyAmountText.setText(USDAmount);
         }else{
@@ -255,7 +256,7 @@ public class SendActivity extends BaseActivity {
     }
 
     public void updateFromInputUSD(String USDAmount){
-        if(USDAmount != null && USDAmount.length()>0 && new BigDecimal(USDAmount).compareTo(new BigDecimal("0")) > 0 ) {
+        if(USDAmount != null && !USDAmount.equals(".") && USDAmount.length()>0 && new BigDecimal(USDAmount).compareTo(new BigDecimal("0")) > 0 ) {
             String ETHAmount = BalanceUtils.usdToEth(tickerPrice, USDAmount, INPUT_DISPLAY_EDITTEXT_AMOUNT_SCALE);
             amountText.setText(ETHAmount);
         }else{

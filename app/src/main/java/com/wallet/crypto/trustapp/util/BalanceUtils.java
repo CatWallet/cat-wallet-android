@@ -27,7 +27,7 @@ public class BalanceUtils {
     }
 
     public static String ethToUsd(String priceUsd, String ethBalance, int scale) {
-        if(ethBalance.equals("0") || ethBalance.equals("")){
+        if(ethBalance == null || ethBalance.equals("0") || ethBalance.equals("") || ethBalance.equals(".")){
             return "";
         }
         BigDecimal usd = new BigDecimal(ethBalance).multiply(new BigDecimal(priceUsd));
@@ -36,10 +36,10 @@ public class BalanceUtils {
     }
 
     public static String usdToEth(String priceUsd, String usd, int scale) {
-        if(usd.equals("0") || usd.equals("")){
+        if(usd == null || usd.equals("0") || usd.equals("") || usd.equals(".")){
             return "";
         }
-        BigDecimal eth = new BigDecimal(usd).divide(new BigDecimal(priceUsd), RoundingMode.CEILING);
+        BigDecimal eth = new BigDecimal(usd).divide(new BigDecimal(priceUsd), RoundingMode.HALF_DOWN);
         eth = eth.setScale(scale, RoundingMode.CEILING);
         return eth.toString();
     }
