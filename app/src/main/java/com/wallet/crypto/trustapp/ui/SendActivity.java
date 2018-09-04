@@ -221,6 +221,12 @@ public class SendActivity extends BaseActivity {
         }
     }
 
+    //when click clear button
+    public void clearAmount(View view){
+        amountText.setText("");
+        currencyAmountText.setText("");
+    }
+
     public void getGasSettings(GasSettings gasSettings){
         this.gasSettings = gasSettings;
         networkFee = BalanceUtils.weiToEth(gasSettings.gasPrice.multiply(gasSettings.gasLimit));// + " " + C.ETH_SYMBOL
