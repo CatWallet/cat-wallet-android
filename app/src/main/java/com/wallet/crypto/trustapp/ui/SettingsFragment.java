@@ -120,6 +120,15 @@ public class SettingsFragment extends PreferenceFragment
 //            startActivity(intent);
 //            return true;
 //        });
+        final Preference share = findPreference("pref_share");
+        share.setOnPreferenceClickListener(preference -> {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.share_message));
+            sendIntent.setType("text/plain");
+            startActivity(sendIntent);
+            return false;
+        });
 
         final Preference email = findPreference("pref_email");
         email.setOnPreferenceClickListener(preference -> {

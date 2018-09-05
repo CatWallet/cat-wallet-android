@@ -77,6 +77,7 @@
     <string name="title_report_bug">Report a bug</string>
     <string name="title_rate">Rate us on Play Store</string>
     <string name="title_support">Support</string>
+    <string name="title_share">Share With Friends</string>
     <string name="title_donate">Donate</string>
     <string name="account_already_imported">Wallet with this address already exists</string>
     <string name="message_delete_account">Permanently deleting wallet. Make sure that it has been exported and stored elsewhere.</string>
@@ -86,6 +87,9 @@
     <string name="backup_warning_text">
         Since only you control your money, you\'ll need to save your backup keystore in case this app is deleted. \n\n
         Your wallet is never saved to cloud storage or standard device backups.
+    </string>
+    <string name="share_message">
+        Here is the app I use to store my ETH and ERC20 tokens. https://catwallet.com
     </string>
     <string name="message_no_backup">No backup, no Ethereum.</string>
     <string name="error_deleting_account">Error deleting wallet</string>

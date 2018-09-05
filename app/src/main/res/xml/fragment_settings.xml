@@ -24,13 +24,13 @@
                 android:title="@string/title_source_code"
                 android:icon="@mipmap/settings_open_source">
                 <intent android:action="android.intent.action.VIEW"
-                    android:data="https://github.com/TrustWallet/trust-wallet-android" />
+                    android:data="https://github.com/CatWallet/trust-wallet-android" />
             </Preference>
 
             <Preference android:title="@string/title_report_bug"
                         android:icon="@mipmap/settings_bug">
                 <intent android:action="android.intent.action.VIEW"
-                    android:data="https://github.com/TrustWallet/trust-wallet-android/issues/new" />
+                    android:data="https://github.com/CatWallet/trust-wallet-android/issues/new" />
             </Preference>
 
         </PreferenceCategory>
@@ -64,6 +64,11 @@
             android:title="@string/title_support"
             android:key="pref_support"
             >
+
+            <Preference
+                android:key="pref_share"
+                android:icon="@mipmap/settings_share"
+                android:title="@string/title_share" />
 
             <Preference
                 android:key="pref_rate"
