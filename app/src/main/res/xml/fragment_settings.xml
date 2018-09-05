@@ -24,13 +24,13 @@
                 android:title="@string/title_source_code"
                 android:icon="@mipmap/settings_open_source">
                 <intent android:action="android.intent.action.VIEW"
-                    android:data="https://github.com/TrustWallet/trust-wallet-android" />
+                    android:data="https://github.com/CatWallet/trust-wallet-android" />
             </Preference>
 
             <Preference android:title="@string/title_report_bug"
                         android:icon="@mipmap/settings_bug">
                 <intent android:action="android.intent.action.VIEW"
-                    android:data="https://github.com/TrustWallet/trust-wallet-android/issues/new" />
+                    android:data="https://github.com/CatWallet/trust-wallet-android/issues/new" />
             </Preference>
 
         </PreferenceCategory>
