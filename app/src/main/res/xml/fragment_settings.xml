@@ -66,6 +66,11 @@
             >
 
             <Preference
+                android:key="pref_share"
+                android:icon="@mipmap/settings_share"
+                android:title="@string/title_share" />
+
+            <Preference
                 android:key="pref_rate"
                 android:icon="@mipmap/settings_rating"
                 android:title="@string/title_rate" />
