@@ -45,9 +45,7 @@ public class BalanceUtils {
 
         if(priceUsd == null) return "";
 
-         //eth = eth.setScale(scale, RoundingMode.HALF_DOWN);
-        BigDecimal eth = new BigDecimal(usd).divide(new BigDecimal(priceUsd), RoundingMode.CEILING).setScale(scale);
-
+        BigDecimal eth = new BigDecimal(usd).divide(new BigDecimal(priceUsd),scale, RoundingMode.HALF_UP);
         return eth.toString();
     }
 
