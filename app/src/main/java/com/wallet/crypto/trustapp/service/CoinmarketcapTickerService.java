@@ -59,7 +59,7 @@ public class CoinmarketcapTickerService implements TickerService {
     }
 
     public interface CoinmarketApiClient {
-        @GET("/v1/ticker/{ticker}")
+        @GET("/v2/ticker/{ticker}")
         Observable<Response<Ticker[]>> fetchTickerPrice(@Path("ticker") String ticker);
     }
 
