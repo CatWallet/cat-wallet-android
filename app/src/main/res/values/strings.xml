@@ -241,4 +241,6 @@
     <string name="title_activity_barcode">Barcode Scan</string>
     <string name="error_add_token">Could not add token.</string>
     <string name="facebook">Facebook</string>
+    <!--Push notifications-->
+    <string name="default_notification_channel_id">default channel</string>>
 </resources>

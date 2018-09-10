@@ -330,7 +330,9 @@ public class SendActivity extends BaseActivity {
         final String currencyAmount = currencyAmountText.getText().toString();
         if (!isValidAmount(currencyAmount)) {
             currencyInputLayout.setError(getString(R.string.error_invalid_amount));
-            inputValid = false;
+            if(!isValidAmount(amount)){
+                inputValid = false;
+            }
         }
 
 
