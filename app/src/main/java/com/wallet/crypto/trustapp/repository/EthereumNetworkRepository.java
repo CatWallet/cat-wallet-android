@@ -19,6 +19,7 @@ import static com.wallet.crypto.trustapp.C.POA_SYMBOL;
 import static com.wallet.crypto.trustapp.C.ROPSTEN_NETWORK_NAME;
 import static com.wallet.crypto.trustapp.C.CLASSIC_NETWORK_NAME;
 import static com.wallet.crypto.trustapp.C.ETC_SYMBOL;
+import static com.wallet.crypto.trustapp.C.RINKEBY_NETWORK_NAME;
 
 public class EthereumNetworkRepository implements EthereumNetworkRepositoryType {
 
@@ -36,12 +37,16 @@ public class EthereumNetworkRepository implements EthereumNetworkRepositoryType 
                     "https://poa.trustwalletapp.com","poa", 99, false),
 			new NetworkInfo(KOVAN_NETWORK_NAME, ETH_SYMBOL,
                     "https://kovan.infura.io/TejPKvmSjVukp9t0U4IJ",
-                    "https://kovan.trustwalletapp.com/",
+                    "https://cat-kovan.herokuapp.com/",
                     "https://kovan.etherscan.io", 42, false),
 			new NetworkInfo(ROPSTEN_NETWORK_NAME, ETH_SYMBOL,
                     "https://ropsten.infura.io/TejPKvmSjVukp9t0U4IJ",
-                    "https://ropsten.trustwalletapp.com/",
+					"https://cat-ropsten.herokuapp.com/",
                     "https://ropsten.etherscan.io",3, false),
+			new NetworkInfo(RINKEBY_NETWORK_NAME, ETH_SYMBOL,
+					"https://rinkeby.infura.io/TejPKvmSjVukp9t0U4IJ",
+					"https://cat-rinkeby.herokuapp.com/",
+					"https://rinkeby.etherscan.io",5, false),
 	};
 
 	private final PreferenceRepositoryType preferences;

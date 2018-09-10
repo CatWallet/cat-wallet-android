@@ -242,4 +242,5 @@ public class TransactionsActivity extends BaseNavigationActivity implements View
     private void onDepositClick(View view, Uri uri) {
         viewModel.openDeposit(this, uri);
     }
+
 }
