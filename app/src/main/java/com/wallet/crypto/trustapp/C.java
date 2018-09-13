@@ -16,7 +16,27 @@ public abstract class C {
     public static final String ETHEREUM_TIKER = "ethereum";
     public static final String POA_TIKER = "poa";
 
+    //Currency
     public static final String USD_SYMBOL = "$";
+    public static final String CNY_SYMBOL = "￥";
+    public static final String EUR_SYMBOL = "€";
+    public static final String HKD_SYMBOL = "HK$";
+    public static final String AUD_SYMBOL = "AU$";
+
+
+    public static final String USD_ABBR = "USD";
+    public static final String CNY_ABBR = "CNY";
+    public static final String EUR_ABBR = "EUR";
+    public static final String HKD_ABBR = "HKD";
+    public static final String AUD_ABBR = "AUD";
+
+    public static final String USD_NAME = "US Dollar";
+    public static final String CNY_NAME = "Chinese Yuan";
+    public static final String EUR_NAME = "Europe Euro";
+    public static final String HKD_NAME = "Hongkong Dollar";
+    public static final String AUD_NAME = "Australian Dollar";
+
+    //Coin
     public static final String ETH_SYMBOL = "ETH";
     public static final String POA_SYMBOL = "POA";
     public static final String ETC_SYMBOL = "ETC";
@@ -38,6 +58,7 @@ public abstract class C {
     public static final String CHANGELLY_REF_ID = "968d4f0f0bf9";
     public static final String DONATION_ADDRESS = "0x9f8284ce2cf0c8ce10685f537b1fff418104a317";
 
+    //Gas
     public static final String DEFAULT_GAS_PRICE = "21000000000";
     public static final String DEFAULT_GAS_LIMIT = "90000";
     public static final String DEFAULT_GAS_LIMIT_FOR_TOKENS = "144000";
@@ -46,6 +67,7 @@ public abstract class C {
     public static final long GAS_PRICE_MIN = 1000000000L;
     public static final long NETWORK_FEE_MAX = 20000000000000000L;
     public static final int ETHER_DECIMALS = 18;
+
 
     public interface ErrorCode {
 

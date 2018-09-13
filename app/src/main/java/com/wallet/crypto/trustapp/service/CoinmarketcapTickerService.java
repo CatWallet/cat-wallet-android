@@ -45,9 +45,9 @@ public class CoinmarketcapTickerService implements TickerService {
     }
 
     @Override
-    public Observable<Ticker> fetchTickerPrice(String ticker) {
+    public Observable<Ticker> fetchTickerPrice(String currency, String symbol) {
         return coinmarketApiClient
-                .fetchTickerPrice(ticker)
+                .fetchTickerPrice(currency, symbol)
                 .lift(apiError(gson))
                 .map(r -> r[0])
                 .subscribeOn(Schedulers.io());
@@ -59,8 +59,8 @@ public class CoinmarketcapTickerService implements TickerService {
     }
 
     public interface CoinmarketApiClient {
-        @GET("/v2/ticker/{ticker}")
-        Observable<Response<Ticker[]>> fetchTickerPrice(@Path("ticker") String ticker);
+        @GET("/v2/ticker/?convert={currency}")
+        Observable<Response<Ticker[]>> fetchTickerPrice(@Path("symbol") String symbol, @Path("currency") String currency);
     }
 
     private final static class ApiErrorOperator <T> implements ObservableOperator<T, Response<T>> {

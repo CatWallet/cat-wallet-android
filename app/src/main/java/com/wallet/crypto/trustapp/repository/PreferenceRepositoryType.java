@@ -12,4 +12,7 @@ public interface PreferenceRepositoryType {
 	GasSettings getGasSettings(boolean forTokenTransfer);
 	void setGasSettings(GasSettings gasPrice);
 
+	String getDefaultCurrency();
+	void setDefaultCurrency(String currency);
+
 }

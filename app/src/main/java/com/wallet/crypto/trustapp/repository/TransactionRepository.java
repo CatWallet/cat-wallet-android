@@ -1,5 +1,6 @@
 package com.wallet.crypto.trustapp.repository;
 
+import com.wallet.crypto.trustapp.entity.CurrencyInfo;
 import com.wallet.crypto.trustapp.entity.NetworkInfo;
 import com.wallet.crypto.trustapp.entity.ServiceException;
 import com.wallet.crypto.trustapp.entity.Transaction;
@@ -50,6 +51,7 @@ public class TransactionRepository implements TransactionRepositoryType {
 		this.pendingTransactions = new ArrayList<>();
 
 		this.networkRepository.addOnChangeDefaultNetwork(this::onNetworkChanged);
+		//this.networkRepository.addOnChangeDefaultCurrency(this::onCurrencyChanged);
 	}
 
     @Override
@@ -151,4 +153,8 @@ public class TransactionRepository implements TransactionRepositoryType {
     private void onNetworkChanged(NetworkInfo networkInfo) {
         transactionLocalSource.clear();
     }
+
+//	private void onCurrencyChanged(CurrencyInfo networkInfo) {
+//		transactionLocalSource.clear();
+//	}
 }

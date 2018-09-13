@@ -1,7 +1,9 @@
 package com.wallet.crypto.trustapp.repository;
 
+import android.net.Network;
 import android.text.TextUtils;
 
+import com.wallet.crypto.trustapp.entity.CurrencyInfo;
 import com.wallet.crypto.trustapp.entity.NetworkInfo;
 import com.wallet.crypto.trustapp.entity.Ticker;
 import com.wallet.crypto.trustapp.service.TickerService;
@@ -11,17 +13,19 @@ import java.util.Set;
 
 import io.reactivex.Single;
 
-import static com.wallet.crypto.trustapp.C.ETHEREUM_NETWORK_NAME;
-import static com.wallet.crypto.trustapp.C.ETH_SYMBOL;
-import static com.wallet.crypto.trustapp.C.KOVAN_NETWORK_NAME;
-import static com.wallet.crypto.trustapp.C.POA_NETWORK_NAME;
-import static com.wallet.crypto.trustapp.C.POA_SYMBOL;
-import static com.wallet.crypto.trustapp.C.ROPSTEN_NETWORK_NAME;
-import static com.wallet.crypto.trustapp.C.CLASSIC_NETWORK_NAME;
-import static com.wallet.crypto.trustapp.C.ETC_SYMBOL;
-import static com.wallet.crypto.trustapp.C.RINKEBY_NETWORK_NAME;
+//Static Variables
+import static com.wallet.crypto.trustapp.C.*;
+
 
 public class EthereumNetworkRepository implements EthereumNetworkRepositoryType {
+
+	private final PreferenceRepositoryType preferences;
+	private final TickerService tickerService;
+	private NetworkInfo defaultNetwork;
+	private CurrencyInfo defaultCurrency;
+	private final Set<OnNetworkChangeListener> onNetworkChangedListeners = new HashSet<>();
+    private final Set<OnCurrencyChangeListener> onCurrencyChangedListeners = new HashSet<>();
+
 
 	private final NetworkInfo[] NETWORKS = new NetworkInfo[] {
 			new NetworkInfo(ETHEREUM_NETWORK_NAME, ETH_SYMBOL,
@@ -49,21 +53,29 @@ public class EthereumNetworkRepository implements EthereumNetworkRepositoryType 
 					"https://rinkeby.etherscan.io",5, false),
 	};
 
-	private final PreferenceRepositoryType preferences;
-    private final TickerService tickerService;
-    private NetworkInfo defaultNetwork;
-    private final Set<OnNetworkChangeListener> onNetworkChangedListeners = new HashSet<>();
+    private final CurrencyInfo[] CURRENCIES = new CurrencyInfo[] {
+            new CurrencyInfo(USD_NAME, USD_ABBR, USD_SYMBOL, true),
+            new CurrencyInfo(CNY_NAME, CNY_ABBR, CNY_SYMBOL, true),
+            new CurrencyInfo(EUR_NAME, EUR_ABBR, EUR_SYMBOL, true),
+            new CurrencyInfo(HKD_NAME, HKD_ABBR, HKD_SYMBOL, true),
+            new CurrencyInfo(AUD_NAME, AUD_ABBR, AUD_SYMBOL, true),
+    };
 
-    public EthereumNetworkRepository(PreferenceRepositoryType preferenceRepository, TickerService tickerService) {
+	public EthereumNetworkRepository(PreferenceRepositoryType preferenceRepository, TickerService tickerService) {
 		this.preferences = preferenceRepository;
 		this.tickerService = tickerService;
-		defaultNetwork = getByName(preferences.getDefaultNetwork());
+		defaultNetwork = getNetworkInfoByName(preferences.getDefaultNetwork());
+        defaultCurrency = getCurrencyInfoByName(preferences.getDefaultCurrency());
 		if (defaultNetwork == null) {
 			defaultNetwork = NETWORKS[0];
 		}
+		if(defaultCurrency == null){
+		    defaultCurrency = CURRENCIES[0];
+        }
 	}
 
-	private NetworkInfo getByName(String name) {
+
+	private NetworkInfo getNetworkInfoByName(String name) {
 		if (!TextUtils.isEmpty(name)) {
 			for (NetworkInfo NETWORK : NETWORKS) {
 				if (name.equals(NETWORK.name)) {
@@ -74,10 +86,22 @@ public class EthereumNetworkRepository implements EthereumNetworkRepositoryType 
 		return null;
 	}
 
+    private CurrencyInfo getCurrencyInfoByName(String name) {
+        if (!TextUtils.isEmpty(name)) {
+            for (CurrencyInfo CURRENCY : CURRENCIES) {
+                if (name.equals(CURRENCY.name)) {
+                    return CURRENCY;
+                }
+            }
+        }
+        return null;
+    }
+
 	@Override
 	public NetworkInfo getDefaultNetwork() {
 		return defaultNetwork;
 	}
+
 
 	@Override
 	public void setDefaultNetworkInfo(NetworkInfo networkInfo) {
@@ -102,6 +126,30 @@ public class EthereumNetworkRepository implements EthereumNetworkRepositoryType 
     @Override
     public Single<Ticker> getTicker() {
         return Single.fromObservable(tickerService
-                .fetchTickerPrice(getDefaultNetwork().symbol));
+                .fetchTickerPrice(getDefaultCurrency().abbreviation, getDefaultNetwork().symbol));
+    }
+
+
+    @Override
+    public CurrencyInfo getDefaultCurrency() {
+        return defaultCurrency;
+    }
+    @Override
+    public void setDefaultCurrencyInfo(CurrencyInfo currencyInfo){
+        defaultCurrency = currencyInfo;
+        preferences.setDefaultCurrency(defaultCurrency.name);
+        for(OnCurrencyChangeListener listener: onCurrencyChangedListeners){
+            listener.onCurrencyChanged(currencyInfo);
+        }
+    }
+
+    @Override
+    public CurrencyInfo[] getAvailableCurrencyList() {
+        return CURRENCIES;
+    }
+
+    @Override
+    public void addOnChangeDefaultCurrency(OnCurrencyChangeListener onCurrencyChanged) {
+        onCurrencyChangedListeners.add(onCurrencyChanged);
     }
 }

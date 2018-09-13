@@ -15,6 +15,7 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 
@@ -43,9 +44,9 @@ public class TrustWalletTickerService implements TickerService {
     }
 
     @Override
-    public Observable<Ticker> fetchTickerPrice(String symbols) {
+    public Observable<Ticker> fetchTickerPrice(String currency, String symbols) {
         return apiClient
-                .fetchTickerPrice(symbols)
+                .fetchTickerPrice(currency, symbols)
                 .lift(apiError())
                 .map(r -> r.response[0])
                 .subscribeOn(Schedulers.io());
@@ -57,8 +58,14 @@ public class TrustWalletTickerService implements TickerService {
     }
 
     public interface ApiClient {
-        @GET("prices?currency=USD&")
-        Observable<Response<TrustResponse>> fetchTickerPrice(@Query("symbols") String symbols);
+//        @GET("prices?currency=USD&")
+        String currency = "CNY";
+        String symbol = "ETH";
+        @GET("prices?currency={currency}&symbols={symbol}")
+        Observable<Response<TrustResponse>> fetchTickerPrice(@Path("currency") String currency, @Path("symbol") String symbol);
+//
+//        Observable<Response<TrustResponse>> fetchTickerPrice(@Query("currency") String currency);
+//        Observable<Response<TrustResponse>> fetchTickerPrice(@Query("symbols") String symbols);
     }
 
     private static class TrustResponse {

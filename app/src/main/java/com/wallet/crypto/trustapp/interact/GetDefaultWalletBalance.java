@@ -39,8 +39,8 @@ public class GetDefaultWalletBalance {
                         .observeOn(Schedulers.io())
                         .flatMap(ticker -> {
                             String ethBallance = balances.get(ethereumNetworkRepository.getDefaultNetwork().symbol);
-                            balances.put(USD_SYMBOL, BalanceUtils.ethToUsd(ticker.price, ethBallance, 2));
-                            balances.put(ethereumNetworkRepository.getDefaultNetwork().symbol+"To"+USD_SYMBOL, ticker.price);
+                            balances.put(ethereumNetworkRepository.getDefaultCurrency().currencySymbol, BalanceUtils.ethToUsd(ticker.price, ethBallance, 2));
+                            balances.put(ethereumNetworkRepository.getDefaultNetwork().symbol+"To"+ethereumNetworkRepository.getDefaultCurrency().abbreviation, ticker.price);
                             return Single.just(balances);
                         })
                         .onErrorResumeNext(throwable -> Single.just(balances)))
