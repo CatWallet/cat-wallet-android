@@ -16,6 +16,12 @@
             android:icon="@mipmap/settings_server"
             android:dialogTitle="@string/network_label" />
 
+        <ListPreference
+            android:key="pref_currency"
+            android:title="@string/currency_label"
+            android:icon="@mipmap/settings_currency"
+            android:dialogTitle="@string/currency_label" />
+
         <PreferenceCategory
             android:title="@string/title_opensource"
             android:key="pref_opensource_links" >

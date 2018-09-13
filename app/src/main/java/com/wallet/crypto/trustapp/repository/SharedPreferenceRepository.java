@@ -16,6 +16,7 @@ public class SharedPreferenceRepository implements PreferenceRepositoryType {
 	private static final String GAS_PRICE_KEY  ="gas_price";
     private static final String GAS_LIMIT_KEY  ="gas_limit";
 	private static final String GAS_LIMIT_FOR_TOKENS_KEY = "gas_limit_for_tokens";
+	private static final String DEFAULT_CURRENCY_KEY = "default_currency_name";
 
 	private final SharedPreferences pref;
 
@@ -59,4 +60,14 @@ public class SharedPreferenceRepository implements PreferenceRepositoryType {
 	    pref.edit().putString(GAS_PRICE_KEY, gasSettings.gasPrice.toString()).apply();
         pref.edit().putString(GAS_PRICE_KEY, gasSettings.gasLimit.toString()).apply();
     }
+
+    @Override
+	public String getDefaultCurrency(){
+		return pref.getString(DEFAULT_CURRENCY_KEY, null);
+	}
+
+    @Override
+	public void setDefaultCurrency(String currency){
+		pref.edit().putString(DEFAULT_CURRENCY_KEY, currency).apply();
+	}
 }
