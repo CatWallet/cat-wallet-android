@@ -6,6 +6,7 @@ public abstract class C {
     public static final int EXPORT_REQUEST_CODE = 1002;
     public static final int SHARE_REQUEST_CODE = 1003;
 
+    public static String CURRENT_NETWORK_NAME = "Ethereum";
     public static final String ETHEREUM_NETWORK_NAME = "Ethereum";
     public static final String CLASSIC_NETWORK_NAME = "Ethereum Classic";
     public static final String POA_NETWORK_NAME = "POA Network";
@@ -17,19 +18,22 @@ public abstract class C {
     public static final String POA_TIKER = "poa";
 
     //Currency
+    public static String CURRENCT_CURRENCY_SYMBOL = "$";
     public static final String USD_SYMBOL = "$";
     public static final String CNY_SYMBOL = "￥";
     public static final String EUR_SYMBOL = "€";
     public static final String HKD_SYMBOL = "HK$";
     public static final String AUD_SYMBOL = "AU$";
 
-
+    public static String CURRENCT_CURRENCY_ABBR = "USD";
     public static final String USD_ABBR = "USD";
     public static final String CNY_ABBR = "CNY";
     public static final String EUR_ABBR = "EUR";
     public static final String HKD_ABBR = "HKD";
     public static final String AUD_ABBR = "AUD";
 
+
+    public static String CURRENCT_CURRENCY_Name = "US Dollar";
     public static final String USD_NAME = "US Dollar";
     public static final String CNY_NAME = "Chinese Yuan";
     public static final String EUR_NAME = "Europe Euro";
@@ -37,6 +41,7 @@ public abstract class C {
     public static final String AUD_NAME = "Australian Dollar";
 
     //Coin
+    public static String CURRENT_COIN_SYMBOL = "ETH";
     public static final String ETH_SYMBOL = "ETH";
     public static final String POA_SYMBOL = "POA";
     public static final String ETC_SYMBOL = "ETC";
