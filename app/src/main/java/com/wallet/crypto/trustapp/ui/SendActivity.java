@@ -27,9 +27,12 @@ import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.wallet.crypto.trustapp.C;
 import com.wallet.crypto.trustapp.R;
+import com.wallet.crypto.trustapp.entity.CurrencyInfo;
 import com.wallet.crypto.trustapp.entity.GasSettings;
 import com.wallet.crypto.trustapp.entity.NetworkInfo;
 import com.wallet.crypto.trustapp.entity.Wallet;
+import com.wallet.crypto.trustapp.repository.PreferenceRepositoryType;
+import com.wallet.crypto.trustapp.repository.SharedPreferenceRepository;
 import com.wallet.crypto.trustapp.ui.barcode.BarcodeCaptureActivity;
 import com.wallet.crypto.trustapp.util.BalanceUtils;
 import com.wallet.crypto.trustapp.util.QRURLParser;
@@ -78,6 +81,7 @@ public class SendActivity extends BaseActivity {
     private GasSettings gasSettings;
     private String tickerPrice;
     private BigDecimal networkFee;
+    public PreferenceRepositoryType preferenceRepositoryType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,6 +92,7 @@ public class SendActivity extends BaseActivity {
         setContentView(R.layout.activity_send);
         toolbar();
 
+        preferenceRepositoryType = new SharedPreferenceRepository(this.getApplicationContext());
 
         viewModel = ViewModelProviders.of(this, sendViewModelFactory)
                 .get(SendViewModel.class);
@@ -102,15 +107,24 @@ public class SendActivity extends BaseActivity {
         contractAddress = getIntent().getStringExtra(C.EXTRA_CONTRACT_ADDRESS);
         decimals = getIntent().getIntExtra(C.EXTRA_DECIMALS, C.ETHER_DECIMALS);
         symbol = getIntent().getStringExtra(C.EXTRA_SYMBOL);
-        symbol = symbol == null ? C.ETH_SYMBOL : symbol;
-        currencySymbol = getIntent().getStringExtra(C.USD_SYMBOL);
+        symbol = preferenceRepositoryType.getDefaultNetworkSymbol();
+        symbol = symbol.equals(null) ? C.ETH_SYMBOL : symbol;
+
+
+
+        String currentCurrenty = preferenceRepositoryType.getDefaultCurrency();
+        String currentyCoin = preferenceRepositoryType.getDefaultNetworkSymbol();
+        //currencySymbol = getIntent().getStringExtra(C.CURRENCT_CURRENCY_ABBR);
         currencySymbol = currencySymbol == null ? C.USD_ABBR : currencySymbol;
+        currencySymbol = currentCurrenty;
         sendingTokens = getIntent().getBooleanExtra(C.EXTRA_SENDING_TOKENS, false);
 
         //setTitle(getString(R.string.title_send) + " " + symbol);
-        amountInputLayout.setHint(getString(R.string.hint_amount));
-        currencyInputLayout.setHint(getString(R.string.hint_currency_amount));
+//        amountInputLayout.setHint(getString(R.string.hint_amount));
+//        currencyInputLayout.setHint(getString(R.string.hint_currency_amount));
 
+        amountInputLayout.setHint(currentyCoin + " Amount");
+        currencyInputLayout.setHint(currentCurrenty +" Amount");
 
         // Populate to address if it has been passed forward
         String toAddress = getIntent().getStringExtra(C.EXTRA_ADDRESS);

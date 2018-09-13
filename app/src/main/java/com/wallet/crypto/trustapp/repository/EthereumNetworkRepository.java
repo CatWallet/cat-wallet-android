@@ -3,6 +3,7 @@ package com.wallet.crypto.trustapp.repository;
 import android.net.Network;
 import android.text.TextUtils;
 
+import com.wallet.crypto.trustapp.C;
 import com.wallet.crypto.trustapp.entity.CurrencyInfo;
 import com.wallet.crypto.trustapp.entity.NetworkInfo;
 import com.wallet.crypto.trustapp.entity.Ticker;
@@ -106,7 +107,10 @@ public class EthereumNetworkRepository implements EthereumNetworkRepositoryType 
 	@Override
 	public void setDefaultNetworkInfo(NetworkInfo networkInfo) {
 		defaultNetwork = networkInfo;
+		C.CURRENT_COIN_SYMBOL = networkInfo.symbol;
+		C.CURRENT_NETWORK_NAME = networkInfo.name;
 		preferences.setDefaultNetwork(defaultNetwork.name);
+		preferences.setDefaultNetworkSymbol(defaultNetwork.symbol);
 
 		for (OnNetworkChangeListener listener : onNetworkChangedListeners) {
 		    listener.onNetworkChanged(networkInfo);
@@ -137,7 +141,12 @@ public class EthereumNetworkRepository implements EthereumNetworkRepositoryType 
     @Override
     public void setDefaultCurrencyInfo(CurrencyInfo currencyInfo){
         defaultCurrency = currencyInfo;
+		C.CURRENCT_CURRENCY_ABBR = currencyInfo.abbreviation;
+		C.CURRENCT_CURRENCY_SYMBOL = currencyInfo.currencySymbol;
+		C.CURRENCT_CURRENCY_Name = currencyInfo.name;
         preferences.setDefaultCurrency(defaultCurrency.name);
+		preferences.setDefaultCurrencyAbbr(defaultCurrency.abbreviation);
+		preferences.setDefaultCurrencySymbol(defaultCurrency.currencySymbol);
         for(OnCurrencyChangeListener listener: onCurrencyChangedListeners){
             listener.onCurrencyChanged(currencyInfo);
         }
