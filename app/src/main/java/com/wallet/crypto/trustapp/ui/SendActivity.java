@@ -7,7 +7,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
-import android.inputmethodservice.Keyboard;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -22,7 +21,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
@@ -32,7 +30,6 @@ import com.wallet.crypto.trustapp.R;
 import com.wallet.crypto.trustapp.entity.GasSettings;
 import com.wallet.crypto.trustapp.entity.NetworkInfo;
 import com.wallet.crypto.trustapp.entity.Wallet;
-import com.wallet.crypto.trustapp.service.TrustWalletTickerService;
 import com.wallet.crypto.trustapp.ui.barcode.BarcodeCaptureActivity;
 import com.wallet.crypto.trustapp.util.BalanceUtils;
 import com.wallet.crypto.trustapp.util.QRURLParser;
@@ -107,7 +104,7 @@ public class SendActivity extends BaseActivity {
         symbol = getIntent().getStringExtra(C.EXTRA_SYMBOL);
         symbol = symbol == null ? C.ETH_SYMBOL : symbol;
         currencySymbol = getIntent().getStringExtra(C.USD_SYMBOL);
-        currencySymbol = currencySymbol == null ? C.USD_SYMBOL : currencySymbol;
+        currencySymbol = currencySymbol == null ? C.USD_ABBR : currencySymbol;
         sendingTokens = getIntent().getBooleanExtra(C.EXTRA_SENDING_TOKENS, false);
 
         //setTitle(getString(R.string.title_send) + " " + symbol);

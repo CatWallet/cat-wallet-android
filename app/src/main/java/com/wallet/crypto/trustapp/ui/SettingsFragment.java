@@ -14,6 +14,7 @@ import android.preference.PreferenceManager;
 
 import com.wallet.crypto.trustapp.C;
 import com.wallet.crypto.trustapp.R;
+import com.wallet.crypto.trustapp.entity.CurrencyInfo;
 import com.wallet.crypto.trustapp.entity.NetworkInfo;
 import com.wallet.crypto.trustapp.interact.FindDefaultWalletInteract;
 import com.wallet.crypto.trustapp.repository.EthereumNetworkRepositoryType;
@@ -66,10 +67,20 @@ public class SettingsFragment extends PreferenceFragment
         final ListPreference listPreference = (ListPreference) findPreference("pref_rpcServer");
         // THIS IS REQUIRED IF YOU DON'T HAVE 'entries' and 'entryValues' in your XML
         setRpcServerPreferenceData(listPreference);
-        listPreference.setOnPreferenceClickListener(preference -> {
+        listPreference.setOnPreferenceClickListener(networkPreference -> {
             setRpcServerPreferenceData(listPreference);
             return false;
         });
+
+        //change currency setting
+        final ListPreference listCurrencyPreference = (ListPreference) findPreference("pref_currency");
+        // THIS IS REQUIRED IF YOU DON'T HAVE 'entries' and 'entryValues' in your XML
+        setCurrencyPreferenceData(listCurrencyPreference  );
+        listCurrencyPreference.setOnPreferenceClickListener(currencyPreference -> {
+            setCurrencyPreferenceData(listCurrencyPreference);
+            return false;
+        });
+
         String versionString = getVersion();
         Preference version = findPreference("pref_version");
         version.setSummary(versionString);
@@ -77,6 +88,16 @@ public class SettingsFragment extends PreferenceFragment
                 .getDefaultSharedPreferences(getActivity());
         preferences
                 .registerOnSharedPreferenceChangeListener(SettingsFragment.this);
+
+
+//        String versionString = getVersion();
+//        Preference version = findPreference("pref_version");
+//        version.setSummary(versionString);
+//        SharedPreferences preferences = PreferenceManager
+//                .getDefaultSharedPreferences(getActivity());
+//        preferences
+//                .registerOnSharedPreferenceChangeListener(SettingsFragment.this);
+
         final Preference rate = findPreference("pref_rate");
         rate.setOnPreferenceClickListener(preference -> {
             rateThisApp();
@@ -178,6 +199,20 @@ public class SettingsFragment extends PreferenceFragment
                 }
             }
         }
+
+        if (key.equals("pref_currency")) {
+            Preference currencyPref = findPreference(key);
+            // Set summary
+            String selectCurrency = sharedPreferences.getString(key, "");
+            currencyPref.setSummary(selectCurrency);
+            CurrencyInfo[] currencies = ethereumNetworkRepository.getAvailableCurrencyList();
+            for (CurrencyInfo currencyInfo : currencies) {
+                if (currencyInfo.name.equals(selectCurrency)) {
+                    ethereumNetworkRepository.setDefaultCurrencyInfo(currencyInfo);
+                    return;
+                }
+            }
+        }
     }
 
     private void setRpcServerPreferenceData(ListPreference lp) {
@@ -193,6 +228,28 @@ public class SettingsFragment extends PreferenceFragment
         }
 
         String currentValue = ethereumNetworkRepository.getDefaultNetwork().name;
+
+        lp.setEntries(entries);
+        lp.setDefaultValue(currentValue);
+        lp.setValue(currentValue);
+        lp.setSummary(currentValue);
+        lp.setEntryValues(entryValues);
+    }
+
+    private void setCurrencyPreferenceData(ListPreference lp) {
+        CurrencyInfo[] currencies = ethereumNetworkRepository.getAvailableCurrencyList();
+
+        CharSequence[] entries = new CharSequence[currencies.length];
+        for (int ii = 0; ii < currencies.length; ii++) {
+            entries[ii] = currencies[ii].name;
+        }
+
+        CharSequence[] entryValues = new CharSequence[currencies.length];
+        for (int ii = 0; ii < currencies.length; ii++) {
+            entryValues[ii] = currencies[ii].name;
+        }
+
+        String currentValue = ethereumNetworkRepository.getDefaultCurrency().name;
 
         lp.setEntries(entries);
         lp.setDefaultValue(currentValue);
