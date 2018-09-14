@@ -26,6 +26,8 @@ import com.wallet.crypto.trustapp.entity.ErrorEnvelope;
 import com.wallet.crypto.trustapp.entity.NetworkInfo;
 import com.wallet.crypto.trustapp.entity.Transaction;
 import com.wallet.crypto.trustapp.entity.Wallet;
+import com.wallet.crypto.trustapp.repository.PreferenceRepositoryType;
+import com.wallet.crypto.trustapp.repository.SharedPreferenceRepository;
 import com.wallet.crypto.trustapp.ui.widget.adapter.TransactionsAdapter;
 import com.wallet.crypto.trustapp.util.BalanceUtils;
 import com.wallet.crypto.trustapp.util.RootUtil;
@@ -54,6 +56,9 @@ public class TransactionsActivity extends BaseNavigationActivity implements View
     private SystemView systemView;
     private TransactionsAdapter adapter;
     private Dialog dialog;
+    private String currencyAbbr;
+    private String currencySymbol;
+    public PreferenceRepositoryType preferenceRepositoryType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,6 +95,11 @@ public class TransactionsActivity extends BaseNavigationActivity implements View
         viewModel.transactions().observe(this, this::onTransactions);
 
         refreshLayout.setOnRefreshListener(viewModel::fetchTransactions);
+        preferenceRepositoryType = new SharedPreferenceRepository(this.getApplicationContext());
+        currencySymbol = preferenceRepositoryType.getDefaultCurrencySymbol();
+        //currencySymbol = getIntent().getStringExtra(C.CURRENCT_CURRENCY_ABBR);
+        //currencyAbbr = currencyAbbr == null ? C.USD_ABBR : currencyAbbr;
+        currencyAbbr= preferenceRepositoryType.getDefaultCurrencyAbbr();;
     }
 
     private void onTransactionClick(View view, Transaction transaction) {
@@ -170,6 +180,7 @@ public class TransactionsActivity extends BaseNavigationActivity implements View
         return false;
     }
 
+
     private void onBalanceChanged(Map<String, String> balance) {
         ActionBar actionBar = getSupportActionBar();
         NetworkInfo networkInfo = viewModel.defaultNetwork().getValue();
@@ -177,14 +188,14 @@ public class TransactionsActivity extends BaseNavigationActivity implements View
         if (actionBar == null || networkInfo == null || wallet == null) {
             return;
         }
-        if (TextUtils.isEmpty(balance.get(C.USD_SYMBOL))) {
+        if (TextUtils.isEmpty(balance.get(currencyAbbr))) {
             //actionBar.setTitle(balance.get(networkInfo.symbol) + " " + networkInfo.symbol);
             //actionBar.setSubtitle("");
             BalanceUtils.changeDisplayBalance(balance.get(networkInfo.symbol) + " " + networkInfo.symbol, "", findViewById(android.R.id.content));
         } else {
             //actionBar.setTitle("$" + balance.get(C.USD_SYMBOL));
             //actionBar.setSubtitle(balance.get(networkInfo.symbol) + " " + networkInfo.symbol);
-            BalanceUtils.changeDisplayBalance("$" + balance.get(C.USD_SYMBOL), balance.get(networkInfo.symbol) + " " + networkInfo.symbol, findViewById(android.R.id.content));
+            BalanceUtils.changeDisplayBalance(currencySymbol + balance.get(currencyAbbr), balance.get(networkInfo.symbol) + " " + networkInfo.symbol, findViewById(android.R.id.content));
         }
     }
 

@@ -1,5 +1,7 @@
 package com.wallet.crypto.trustapp.interact;
 
+import android.util.Log;
+
 import com.wallet.crypto.trustapp.entity.Wallet;
 import com.wallet.crypto.trustapp.repository.EthereumNetworkRepositoryType;
 import com.wallet.crypto.trustapp.repository.WalletRepositoryType;
@@ -40,7 +42,9 @@ public class GetDefaultWalletBalance {
                         .flatMap(ticker -> {
                             String ethBallance = balances.get(ethereumNetworkRepository.getDefaultNetwork().symbol);
                             balances.put(ethereumNetworkRepository.getDefaultCurrency().currencySymbol, BalanceUtils.ethToUsd(ticker.price, ethBallance, 2));
+                            balances.put(ethereumNetworkRepository.getDefaultCurrency().abbreviation, BalanceUtils.ethToUsd(ticker.price, ethBallance, 2));
                             balances.put(ethereumNetworkRepository.getDefaultNetwork().symbol+"To"+ethereumNetworkRepository.getDefaultCurrency().abbreviation, ticker.price);
+                            //Log.i("Balance", ethereumNetworkRepository.getDefaultNetwork()+" - "+ethereumNetworkRepository.getDefaultCurrency().abbreviation+" - "+ ethereumNetworkRepository.getTicker().toString());
                             return Single.just(balances);
                         })
                         .onErrorResumeNext(throwable -> Single.just(balances)))
