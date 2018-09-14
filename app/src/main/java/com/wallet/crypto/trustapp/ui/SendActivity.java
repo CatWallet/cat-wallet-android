@@ -67,7 +67,9 @@ public class SendActivity extends BaseActivity {
     private String contractAddress;
     private int decimals;
     private String symbol;
+    private String currencyAbbr;
     private String currencySymbol;
+    private String currentCoin;
     private TextInputLayout toInputLayout;
     private TextInputLayout amountInputLayout;
     private TextInputLayout currencyInputLayout;
@@ -111,20 +113,20 @@ public class SendActivity extends BaseActivity {
         symbol = symbol.equals(null) ? C.ETH_SYMBOL : symbol;
 
 
-
-        String currentCurrenty = preferenceRepositoryType.getDefaultCurrency();
-        String currentyCoin = preferenceRepositoryType.getDefaultNetworkSymbol();
+        currentCoin = preferenceRepositoryType.getDefaultNetworkSymbol();
+        currencySymbol = preferenceRepositoryType.getDefaultCurrencySymbol();
         //currencySymbol = getIntent().getStringExtra(C.CURRENCT_CURRENCY_ABBR);
-        currencySymbol = currencySymbol == null ? C.USD_ABBR : currencySymbol;
-        currencySymbol = currentCurrenty;
+        //currencyAbbr = currencyAbbr == null ? C.USD_ABBR : currencyAbbr;
+        currencyAbbr= preferenceRepositoryType.getDefaultCurrencyAbbr();;
+
         sendingTokens = getIntent().getBooleanExtra(C.EXTRA_SENDING_TOKENS, false);
 
         //setTitle(getString(R.string.title_send) + " " + symbol);
 //        amountInputLayout.setHint(getString(R.string.hint_amount));
 //        currencyInputLayout.setHint(getString(R.string.hint_currency_amount));
 
-        amountInputLayout.setHint(currentyCoin + " Amount");
-        currencyInputLayout.setHint(currentCurrenty +" Amount");
+        amountInputLayout.setHint(currentCoin + " Amount");
+        currencyInputLayout.setHint(currencyAbbr +" Amount");
 
         // Populate to address if it has been passed forward
         String toAddress = getIntent().getStringExtra(C.EXTRA_ADDRESS);
@@ -244,7 +246,7 @@ public class SendActivity extends BaseActivity {
     }
     public void setMaxTransferAmount(Map<String, String> balance){
         networkInfo = viewModel.defaultNetwork().getValue();
-        tickerPrice = balance.get(symbol+"To"+currencySymbol);
+        tickerPrice = balance.get(symbol+"To"+currencyAbbr);
         //String gasPrice = BalanceUtils.weiToGwei(gasSettings.gasPrice);// + " " + C.GWEI_UNIT
 
         MaxTransferETH = new BigDecimal(balance.get(networkInfo.symbol)).subtract(networkFee).toPlainString();
@@ -383,14 +385,14 @@ public class SendActivity extends BaseActivity {
         if (actionBar == null || networkInfo == null || wallet == null) {
             return;
         }
-        if (TextUtils.isEmpty(balance.get(C.USD_SYMBOL))) {
+        if (TextUtils.isEmpty(balance.get(currencyAbbr))) {
             //actionBar.setTitle(balance.get(networkInfo.symbol) + " " + networkInfo.symbol);
             //actionBar.setSubtitle("");
             BalanceUtils.changeDisplayBalance(balance.get(networkInfo.symbol) + " " + networkInfo.symbol, "", findViewById(android.R.id.content));
         } else {
             //actionBar.setTitle("$" + balance.get(C.USD_SYMBOL));
             //actionBar.setSubtitle(balance.get(networkInfo.symbol) + " " + networkInfo.symbol);
-            BalanceUtils.changeDisplayBalance("$" + balance.get(C.USD_SYMBOL), balance.get(networkInfo.symbol) + " " + networkInfo.symbol, findViewById(android.R.id.content));
+            BalanceUtils.changeDisplayBalance(currencySymbol + balance.get(currencyAbbr), balance.get(networkInfo.symbol) + " " + networkInfo.symbol, findViewById(android.R.id.content));
         }
     }
 

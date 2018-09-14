@@ -58,14 +58,15 @@ public class TrustWalletTickerService implements TickerService {
     }
 
     public interface ApiClient {
-//        @GET("prices?currency=USD&")
-        String currency = "CNY";
-        String symbol = "ETH";
-        @GET("prices?currency={currency}&symbols={symbol}")
-        Observable<Response<TrustResponse>> fetchTickerPrice(@Path("currency") String currency, @Path("symbol") String symbol);
-//
-//        Observable<Response<TrustResponse>> fetchTickerPrice(@Query("currency") String currency);
-//        Observable<Response<TrustResponse>> fetchTickerPrice(@Query("symbols") String symbols);
+        //@GET("prices?currency=USD&")
+        //String currency = "USD";
+        //String symbol = "ETH";
+        //@GET("prices?currency={currency}&symbols={symbol}")
+        //@GET("prices?")
+        @GET("prices")
+        //Observable<Response<TrustResponse>> fetchTickerPrice(@Path("currency") String currency, @Path("symbol") String symbol);
+        Observable<Response<TrustResponse>> fetchTickerPrice(@Query("currency") String currency, @Query("symbols") String symbol);
+        //Observable<Response<TrustResponse>> fetchTickerPrice(@Query("symbol") String symbol);
     }
 
     private static class TrustResponse {
