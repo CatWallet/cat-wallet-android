@@ -90,7 +90,7 @@ public class EthereumNetworkRepository implements EthereumNetworkRepositoryType 
     private CurrencyInfo getCurrencyInfoByName(String name) {
         if (!TextUtils.isEmpty(name)) {
             for (CurrencyInfo CURRENCY : CURRENCIES) {
-                if (name.equals(CURRENCY.name)) {
+                if (name.equals(CURRENCY.name) || name.equals(CURRENCY.abbreviation)) {
                     return CURRENCY;
                 }
             }
