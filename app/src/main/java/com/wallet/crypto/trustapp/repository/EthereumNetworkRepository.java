@@ -2,6 +2,7 @@ package com.wallet.crypto.trustapp.repository;
 
 import android.net.Network;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.wallet.crypto.trustapp.C;
 import com.wallet.crypto.trustapp.entity.CurrencyInfo;
@@ -77,8 +78,12 @@ public class EthereumNetworkRepository implements EthereumNetworkRepositoryType 
 
 
 	private NetworkInfo getNetworkInfoByName(String name) {
+
+		Log.i("network", name);
 		if (!TextUtils.isEmpty(name)) {
+			Log.i("network", name);
 			for (NetworkInfo NETWORK : NETWORKS) {
+				Log.i("network.name",NETWORK.name);
 				if (name.equals(NETWORK.name)) {
 					return NETWORK;
 				}
