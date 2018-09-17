@@ -24,6 +24,8 @@ public abstract class C {
     public static final String EUR_SYMBOL = "€";
     public static final String HKD_SYMBOL = "HK$";
     public static final String AUD_SYMBOL = "AU$";
+    public static final String RUB_SYMBOL = "\u20BD";
+    public static final String KRW_SYMBOL = "₩";
 
     public static String CURRENCT_CURRENCY_ABBR = "USD";
     public static final String USD_ABBR = "USD";
@@ -31,7 +33,8 @@ public abstract class C {
     public static final String EUR_ABBR = "EUR";
     public static final String HKD_ABBR = "HKD";
     public static final String AUD_ABBR = "AUD";
-
+    public static final String RUB_ABBR = "RUB";
+    public static final String KRW_ABBR = "KRW";
 
     public static String CURRENCT_CURRENCY_Name = "US Dollar";
     public static final String USD_NAME = "US Dollar";
@@ -39,6 +42,8 @@ public abstract class C {
     public static final String EUR_NAME = "Europe Euro";
     public static final String HKD_NAME = "Hongkong Dollar";
     public static final String AUD_NAME = "Australian Dollar";
+    public static final String RUB_NAME = "Russian Ruble";
+    public static final String KRW_NAME = "South Korean Won";
 
     //Coin
     public static String CURRENT_COIN_SYMBOL = "ETH";
