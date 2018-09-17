@@ -35,7 +35,7 @@ public class EthereumNetworkRepository implements EthereumNetworkRepositoryType 
                     "https://api.trustwalletapp.com/",
                     "https://etherscan.io/",1, true),
             new NetworkInfo(CLASSIC_NETWORK_NAME, ETC_SYMBOL,
-                    "https://mewapi.epool.io/",
+                    "https://etc-geth.0xinfra.com/",
                     "https://classic.trustwalletapp.com",
                     "https://gastracker.io",61, true),
             new NetworkInfo(POA_NETWORK_NAME, POA_SYMBOL,
@@ -61,6 +61,8 @@ public class EthereumNetworkRepository implements EthereumNetworkRepositoryType 
             new CurrencyInfo(EUR_NAME, EUR_ABBR, EUR_SYMBOL, true),
             new CurrencyInfo(HKD_NAME, HKD_ABBR, HKD_SYMBOL, true),
             new CurrencyInfo(AUD_NAME, AUD_ABBR, AUD_SYMBOL, true),
+            new CurrencyInfo(RUB_NAME, RUB_ABBR, RUB_SYMBOL, true),
+            new CurrencyInfo(KRW_NAME, KRW_ABBR, KRW_SYMBOL, true),
     };
 
 	public EthereumNetworkRepository(PreferenceRepositoryType preferenceRepository, TickerService tickerService) {
