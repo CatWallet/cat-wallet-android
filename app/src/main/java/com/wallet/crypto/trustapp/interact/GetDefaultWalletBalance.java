@@ -40,6 +40,11 @@ public class GetDefaultWalletBalance {
                         .getTicker()
                         .observeOn(Schedulers.io())
                         .flatMap(ticker -> {
+                            Log.i("network balance name", ethereumNetworkRepository.getDefaultNetwork().name);
+                            Log.i("network balance symbol", ethereumNetworkRepository.getDefaultNetwork().symbol);
+                            Log.i("network balance ticker", ticker.price);
+                            Log.i("network balance ", balances.toString());
+
                             String ethBallance = balances.get(ethereumNetworkRepository.getDefaultNetwork().symbol);
                             balances.put(ethereumNetworkRepository.getDefaultCurrency().currencySymbol, BalanceUtils.ethToUsd(ticker.price, ethBallance, 2));
                             balances.put(ethereumNetworkRepository.getDefaultCurrency().abbreviation, BalanceUtils.ethToUsd(ticker.price, ethBallance, 2));

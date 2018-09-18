@@ -2,6 +2,7 @@ package com.wallet.crypto.trustapp.repository;
 
 import android.net.Network;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.wallet.crypto.trustapp.C;
 import com.wallet.crypto.trustapp.entity.CurrencyInfo;
@@ -34,7 +35,7 @@ public class EthereumNetworkRepository implements EthereumNetworkRepositoryType 
                     "https://api.trustwalletapp.com/",
                     "https://etherscan.io/",1, true),
             new NetworkInfo(CLASSIC_NETWORK_NAME, ETC_SYMBOL,
-                    "https://mewapi.epool.io/",
+                    "https://etc-geth.0xinfra.com/",
                     "https://classic.trustwalletapp.com",
                     "https://gastracker.io",61, true),
             new NetworkInfo(POA_NETWORK_NAME, POA_SYMBOL,
@@ -60,6 +61,8 @@ public class EthereumNetworkRepository implements EthereumNetworkRepositoryType 
             new CurrencyInfo(EUR_NAME, EUR_ABBR, EUR_SYMBOL, true),
             new CurrencyInfo(HKD_NAME, HKD_ABBR, HKD_SYMBOL, true),
             new CurrencyInfo(AUD_NAME, AUD_ABBR, AUD_SYMBOL, true),
+            new CurrencyInfo(RUB_NAME, RUB_ABBR, RUB_SYMBOL, true),
+            new CurrencyInfo(KRW_NAME, KRW_ABBR, KRW_SYMBOL, true),
     };
 
 	public EthereumNetworkRepository(PreferenceRepositoryType preferenceRepository, TickerService tickerService) {
@@ -77,8 +80,12 @@ public class EthereumNetworkRepository implements EthereumNetworkRepositoryType 
 
 
 	private NetworkInfo getNetworkInfoByName(String name) {
+
+		Log.i("network", name);
 		if (!TextUtils.isEmpty(name)) {
+			Log.i("network", name);
 			for (NetworkInfo NETWORK : NETWORKS) {
+				Log.i("network.name",NETWORK.name);
 				if (name.equals(NETWORK.name)) {
 					return NETWORK;
 				}
@@ -90,7 +97,7 @@ public class EthereumNetworkRepository implements EthereumNetworkRepositoryType 
     private CurrencyInfo getCurrencyInfoByName(String name) {
         if (!TextUtils.isEmpty(name)) {
             for (CurrencyInfo CURRENCY : CURRENCIES) {
-                if (name.equals(CURRENCY.name)) {
+                if (name.equals(CURRENCY.name) || name.equals(CURRENCY.abbreviation)) {
                     return CURRENCY;
                 }
             }
