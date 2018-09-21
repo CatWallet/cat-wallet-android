@@ -15,6 +15,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -99,7 +100,7 @@ public class TransactionsActivity extends BaseNavigationActivity implements View
         currencySymbol = preferenceRepositoryType.getDefaultCurrencySymbol();
         //currencySymbol = getIntent().getStringExtra(C.CURRENCT_CURRENCY_ABBR);
         //currencyAbbr = currencyAbbr == null ? C.USD_ABBR : currencyAbbr;
-        currencyAbbr= preferenceRepositoryType.getDefaultCurrencyAbbr();;
+        currencyAbbr= preferenceRepositoryType.getDefaultCurrencyAbbr();
     }
 
     private void onTransactionClick(View view, Transaction transaction) {

@@ -48,7 +48,7 @@ public class EthereumNetworkRepository implements EthereumNetworkRepositoryType 
 					"GoChain",60, true),
             new NetworkInfo(POA_NETWORK_NAME, POA_SYMBOL,
                     "https://core.poa.network",
-                    "https://poa.trustwalletapp.com","poa", 99, false),
+                    "https://poa.trustwalletapp.com","poa", 99, true),
 			new NetworkInfo(KOVAN_NETWORK_NAME, ETH_SYMBOL,
                     "https://kovan.infura.io/TejPKvmSjVukp9t0U4IJ",
                     "https://cat-kovan.herokuapp.com/",
