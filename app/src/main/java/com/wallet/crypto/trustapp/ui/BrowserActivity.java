@@ -124,18 +124,52 @@ public class BrowserActivity extends BaseNavigationActivity {
         checkRoot();
     }
 
+//    @Override
+//    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+////        switch (item.getItemId()) {
+////            case R.id.action_transaction: {
+////                viewModel.showTransactions(this, true);
+////                return true;
+////            }
+////            case R.id.action_my_tokens: {
+////                viewModel.showAddToken(this);
+////                return true;
+////            }
+////        }
+//        return false;
+//    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_settings, menu);
+
+        //NetworkInfo networkInfo = viewModel.defaultNetwork().getValue();
+        //if (networkInfo != null && networkInfo.name.equals(ETHEREUM_NETWORK_NAME)) {
+        //    getMenuInflater().inflate(R.menu.menu_deposit, menu);
+        //}
+        return super.onCreateOptionsMenu(menu);
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.action_transaction: {
-//                viewModel.showTransactions(this, true);
-//                return true;
-//            }
-//            case R.id.action_my_tokens: {
-//                viewModel.showAddToken(this);
-//                return true;
-//            }
-//        }
+        switch (item.getItemId()) {
+            case R.id.action_my_address: {
+                viewModel.showMyAddress(this);
+                return true;
+            }
+            case R.id.action_my_tokens: {
+                viewModel.showTokens(this);
+                return true;
+            }
+            case R.id.action_send: {
+                viewModel.showSend(this);
+                return true;
+            }
+            case R.id.action_my_browser:{
+                viewModel.showBrowser(this, true);
+                return true;
+            }
+        }
         return false;
     }
 

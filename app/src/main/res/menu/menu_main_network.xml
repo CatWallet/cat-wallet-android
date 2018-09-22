@@ -16,4 +16,9 @@
         android:icon="@drawable/token_icon"
         android:title="@string/title_tokens"
         />
+    <item
+        android:id="@+id/action_my_browser"
+        android:icon="@drawable/browser_icon"
+        android:title="@string/title_browser"
+        />
 </menu>
