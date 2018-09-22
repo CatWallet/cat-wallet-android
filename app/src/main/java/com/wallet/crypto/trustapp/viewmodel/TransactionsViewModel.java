@@ -15,6 +15,7 @@ import com.wallet.crypto.trustapp.interact.GetDefaultWalletBalance;
 import com.wallet.crypto.trustapp.router.ExternalBrowserRouter;
 import com.wallet.crypto.trustapp.router.ManageWalletsRouter;
 import com.wallet.crypto.trustapp.router.MyAddressRouter;
+import com.wallet.crypto.trustapp.router.MyBrowserRouter;
 import com.wallet.crypto.trustapp.router.MyTokensRouter;
 import com.wallet.crypto.trustapp.router.SendRouter;
 import com.wallet.crypto.trustapp.router.SettingsRouter;
@@ -46,6 +47,7 @@ public class TransactionsViewModel extends BaseViewModel {
     private final MyAddressRouter myAddressRouter;
     private final MyTokensRouter myTokensRouter;
     private final ExternalBrowserRouter externalBrowserRouter;
+    private final MyBrowserRouter myBrowserRouter;
     private Disposable balanceDisposable;
     private Disposable transactionDisposable;
 
@@ -60,7 +62,8 @@ public class TransactionsViewModel extends BaseViewModel {
             TransactionDetailRouter transactionDetailRouter,
             MyAddressRouter myAddressRouter,
             MyTokensRouter myTokensRouter,
-            ExternalBrowserRouter externalBrowserRouter) {
+            ExternalBrowserRouter externalBrowserRouter,
+            MyBrowserRouter myBrowserRouter) {
         this.findDefaultNetworkInteract = findDefaultNetworkInteract;
         this.findDefaultWalletInteract = findDefaultWalletInteract;
         this.getDefaultWalletBalance = getDefaultWalletBalance;
@@ -72,6 +75,7 @@ public class TransactionsViewModel extends BaseViewModel {
         this.myAddressRouter = myAddressRouter;
         this.myTokensRouter = myTokensRouter;
         this.externalBrowserRouter = externalBrowserRouter;
+        this.myBrowserRouter = myBrowserRouter;
     }
 
     @Override
@@ -165,5 +169,13 @@ public class TransactionsViewModel extends BaseViewModel {
 
     public void openDeposit(Context context, Uri uri) {
         externalBrowserRouter.open(context, uri);
+    }
+
+    public void showExternalBrowser(Context context, Uri uri){
+        externalBrowserRouter.open(context, uri);
+    }
+
+    public void showBrowser(Context context, boolean isCleanStack){
+        myBrowserRouter.open(context, isCleanStack);
     }
 }
