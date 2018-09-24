@@ -13,6 +13,8 @@ public abstract class C {
     public static final String KOVAN_NETWORK_NAME = "Kovan (Test)";
     public static final String ROPSTEN_NETWORK_NAME = "Ropsten (Test)";
     public static final String RINKEBY_NETWORK_NAME = "Rinkeby (Test)";
+    public static final String CALLISTO_NETWORK_NAME = "Callisto";
+    public static final String GOCHAIN_NETWORK_NAME = "GoChain";
 
     public static final String ETHEREUM_TIKER = "ethereum";
     public static final String POA_TIKER = "poa";
@@ -50,6 +52,8 @@ public abstract class C {
     public static final String ETH_SYMBOL = "ETH";
     public static final String POA_SYMBOL = "POA";
     public static final String ETC_SYMBOL = "ETC";
+    public static final String CLO_SYMBOL = "CLO";
+    public static final String GO_SYMBOL = "GO";
 
     public static final String GWEI_UNIT = "Gwei";
 
