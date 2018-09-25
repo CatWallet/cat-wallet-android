@@ -169,6 +169,12 @@ public class SettingsFragment extends PreferenceFragment
         });
     }
 
+//    final Preference myAddress = findPreference("pref_myAddress");
+//    myAddress.setOnPreferenceClickListener(preference -> {
+//
+//
+//    });
+
     private void rateThisApp() {
         Uri uri = Uri.parse("market://details?id=" + getActivity().getPackageName());
         Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);

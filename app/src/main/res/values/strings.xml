@@ -213,6 +213,7 @@
     <string name="action_next">Next</string>
     <string name="action_edit">Edit</string>
     <string name="action_save">Save</string>
+    <string name="action_home">Home</string>
     <!-- Subject -->
     <string name="subject_transaction_detail">Transaction detail</string>
     <string name="error_fail_load_transaction">Failed to load transaction list</string>
