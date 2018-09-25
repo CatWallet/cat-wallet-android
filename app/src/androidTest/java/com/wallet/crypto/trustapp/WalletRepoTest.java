@@ -100,7 +100,6 @@ public class WalletRepoTest {
 		subscriber.awaitTerminalEvent();
 		subscriber.assertComplete();
 		Assert.assertEquals(subscriber.valueCount(), 1);
-		Log.d("EXPORT_ACC", "Val: " + subscriber.values().get(0));
 		String val = subscriber.values().get(0);
 		try {
 			JSONObject json = new JSONObject(val);
