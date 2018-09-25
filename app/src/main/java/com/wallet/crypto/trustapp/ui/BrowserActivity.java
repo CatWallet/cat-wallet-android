@@ -85,12 +85,12 @@ public class BrowserActivity extends BaseNavigationActivity {
 
         toolbar();
         setTitle(getString(R.string.title_browser));
-        initBottomNavigation();
+        //initBottomNavigation();
         dissableDisplayHomeAsUp();
 
         viewModel = ViewModelProviders.of(this, browserViewModelFactory)
                 .get(BrowserViewModel.class);
-        setBottomMenu(R.menu.menu_main_network);
+        //setBottomMenu(R.menu.menu_main_network);
 
         editText = findViewById(R.id.web_edit_text);
         setBrowseText(DEFAULT_WEB_URL);
@@ -128,9 +128,10 @@ public class BrowserActivity extends BaseNavigationActivity {
     }
 
 
-    public void clickBrowserLoad(){
-        loadEditText();
+    public void clickBrowserLoad(View view){
+        this.loadEditText();
     }
+
     public void clickBackHome(View view){
         viewModel.showTransactions(this,true);
         Log.i("debug","home button clicked");
