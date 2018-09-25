@@ -128,9 +128,10 @@ public class BrowserActivity extends BaseNavigationActivity {
     }
 
 
-    public void clickBrowserLoad(){
-        loadEditText();
+    public void clickBrowserLoad(View view){
+        this.loadEditText();
     }
+
     public void clickBackHome(View view){
         viewModel.showTransactions(this,true);
         Log.i("debug","home button clicked");

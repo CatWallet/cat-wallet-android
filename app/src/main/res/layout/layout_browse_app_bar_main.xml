@@ -47,15 +47,13 @@
             android:background="@drawable/browse_edit_text_background"
             />
 
-        <ImageView
-            android:id="@+id/browserLoad"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:visibility="visible"
-            android:onClick="clickBrowserLoad"
-            app:srcCompat="@drawable/ic_chevron_right_black_24dp"
-            />
+            <ImageView
+                android:id="@+id/browserLoad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="clickBrowserLoad"
+                android:padding="10dp"
+                app:srcCompat="@drawable/ic_chevron_right_black_24dp" />
         </LinearLayout>
 
     </android.support.v7.widget.Toolbar>
