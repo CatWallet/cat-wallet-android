@@ -97,4 +97,5 @@ public class BrowserViewModel extends BaseViewModel {
     public void showBrowser(Context context, boolean isCleanStack){
         myBrowserRouter.open(context, isCleanStack);
     }
+
 }
