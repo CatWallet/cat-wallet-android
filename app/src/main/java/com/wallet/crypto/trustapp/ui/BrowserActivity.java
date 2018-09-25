@@ -19,6 +19,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -126,61 +127,13 @@ public class BrowserActivity extends BaseNavigationActivity {
         checkRoot();
     }
 
-//    @Override
-//    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-////        switch (item.getItemId()) {
-////            case R.id.action_transaction: {
-////                viewModel.showTransactions(this, true);
-////                return true;
-////            }
-////            case R.id.action_my_tokens: {
-////                viewModel.showAddToken(this);
-////                return true;
-////            }
-////        }
-//        return false;
-//    }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_settings, menu);
-//
-//        //NetworkInfo networkInfo = viewModel.defaultNetwork().getValue();
-//        //if (networkInfo != null && networkInfo.name.equals(ETHEREUM_NETWORK_NAME)) {
-//        //    getMenuInflater().inflate(R.menu.menu_deposit, menu);
-//        //}
-//        return super.onCreateOptionsMenu(menu);
-//    }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            // Respond to the action bar's Up/Home button
-//            case android.R.id.home:
-//                NavUtils.navigateUpFromSameTask(this);
-//                return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.send_menu, menu);
-
-        return super.onCreateOptionsMenu(menu);
+    public void clickBrowserLoad(){
+        loadEditText();
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_next: {
-                Intent intent = new Intent(this, TransactionsActivity.class);
-                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                this.startActivity(intent);
-            }
-            break;
-        }
-        return super.onOptionsItemSelected(item);
+    public void clickBackHome(View view){
+        viewModel.showTransactions(this,true);
+        Log.i("debug","home button clicked");
     }
 
     @Override
