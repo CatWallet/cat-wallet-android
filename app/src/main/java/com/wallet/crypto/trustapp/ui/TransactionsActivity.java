@@ -29,6 +29,7 @@ import com.wallet.crypto.trustapp.entity.Transaction;
 import com.wallet.crypto.trustapp.entity.Wallet;
 import com.wallet.crypto.trustapp.repository.PreferenceRepositoryType;
 import com.wallet.crypto.trustapp.repository.SharedPreferenceRepository;
+import com.wallet.crypto.trustapp.router.MyAddressRouter;
 import com.wallet.crypto.trustapp.ui.widget.adapter.TransactionsAdapter;
 import com.wallet.crypto.trustapp.util.BalanceUtils;
 import com.wallet.crypto.trustapp.util.RootUtil;
@@ -185,6 +186,10 @@ public class TransactionsActivity extends BaseNavigationActivity implements View
         return false;
     }
 
+
+    public void clickMyAddress(View view){
+        viewModel.showMyAddress(this);
+    }
 
     private void onBalanceChanged(Map<String, String> balance) {
         ActionBar actionBar = getSupportActionBar();
