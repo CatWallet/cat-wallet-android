@@ -3,17 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android" >
-
-        <Preference
+    <Preference
             android:key="pref_wallet"
             android:icon="@mipmap/settings_backup"
             android:title="@string/action_wallets"
             />
 
-        <Preference
-            android:title="@string/title_my_address"
-            android:icon="@mipmap/settings_open_source">
-        </Preference>
         <ListPreference
             android:key="pref_rpcServer"
             android:title="@string/network_label"

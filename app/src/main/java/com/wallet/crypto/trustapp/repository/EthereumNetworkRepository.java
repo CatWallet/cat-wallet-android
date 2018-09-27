@@ -89,11 +89,8 @@ public class EthereumNetworkRepository implements EthereumNetworkRepositoryType 
 
 	private NetworkInfo getNetworkInfoByName(String name) {
 
-		Log.i("network", name);
 		if (!TextUtils.isEmpty(name)) {
-			Log.i("network", name);
 			for (NetworkInfo NETWORK : NETWORKS) {
-				Log.i("network.name",NETWORK.name);
 				if (name.equals(NETWORK.name)) {
 					return NETWORK;
 				}

@@ -169,11 +169,6 @@ public class SettingsFragment extends PreferenceFragment
         });
     }
 
-//    final Preference myAddress = findPreference("pref_myAddress");
-//    myAddress.setOnPreferenceClickListener(preference -> {
-//
-//
-//    });
 
     private void rateThisApp() {
         Uri uri = Uri.parse("market://details?id=" + getActivity().getPackageName());
@@ -193,7 +188,6 @@ public class SettingsFragment extends PreferenceFragment
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
                                           String key) {
-        Log.i("network Preference:","key:"+key+" "+sharedPreferences.getString(key,""));
         if (key.equals("pref_rpcServer")) {
             Preference rpcServerPref = findPreference(key);
             // Set summary
@@ -201,10 +195,8 @@ public class SettingsFragment extends PreferenceFragment
             rpcServerPref.setSummary(selectedRpcServer);
             NetworkInfo[] networks = ethereumNetworkRepository.getAvailableNetworkList();
             for (NetworkInfo networkInfo : networks) {
-                Log.i("network all:", networkInfo.name);
                 if (networkInfo.name.equals(selectedRpcServer)) {
                     ethereumNetworkRepository.setDefaultNetworkInfo(networkInfo);
-                    Log.i("network Change:", networkInfo.name+"\n\n\n");
                     return;
                 }
             }

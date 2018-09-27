@@ -201,9 +201,9 @@ public class KS {
 			fos.write(data);
 			return true;
 		} catch (FileNotFoundException e) {
-			System.out.println("File not found" + e);
+			//System.out.println("File not found" + e);
 		} catch (IOException ioe) {
-			System.out.println("Exception while writing file " + ioe);
+			//System.out.println("Exception while writing file " + ioe);
 		} finally {
 			// close the streams using close method
 			try {
@@ -211,7 +211,7 @@ public class KS {
 					fos.close();
 				}
 			} catch (IOException ioe) {
-				System.out.println("Error while closing stream: " + ioe);
+				//System.out.println("Error while closing stream: " + ioe);
 			}
 		}
 		return false;

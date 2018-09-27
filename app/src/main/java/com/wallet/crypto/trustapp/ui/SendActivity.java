@@ -318,8 +318,8 @@ public class SendActivity extends BaseActivity {
                     toAddressText.setText(extracted_address);
                 }
             } else {
-                Log.e("SEND", String.format(getString(R.string.barcode_error_format),
-                        CommonStatusCodes.getStatusCodeString(resultCode)));
+                //Log.e("SEND", String.format(getString(R.string.barcode_error_format),
+                 //       CommonStatusCodes.getStatusCodeString(resultCode)));
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
