@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     >
 
-    <include layout="@layout/layout_app_bar_send" />
+    <include layout="@layout/layout_app_bar" />
     <LinearLayout
         android:padding="16dp"
         android:orientation="vertical"
