@@ -127,5 +127,5 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(":tn")
     // Parse
-    implementation "com.github.parse-community.Parse-SDK-Android:parse:$project.parseVersion"
+    //implementation "com.github.parse-community.Parse-SDK-Android:parse:$project.parseVersion"
 }

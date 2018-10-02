@@ -11,7 +11,7 @@ import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
 import io.realm.Realm;
-import com.parse.Parse;
+//import com.parse.Parse;
 
 public class App extends MultiDexApplication implements HasActivityInjector {
 
