@@ -80,9 +80,11 @@ public class EthereumNetworkRepository implements EthereumNetworkRepositoryType 
         defaultCurrency = getCurrencyInfoByName(preferences.getDefaultCurrency());
 		if (defaultNetwork == null) {
 			defaultNetwork = NETWORKS[0];
+			this.setDefaultNetworkInfo(NETWORKS[0]);
 		}
 		if(defaultCurrency == null){
 		    defaultCurrency = CURRENCIES[0];
+		    this.setDefaultCurrencyInfo(CURRENCIES[0]);
         }
 	}
 

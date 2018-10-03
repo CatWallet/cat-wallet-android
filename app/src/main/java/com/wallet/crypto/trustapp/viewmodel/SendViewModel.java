@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 
 import com.wallet.crypto.trustapp.R;
+import com.wallet.crypto.trustapp.entity.CurrencyInfo;
 import com.wallet.crypto.trustapp.entity.GasSettings;
 import com.wallet.crypto.trustapp.entity.NetworkInfo;
 import com.wallet.crypto.trustapp.entity.Transaction;
@@ -29,6 +30,7 @@ public class SendViewModel extends BaseViewModel {
     private Disposable balanceDisposable;
     private static final long GET_BALANCE_INTERVAL = 8;
     private final MutableLiveData<NetworkInfo> defaultNetwork = new MutableLiveData<>();
+    private final MutableLiveData<CurrencyInfo> defaultCurrency= new MutableLiveData<>();
     private final MutableLiveData<Map<String, String>> defaultWalletBalance = new MutableLiveData<>();
     private final FindDefaultNetworkInteract findDefaultNetworkInteract;
     private final FindDefaultWalletInteract findDefaultWalletInteract;
@@ -49,6 +51,9 @@ public class SendViewModel extends BaseViewModel {
     public LiveData<NetworkInfo> defaultNetwork() {
         return defaultNetwork;
     }
+    public LiveData<CurrencyInfo> defaultCurrency() {
+        return defaultCurrency;
+    }
 
     public LiveData<Wallet> defaultWallet() {
         return defaultWallet;
@@ -67,6 +72,9 @@ public class SendViewModel extends BaseViewModel {
         disposable = findDefaultNetworkInteract
                 .find()
                 .subscribe(this::onDefaultNetwork, this::onError);
+        findDefaultNetworkInteract
+                .findCurrency()
+                .subscribe(this::onDefaultCurrency, this::onError);
     }
 
     public void getBalance() {
@@ -79,6 +87,13 @@ public class SendViewModel extends BaseViewModel {
 
     private void onDefaultNetwork(NetworkInfo networkInfo) {
         defaultNetwork.postValue(networkInfo);
+        disposable = findDefaultWalletInteract
+                .find()
+                .subscribe(this::onDefaultWallet, this::onError);
+    }
+
+    private void onDefaultCurrency(CurrencyInfo currencyInfo) {
+        defaultCurrency.postValue(currencyInfo);
         disposable = findDefaultWalletInteract
                 .find()
                 .subscribe(this::onDefaultWallet, this::onError);

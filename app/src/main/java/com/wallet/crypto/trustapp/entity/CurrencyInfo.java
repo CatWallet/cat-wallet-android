@@ -1,10 +1,10 @@
 package com.wallet.crypto.trustapp.entity;
 
 public class CurrencyInfo {
-    public final String name;
-    public final String abbreviation;
-    public final String currencySymbol;
-    public final boolean isMainCurrency;
+    public String name = "US Dollar";
+    public String abbreviation = "USD";
+    public String currencySymbol = "$";
+    public boolean isMainCurrency = true;
     //public final String backendUrl; //save for later
 
     public CurrencyInfo(
