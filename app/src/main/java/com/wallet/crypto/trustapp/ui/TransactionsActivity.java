@@ -2,6 +2,7 @@ package com.wallet.crypto.trustapp.ui;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 
 import com.wallet.crypto.trustapp.C;
 import com.wallet.crypto.trustapp.R;
+import com.wallet.crypto.trustapp.entity.CurrencyInfo;
 import com.wallet.crypto.trustapp.entity.ErrorEnvelope;
 import com.wallet.crypto.trustapp.entity.NetworkInfo;
 import com.wallet.crypto.trustapp.entity.Transaction;
@@ -40,6 +42,7 @@ import com.wallet.crypto.trustapp.widget.DepositView;
 import com.wallet.crypto.trustapp.widget.EmptyTransactionsView;
 import com.wallet.crypto.trustapp.widget.SystemView;
 
+import java.util.Currency;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -92,16 +95,20 @@ public class TransactionsActivity extends BaseNavigationActivity implements View
         viewModel.progress().observe(this, systemView::showProgress);
         viewModel.error().observe(this, this::onError);
         viewModel.defaultNetwork().observe(this, this::onDefaultNetwork);
+        viewModel.defaultCurrency().observe(this, this::onDefaultCurrency);
         viewModel.defaultWalletBalance().observe(this, this::onBalanceChanged);
         viewModel.defaultWallet().observe(this, this::onDefaultWallet);
         viewModel.transactions().observe(this, this::onTransactions);
 
         refreshLayout.setOnRefreshListener(viewModel::fetchTransactions);
         preferenceRepositoryType = new SharedPreferenceRepository(this.getApplicationContext());
-        currencySymbol = preferenceRepositoryType.getDefaultCurrencySymbol();
+//        if(preferenceRepositoryType.getDefaultCurrency() == null){
+//            viewModel.defaultCurrency();
+//        }
+        currencySymbol = preferenceRepositoryType.getDefaultCurrencySymbol() == null ? "$":preferenceRepositoryType.getDefaultCurrencySymbol();;
         //currencySymbol = getIntent().getStringExtra(C.CURRENCT_CURRENCY_ABBR);
         //currencyAbbr = currencyAbbr == null ? C.USD_ABBR : currencyAbbr;
-        currencyAbbr= preferenceRepositoryType.getDefaultCurrencyAbbr();
+        currencyAbbr= preferenceRepositoryType.getDefaultCurrencyAbbr() == null ? "USD":preferenceRepositoryType.getDefaultCurrencyAbbr();
     }
 
     private void onTransactionClick(View view, Transaction transaction) {
@@ -226,6 +233,10 @@ public class TransactionsActivity extends BaseNavigationActivity implements View
     private void onDefaultNetwork(NetworkInfo networkInfo) {
         adapter.setDefaultNetwork(networkInfo);
         setBottomMenu(R.menu.menu_main_network);
+    }
+
+    private void onDefaultCurrency(CurrencyInfo currencyInfo){
+        adapter.setDefaultCurrency(currencyInfo);
     }
 
     private void onError(ErrorEnvelope errorEnvelope) {

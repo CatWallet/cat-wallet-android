@@ -29,6 +29,7 @@ public class TransactionHolder extends BinderViewHolder<Transaction> implements 
 
     public static final String DEFAULT_ADDRESS_ADDITIONAL = "default_address";
     public static final String DEFAULT_SYMBOL_ADDITIONAL = "network_symbol";
+    public static final String DEFAULT_CURRENCY_ADDITIONAL = "currency_abbr";
 
     private final TextView type;
     private final TextView address;
