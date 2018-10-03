@@ -16,7 +16,7 @@ public class FindDefaultNetworkInteract {
     }
 
     public Single<NetworkInfo> find() {
-        findCurrency();
+        //findCurrency();
         return Single.just(ethereumNetworkRepository.getDefaultNetwork())
                 .observeOn(AndroidSchedulers.mainThread());
     }

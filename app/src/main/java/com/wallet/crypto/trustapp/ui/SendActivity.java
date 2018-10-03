@@ -110,7 +110,7 @@ public class SendActivity extends BaseActivity {
         decimals = getIntent().getIntExtra(C.EXTRA_DECIMALS, C.ETHER_DECIMALS);
         symbol = getIntent().getStringExtra(C.EXTRA_SYMBOL);
         symbol = preferenceRepositoryType.getDefaultNetworkSymbol();
-        symbol = symbol.equals(null) ? C.ETH_SYMBOL : symbol;
+        symbol = symbol==null ? C.ETH_SYMBOL : symbol;
 
 
         currentCoin = preferenceRepositoryType.getDefaultNetworkSymbol();
