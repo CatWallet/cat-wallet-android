@@ -1,5 +1,6 @@
 package com.wallet.crypto.trustapp.ui;
 
+import android.app.Application;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +13,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.wallet.crypto.trustapp.C;
 import com.wallet.crypto.trustapp.R;
@@ -79,6 +81,21 @@ public class SettingsFragment extends PreferenceFragment
         setCurrencyPreferenceData(listCurrencyPreference  );
         listCurrencyPreference.setOnPreferenceClickListener(currencyPreference -> {
             setCurrencyPreferenceData(listCurrencyPreference);
+            return false;
+        });
+
+
+        final Preference linkPhone = findPreference("pref_mobile_account");
+        linkPhone.setOnPreferenceClickListener(preference -> {
+            Intent intent;
+            try{
+                intent = new Intent(getActivity(), MobileLoginActivity.class);
+                startActivity(intent);
+            }catch (Exception e){
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(this.getContext(), "111", duration);
+                toast.show();
+            }
             return false;
         });
 

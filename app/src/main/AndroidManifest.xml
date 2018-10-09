@@ -7,6 +7,11 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
         android:name=".App"
         android:allowBackup="false"
@@ -22,23 +27,20 @@
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.WalletsActivity"
             android:label="@string/title_account_list" />
-
         <activity
             android:name=".ui.ImportWalletActivity"
             android:label="@string/title_import"
             android:windowSoftInputMode="stateAlwaysVisible|adjustResize" />
-
         <activity
             android:name=".ui.TransactionsActivity"
             android:label="@string/title_import" />
-
         <activity
             android:name=".ui.SettingsActivity"
             android:label="@string/title_activity_settings" />
@@ -60,51 +62,48 @@
         <activity
             android:name=".ui.BrowserActivity"
             android:label="@string/title_browser"
-            android:windowSoftInputMode="adjustNothing"/>
-
+            android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".ui.ConfirmationActivity"
             android:label="@string/title_activity_confirmation" />
-
         <activity
             android:name=".ui.AddTokenActivity"
-            android:label="@string/title_add_token"
-            />
-
+            android:label="@string/title_add_token" />
         <activity
             android:name=".ui.barcode.BarcodeCaptureActivity"
             android:label="@string/title_activity_barcode" />
-
         <activity
             android:name=".ui.GasSettingsActivity"
             android:label="@string/title_send_settings" />
 
-         <meta-data
+        <meta-data
             android:name="io.fabric.ApiKey"
             android:value="9f930980e74fbe994d3c64e6055c86bc4735b39e" />
 
-        <!--Firebase used for push notifications-->
-        <service
-            android:name=".service.MyFirebaseMessagingService">
+        <!-- Firebase used for push notifications -->
+        <service android:name=".service.MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <!-- Set custom default icon. This is used when no icon is set for incoming notification messages.
-         See README(https://goo.gl/l4GJaQ) for more. -->
+        <!--
+         Set custom default icon. This is used when no icon is set for incoming notification messages.
+         See README(https://goo.gl/l4GJaQ) for more.
+        -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_splash" />
-        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
-             notification message. See README(https://goo.gl/6BKBk7) for more. -->
+        <!--
+             Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more.
+        -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/default_notification_channel_id"/>
+            android:value="@string/default_notification_channel_id" />
         <meta-data
             android:name="firebase_messaging_auto_init_enabled"
             android:value="false" />
@@ -112,6 +111,14 @@
             android:name="firebase_analytics_collection_enabled"
             android:value="false" />
 
+        <activity
+            android:name=".ui.MobileLoginActivity"
+            android:label="@string/title_activity_mobile_login"
+            android:parentActivityName=".ui.SettingsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.wallet.crypto.trustapp.ui.SettingsActivity" />
+        </activity>
     </application>
 
 </manifest>
