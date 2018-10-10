@@ -21,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +32,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,12 +63,14 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
+    private SendCodeTask mSendTask = null;
 
     // UI references.
     private AutoCompleteTextView mMobileView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private Button mSendCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +105,29 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+        mSendCode = (Button) findViewById(R.id.fetchActivationCode);
+        mSendCode.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MobileLoginActivity.this, "click send code", Toast.LENGTH_SHORT).show();
+
+                mSendCode.setEnabled(false);
+                for(int i = 30; i >0; i--){
+                    mSendCode.setText("("+i+")");
+                    mSendTask = new SendCodeTask();
+                    mSendTask.execute((Void) null);
+                    try {
+                        // Simulate network access.
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        Log.e("ERROR", "Send Code wait 1000 Error");
+                    }
+                }
+
+                mSendCode.setEnabled(true);
+            }
+
+        });
     }
 
     private void populateAutoComplete() {
@@ -329,11 +356,11 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mEmail;
+        private final String mPhone;
         private final String mPassword;
 
         UserLoginTask(String email, String password) {
-            mEmail = email;
+            mPhone = email;
             mPassword = password;
         }
 
@@ -350,7 +377,7 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
 
             for (String credential : DUMMY_CREDENTIALS) {
                 String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
+                if (pieces[0].equals(mPhone)) {
                     // Account exists, return true if the password matches.
                     return pieces[1].equals(mPassword);
                 }
@@ -378,6 +405,65 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
             mAuthTask = null;
             showProgress(false);
         }
+    }
+
+
+
+
+    /**
+     * Represents an asynchronous login/registration task used to authenticate
+     * the user.
+     */
+    public class SendCodeTask extends AsyncTask<Void, Void, Boolean> {
+
+        private final String mPhone;
+
+        SendCodeTask(String phone) {
+            mPhone = phone;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            // TODO: attempt authentication against a network service.
+//
+//            try {
+//                // Simulate network access.
+//                Thread.sleep(2000);
+//            } catch (InterruptedException e) {
+//                return false;
+//            }
+//
+//            for (String credential : DUMMY_CREDENTIALS) {
+//                String[] pieces = credential.split(":");
+//                if (pieces[0].equals(mPhone)) {
+//                    // Account exists, return true if the password matches.
+//                    return pieces[1].equals(mPassword);
+//                }
+//            }
+//
+//            // TODO: register the new account here.
+//            return true;
+        }
+//
+//        @Override
+//        protected void onPostExecute(final Boolean success) {
+//            mAuthTask = null;
+//            showProgress(false);
+//
+//            if (success) {
+//                finish();
+//            } else {
+//                mPasswordView.setError(getString(R.string.error_incorrect_password));
+//                mPasswordView.requestFocus();
+//            }
+//        }
+//
+//        @Override
+//        protected void onCancelled() {
+//            mAuthTask = null;
+//            showProgress(false);
+//        }
+//    }
     }
 }
 
