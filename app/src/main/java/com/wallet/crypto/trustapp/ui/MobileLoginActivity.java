@@ -20,7 +20,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -34,9 +36,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.parse.FunctionCallback;
+import com.parse.ParseCloud;
+import com.parse.ParseException;
 import com.wallet.crypto.trustapp.R;
 import com.wallet.crypto.trustapp.router.SettingsRouter;
 
@@ -71,6 +79,9 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
     private View mProgressView;
     private View mLoginFormView;
     private Button mSendCode;
+    private EditText mPhoneNumber;
+    private String phone;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,25 +117,50 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
         mSendCode = (Button) findViewById(R.id.fetchActivationCode);
+        mPhoneNumber = (EditText) findViewById(R.id.phone_number);
+
+
+        mPhoneNumber.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                phone = mPhoneNumber.getText().toString();
+            }
+        });
+
         mSendCode.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(MobileLoginActivity.this, "click send code", Toast.LENGTH_SHORT).show();
+                /***
+                 * To do: add concurrency (May use RxJava) for send code button parse work and counting remain time
+                 */
 
-                mSendCode.setEnabled(false);
-                for(int i = 30; i >0; i--){
-                    mSendCode.setText("("+i+")");
-                    mSendTask = new SendCodeTask();
-                    mSendTask.execute((Void) null);
-                    try {
-                        // Simulate network access.
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        Log.e("ERROR", "Send Code wait 1000 Error");
-                    }
+                if(checkValidInputPhone()){
+                    Log.i("debug phone","check pass");
+                    sendCodeFromParse(phone);
                 }
 
-                mSendCode.setEnabled(true);
+                Log.i("debug phone","end");
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        sendCodeFunc(phone, 5);
+//                    }
+//                }).start();
+                //mSendTask = new SendCodeTask(phone, 5);
+                //mSendTask.execute((Void) null);
             }
 
         });
@@ -237,6 +273,8 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
             cancel = true;
         }
 
+
+
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
@@ -245,9 +283,33 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(phoneNumber, password);
+            HashMap<String, String> params = new HashMap<String, String>();
+            params.put("code", mPasswordView.getText().toString());
+            params.put("phone", phone);
+            mAuthTask = new UserLoginTask(params);
             mAuthTask.execute((Void) null);
         }
+    }
+
+    private boolean checkValidInputPhone(){
+
+        View focusView = null;
+        boolean isValid = true;
+        Log.i("debug phone", phone);
+        if(TextUtils.isEmpty(this.phone)) {
+            mMobileView.setError(getString(R.string.error_field_required));
+            focusView = mMobileView;
+            isValid = false;
+        }else if (!isPhoneValid(this.phone)) {
+            mMobileView.setError(getString(R.string.error_invalid_phone_number));
+            focusView = mMobileView;
+            isValid = false;
+        }
+        if(!isValid){
+            focusView.requestFocus();
+        }
+
+        return isValid;
     }
 
     private boolean isPhoneValid(String phone) {
@@ -318,7 +380,7 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
         List<String> phones = new ArrayList<>();
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            phones.add(cursor.getString(ProfileQuery.ADDRESS));
+            phones.add(cursor.getString(ProfileQuery.NUMBER));
             cursor.moveToNext();
         }
 
@@ -342,11 +404,11 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
 
     private interface ProfileQuery {
         String[] PROJECTION = {
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
+                ContactsContract.CommonDataKinds.Phone.NUMBER,
+                ContactsContract.CommonDataKinds.Phone.IS_PRIMARY,
         };
 
-        int ADDRESS = 0;
+        int NUMBER= 0;
         int IS_PRIMARY = 1;
     }
 
@@ -356,35 +418,49 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mPhone;
-        private final String mPassword;
+//        private final String mPhone;
+//        private final String mPassword;
+        HashMap<String, String> params;
+        boolean LoginSuccess;
 
-        UserLoginTask(String email, String password) {
-            mPhone = email;
-            mPassword = password;
+        UserLoginTask(HashMap<String, String> params) {
+           this.params = params;
+           LoginSuccess = false;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mPhone)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
+            ParseCloud.callFunctionInBackground("logIn", this.params, new FunctionCallback<String>() {
+                @Override
+                public void done(String ret, ParseException e) {
+                    if (e == null) {
+                        Log.i("Link Parse", "Login Success");
+                        Toast.makeText(MobileLoginActivity.this, "Link Success...", Toast.LENGTH_LONG).show();
+                        LoginSuccess = true;
+                    }else{
+                        Log.e("Link Parse", e.getMessage());
+                        Toast.makeText(MobileLoginActivity.this, "Link failed, please check your code and internet connection", Toast.LENGTH_LONG).show();
+                    }
                 }
-            }
+            });
+//            try {
+//                // Simulate network access.
+//                Thread.sleep(2000);
+//            } catch (InterruptedException e) {
+//                return false;
+//            }
+//
+//            for (String credential : DUMMY_CREDENTIALS) {
+//                String[] pieces = credential.split(":");
+//                if (pieces[0].equals(mPhone)) {
+//                    // Account exists, return true if the password matches.
+//                    return pieces[1].equals(mPassword);
+//                }
+//            }
 
             // TODO: register the new account here.
-            return true;
+            return LoginSuccess;
         }
 
         @Override
@@ -410,6 +486,25 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
 
 
 
+    protected Boolean sendCodeFunc(String phone, int waitTime) {
+        if(!mSendCode.isEnabled()) return false;
+        try {
+
+            Toast.makeText(MobileLoginActivity.this, "Send Code", Toast.LENGTH_LONG).show();
+            // Simulate network access.
+            mSendCode.setEnabled(false);
+            for(int i = waitTime; i>0;i--){
+                mSendCode.setText(i+"s");
+                Thread.sleep(1000);
+            }
+            mSendCode.setEnabled(true);
+            mSendCode.setText("Send Code");
+            Toast.makeText(MobileLoginActivity.this, "Send Code End", Toast.LENGTH_SHORT).show();
+        } catch (InterruptedException e) {
+            return false;
+        }
+        return true;
+    }
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -417,53 +512,68 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
     public class SendCodeTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mPhone;
+        private int waitTime;
 
-        SendCodeTask(String phone) {
+        SendCodeTask(String phone, int wait) {
             mPhone = phone;
+            waitTime = wait;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-//
-//            try {
-//                // Simulate network access.
-//                Thread.sleep(2000);
-//            } catch (InterruptedException e) {
-//                return false;
-//            }
-//
-//            for (String credential : DUMMY_CREDENTIALS) {
-//                String[] pieces = credential.split(":");
-//                if (pieces[0].equals(mPhone)) {
-//                    // Account exists, return true if the password matches.
-//                    return pieces[1].equals(mPassword);
-//                }
-//            }
-//
-//            // TODO: register the new account here.
-//            return true;
+            if(!mSendCode.isEnabled()) return false;
+            try {
+
+                // Simulate network access.
+                mSendCode.setEnabled(false);
+                for(int i = waitTime; i>0;i--){
+                    mSendCode.setText(i+"s");
+                    Thread.sleep(1000);
+                }
+                mSendCode.setEnabled(true);
+                mSendCode.setText("Send Code");
+            } catch (InterruptedException e) {
+                return false;
+            }
+            return true;
         }
-//
-//        @Override
-//        protected void onPostExecute(final Boolean success) {
-//            mAuthTask = null;
-//            showProgress(false);
-//
-//            if (success) {
-//                finish();
-//            } else {
-//                mPasswordView.setError(getString(R.string.error_incorrect_password));
-//                mPasswordView.requestFocus();
-//            }
-//        }
-//
-//        @Override
-//        protected void onCancelled() {
-//            mAuthTask = null;
-//            showProgress(false);
-//        }
-//    }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            mSendTask = null;
+
+            Toast.makeText(MobileLoginActivity.this, "Send Code", Toast.LENGTH_LONG).show();
+            if (success) {
+                Toast.makeText(MobileLoginActivity.this, "Send Code End", Toast.LENGTH_SHORT).show();
+                finish();
+            } else {
+                Toast.makeText(MobileLoginActivity.this, "Send Code Error", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mSendTask = null;
+        }
+    }
+
+    public void sendCodeFromParse(String phone){
+        HashMap<String, String> params = new HashMap();
+        params.put("phone", phone);
+
+        ParseCloud.callFunctionInBackground("sendCode", params, new FunctionCallback<String>() {
+            @Override
+            public void done(String ret, ParseException e) {
+                if (e == null) {
+                    Log.i("Link Parse", "Send Code Success");
+                    Toast.makeText(MobileLoginActivity.this, "Code has been send...", Toast.LENGTH_LONG).show();
+                }else{
+                    Log.e("Link Parse", e.getMessage());
+                    Toast.makeText(MobileLoginActivity.this, "Code send failed, please check your internet connection", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
     }
 }
 
