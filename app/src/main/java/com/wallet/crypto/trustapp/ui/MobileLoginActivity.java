@@ -431,19 +431,25 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-            ParseCloud.callFunctionInBackground("logIn", this.params, new FunctionCallback<String>() {
-                @Override
-                public void done(String ret, ParseException e) {
-                    if (e == null) {
-                        Log.i("Link Parse", "Login Success");
-                        Toast.makeText(MobileLoginActivity.this, "Link Success...", Toast.LENGTH_LONG).show();
-                        LoginSuccess = true;
-                    }else{
-                        Log.e("Link Parse", e.getMessage());
-                        Toast.makeText(MobileLoginActivity.this, "Link failed, please check your code and internet connection", Toast.LENGTH_LONG).show();
+
+            try{
+                ParseCloud.callFunctionInBackground("logIn", this.params, new FunctionCallback<String>() {
+                    @Override
+                    public void done(String ret, ParseException e) {
+                        if (e == null) {
+                            Log.i("Link Parse", "Login Success");
+                            Toast.makeText(MobileLoginActivity.this, "Link Success...", Toast.LENGTH_LONG).show();
+                            LoginSuccess = true;
+                        }else{
+                            Log.e("Link Parse", e.getMessage());
+                            Toast.makeText(MobileLoginActivity.this, "Link failed, please check your code and internet connection", Toast.LENGTH_LONG).show();
+                        }
                     }
-                }
-            });
+                });
+            } catch(Exception e){
+                Log.e("Link Parse", e.getMessage());
+                return false;
+            }
 //            try {
 //                // Simulate network access.
 //                Thread.sleep(2000);
@@ -460,7 +466,7 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
 //            }
 
             // TODO: register the new account here.
-            return LoginSuccess;
+            return true;
         }
 
         @Override
