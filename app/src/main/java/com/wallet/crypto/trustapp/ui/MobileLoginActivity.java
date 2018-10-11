@@ -4,7 +4,13 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.preference.Preference;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
@@ -43,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.parse.FunctionCallback;
+import com.parse.Parse;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.wallet.crypto.trustapp.R;
@@ -81,7 +88,7 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
     private Button mSendCode;
     private EditText mPhoneNumber;
     private String phone;
-
+    private String phoneAccountNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +96,11 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
         setContentView(R.layout.activity_mobile_login);
         setupActionBar();
 
+        SharedPreferences prefs = getSharedPreferences("phoneAccount", MODE_PRIVATE);
+        phoneAccountNum = prefs.getString("phone", null);
+        if(phoneAccountNum != null && !phoneAccountNum.equals("")){
+            linkSuccessDialog(MobileLoginActivity.this);
+        }
         //toolbar();
         // Set up the login form.
         mMobileView = (AutoCompleteTextView) findViewById(R.id.phone_number);
@@ -153,17 +165,10 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
                 }
 
                 Log.i("debug phone","end");
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        sendCodeFunc(phone, 5);
-//                    }
-//                }).start();
-                //mSendTask = new SendCodeTask(phone, 5);
-                //mSendTask.execute((Void) null);
             }
 
         });
+
     }
 
     private void populateAutoComplete() {
@@ -216,8 +221,6 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
     private void setupActionBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             // Show the Up button in the action bar.
-//            ActionBar actionBar = getSupportActionBar();
-//            actionBar.setDisplayHomeAsUpEnabled(true);
             toolbar();
         }
     }
@@ -433,22 +436,25 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
             // TODO: attempt authentication against a network service.
 
             try{
-                ParseCloud.callFunctionInBackground("logIn", this.params, new FunctionCallback<String>() {
-                    @Override
-                    public void done(String ret, ParseException e) {
-                        if (e == null) {
-                            Log.i("Link Parse", "Login Success");
-                            Toast.makeText(MobileLoginActivity.this, "Link Success...", Toast.LENGTH_LONG).show();
-                            LoginSuccess = true;
-                        }else{
-                            Log.e("Link Parse", e.getMessage());
-                            Toast.makeText(MobileLoginActivity.this, "Link failed, please check your code and internet connection", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
+//                ParseCloud.callFunctionInBackground("logIn", this.params, new FunctionCallback<String>() {
+//                    @Override
+//                    public void done(String ret, ParseException e) {
+//                        if (e == null) {
+//                            Log.i("Link Parse", "Login Success");
+//                            Toast.makeText(MobileLoginActivity.this, "Link Success...", Toast.LENGTH_LONG).show();
+//                            LoginSuccess = true;
+//                        }else{
+//                            log.e("link parse", e.getmessage());
+//                            toast.maketext(mobileloginactivity.this, "link failed, please check your code and internet connection", toast.length_long).show();
+//                        }
+//                    }
+//                });
+                ParseCloud.callFunction("logIn", this.params);
+                LoginSuccess = true;
+                Log.i("Link Parse", "Login Success");
             } catch(Exception e){
                 Log.e("Link Parse", e.getMessage());
-                return false;
+                LoginSuccess = false;
             }
 //            try {
 //                // Simulate network access.
@@ -465,8 +471,7 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
 //                }
 //            }
 
-            // TODO: register the new account here.
-            return true;
+            return LoginSuccess;
         }
 
         @Override
@@ -475,6 +480,10 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
             showProgress(false);
 
             if (success) {
+                SharedPreferences.Editor phoneAccountEditor = getSharedPreferences("phoneAccount", Context.MODE_PRIVATE).edit();
+                phoneAccountEditor.putString("phone", phone)
+                                  .apply();
+                linkSuccessDialog(MobileLoginActivity.this);
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
@@ -551,7 +560,7 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
             Toast.makeText(MobileLoginActivity.this, "Send Code", Toast.LENGTH_LONG).show();
             if (success) {
                 Toast.makeText(MobileLoginActivity.this, "Send Code End", Toast.LENGTH_SHORT).show();
-                finish();
+                //finish();
             } else {
                 Toast.makeText(MobileLoginActivity.this, "Send Code Error", Toast.LENGTH_SHORT).show();
             }
@@ -581,5 +590,32 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
             }
         });
     }
+
+
+    public void linkSuccessDialog(Context context){
+        // 1. Instantiate an <code><a href="/reference/android/app/AlertDialog.Builder.html">AlertDialog.Builder</a></code> with its constructor
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        // 2. Chain together various setter methods to set the dialog characteristics
+        //builder.setTitle(R.string.link_phone_success);
+        builder.setMessage(R.string.link_phone_success);
+        // Add the buttons
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+                Intent intent;
+                try{
+                    intent = new Intent(context, SettingsActivity.class);
+                    startActivity(intent);
+                }catch (Exception e){
+                    Log.e("link Success Error",e.getMessage());
+                }
+                finish();
+            }
+        });
+        // 3. Get the <code><a href="/reference/android/app/AlertDialog.html">AlertDialog</a></code> from <code><a href="/reference/android/app/AlertDialog.Builder.html#create()">create()</a></code>
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
 }
 
