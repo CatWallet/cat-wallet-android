@@ -130,7 +130,7 @@ dependencies {
 
     // Parse
     implementation "com.github.parse-community.Parse-SDK-Android:parse:$project.parseVersion"
-        // for FCM Push support (optional)
+    // for FCM Push support (optional)
     //implementation "com.github.parse-community.Parse-SDK-Android:fcm:$project.parseVersion"
 
     implementation project(":tn")
