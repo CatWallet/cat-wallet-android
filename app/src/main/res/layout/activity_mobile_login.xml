@@ -52,6 +52,7 @@
                      </android.support.design.widget.TextInputLayout>
 
                      <android.support.design.widget.TextInputLayout
+                         android:id="@+id/activation_code_layout"
                          android:layout_width="match_parent"
                          android:layout_height="wrap_content">
 
@@ -69,23 +70,28 @@
 
                          <Button
                              android:id="@+id/fetchActivationCode"
+                             style="@style/Widget.AppCompat.Button.Small"
                              android:layout_width="wrap_content"
                              android:layout_height="wrap_content"
                              android:layout_marginBottom="10dp"
                              android:layout_weight="1"
+                             android:background="@color/colorPrimary"
                              android:text="@string/send_activation_code"
+                             android:layout_alignTop="@+id/activation_code_layout"
+                             android:layout_alignParentEnd="true"
                              android:textAlignment="gravity" />
 
                  </android.support.design.widget.TextInputLayout>
 
-                <Button
-                    android:id="@+id/mobile_link_button"
-                    style="?android:textAppearanceSmall"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/action_link"
-                    android:textStyle="bold" />
+                     <Button
+                         android:id="@+id/mobile_link_button"
+                         style="@style/Widget.AppCompat.Button"
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"
+                         android:background="@color/colorPrimary"
+                         android:layout_margin="@dimen/appIntroDefaultPaddingTop"
+                         android:text="@string/action_link"
+                         android:textStyle="bold" />
 
             </LinearLayout>
         </ScrollView>
