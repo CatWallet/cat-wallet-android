@@ -25,7 +25,7 @@ public class accountUtils extends BaseActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         // 2. Chain together various setter methods to set the dialog characteristics
         //builder.setTitle(R.string.link_phone_success);
-        builder.setMessage(R.string.link_phone_success);
+        builder.setMessage(R.string.link_success);
         // Add the buttons
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -66,12 +66,14 @@ public class accountUtils extends BaseActivity {
 
 
     public static boolean isPhoneValid(String phone) {
-        //TODO: Replace this with your own logic
         return phone.matches("^(?:(?:\\+?1\\s*(?:[.-]\\s*)?)?(?:\\(\\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\\s*\\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\\s*(?:[.-]\\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\\s*(?:[.-]\\s*)?([0-9]{4})(?:\\s*(?:#|x\\.?|ext\\.?|extension)\\s*(\\d+))?$");
     }
 
     public static boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
         return true;
+    }
+
+    public static boolean isEmailValid(String email){
+        return email.matches("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$");
     }
 }

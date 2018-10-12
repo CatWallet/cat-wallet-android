@@ -100,6 +100,19 @@ public class SettingsFragment extends PreferenceFragment
             return false;
         });
 
+        final Preference linkEmail = findPreference("pref_email_account");
+        linkEmail.setSummary(getEmail(getContext()));
+        linkEmail.setOnPreferenceClickListener(preference -> {
+            Intent intent;
+            try{
+                intent = new Intent(getActivity(), EmailLoginActivity.class);
+                startActivity(intent);
+            }catch (Exception e){
+                Log.e("click email account",e.getMessage());
+            }
+            return false;
+        });
+
         String versionString = getVersion();
         Preference version = findPreference("pref_version");
         version.setSummary(versionString);
@@ -292,13 +305,23 @@ public class SettingsFragment extends PreferenceFragment
     public String getPhone(Context context){
         String phone = "N/A";
         try {
-//            phone = sharedPreferences.getString(key, "");
             SharedPreferences prefs =  context.getSharedPreferences("phoneAccount", context.MODE_PRIVATE);
             phone = prefs.getString("phone", null);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return phone;
+    }
+
+    public String getEmail(Context context){
+        String email = "N/A";
+        try {
+            SharedPreferences prefs =  context.getSharedPreferences("emailAccount", context.MODE_PRIVATE);
+            email = prefs.getString("email", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return email;
     }
 }
 
