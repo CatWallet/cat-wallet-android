@@ -254,4 +254,5 @@
         completions."
     </string>
     <string name="send_activation_code">Send Code</string>
+    <string name="resend_code">Resend Code</string>
 </resources>

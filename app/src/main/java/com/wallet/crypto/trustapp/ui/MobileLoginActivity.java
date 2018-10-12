@@ -54,6 +54,7 @@ import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.wallet.crypto.trustapp.R;
 import com.wallet.crypto.trustapp.router.SettingsRouter;
+import com.wallet.crypto.trustapp.util.MyCountDownTimer;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -66,6 +67,7 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
+    private static final int SEND_CODE_WAIT_TIME = 10000;
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -131,7 +133,6 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
         mSendCode = (Button) findViewById(R.id.fetchActivationCode);
         mPhoneNumber = (EditText) findViewById(R.id.phone_number);
 
-
         mPhoneNumber.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -151,10 +152,11 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
             }
         });
 
+        final MyCountDownTimer myCountDownTimer = new MyCountDownTimer(mSendCode,SEND_CODE_WAIT_TIME,1000);
         mSendCode.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MobileLoginActivity.this, "click send code", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MobileLoginActivity.this, "click send code", Toast.LENGTH_SHORT).show();
                 /***
                  * To do: add concurrency (May use RxJava) for send code button parse work and counting remain time
                  */
@@ -162,8 +164,8 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
                 if(checkValidInputPhone()){
                     Log.i("debug phone","check pass");
                     sendCodeFromParse(phone);
+                    myCountDownTimer.start();
                 }
-
                 Log.i("debug phone","end");
             }
 
@@ -298,7 +300,6 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
 
         View focusView = null;
         boolean isValid = true;
-        Log.i("debug phone", phone);
         if(TextUtils.isEmpty(this.phone)) {
             mMobileView.setError(getString(R.string.error_field_required));
             focusView = mMobileView;
@@ -484,7 +485,7 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
                 phoneAccountEditor.putString("phone", phone)
                                   .apply();
                 linkSuccessDialog(MobileLoginActivity.this);
-                finish();
+                //finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
