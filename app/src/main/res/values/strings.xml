@@ -13,10 +13,6 @@
     <string name="title_activity_create_account">New Wallet</string>
 
     <!-- Strings relatedwalletount creation -->
-    <string name="prompt_mobile">Phone Number</string>
-    <string name="prompt_password">Activation Code</string>
-    <string name="action_link">Link</string>
-    <string name="action_link_short">Link</string>
 
     <!-- String related to sending -->
     <string name="prompt_to">To</string>
@@ -169,6 +165,7 @@
     <string name="toast_qr_code_no_address">QR code doesn\'t contain valid address</string>
     <string name="link_phone_success">Link Phone Success</string>
     <string name="link_email_success">Link Email Success</string>
+    <string name="link_success">Link Email Success</string>
     <!-- Intro resources-->
     <string name="intro_title_first_page"><![CDATA[Private & Secure]]></string>
     <string name="intro_title_second_page">Fully Transparent</string>
@@ -242,7 +239,13 @@
     <!--Push notifications-->
     <string name="default_notification_channel_id">default channel</string>
     <!--Account-->
+    <string name="prompt_email">Email Address</string>
+    <string name="prompt_mobile">Phone Number</string>
+    <string name="prompt_password">Activation Code</string>
+    <string name="action_link">Link</string>
+    <string name="action_link_short">Link</string>
     <string name="title_activity_mobile_login">Link Phone Number</string>>
+    <string name="title_activity_email_login">Link Email</string>>
     <string name="title_mobile_account">Link Mobile Phone</string>
     <string name="title_email_account">Link Email</string>
     <string name="error_invalid_phone_number">This phone number is invalid</string>

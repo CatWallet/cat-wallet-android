@@ -25,7 +25,7 @@ public class accountUtils extends BaseActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         // 2. Chain together various setter methods to set the dialog characteristics
         //builder.setTitle(R.string.link_phone_success);
-        builder.setMessage(R.string.link_phone_success);
+        builder.setMessage(R.string.link_success);
         // Add the buttons
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {

@@ -119,7 +119,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.wallet.crypto.trustapp.ui.SettingsActivity" />
         </activity>
-        <activity android:name=".ui.EmailLoginActivity">android:label="@string/title_activity_email_login"
+        <activity android:name=".ui.EmailLoginActivity"
+            android:label="@string/title_activity_email_login"
             android:parentActivityName=".ui.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

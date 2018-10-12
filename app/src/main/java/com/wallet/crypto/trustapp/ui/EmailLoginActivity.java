@@ -65,12 +65,12 @@ public class EmailLoginActivity extends BaseActivity implements LoaderManager.Lo
     private UserLoginTask mAuthTask = null;
 
     // UI references.
-    private AutoCompleteTextView mMobileView;
+    private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
     private Button mSendCode;
-    private EditText mPhoneNumber;
+    private EditText mEmailAddress;
     private String email;
     private String emailAccountNum;
 
@@ -88,7 +88,7 @@ public class EmailLoginActivity extends BaseActivity implements LoaderManager.Lo
         }
         //toolbar();
         // Set up the login form.
-        mMobileView = (AutoCompleteTextView) findViewById(R.id.email_number);
+        mEmailView = (AutoCompleteTextView) findViewById(R.id.email_address);
         populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.activation_code);
@@ -115,9 +115,9 @@ public class EmailLoginActivity extends BaseActivity implements LoaderManager.Lo
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
         mSendCode = (Button) findViewById(R.id.fetchActivationCode);
-        mPhoneNumber = (EditText) findViewById(R.id.email_number);
+        mEmailAddress = (EditText) findViewById(R.id.email_address);
 
-        mPhoneNumber.addTextChangedListener(new TextWatcher() {
+        mEmailAddress.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -132,7 +132,7 @@ public class EmailLoginActivity extends BaseActivity implements LoaderManager.Lo
             @Override
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
-                email = mPhoneNumber.getText().toString();
+                email = mEmailAddress.getText().toString();
             }
         });
 
@@ -173,7 +173,7 @@ public class EmailLoginActivity extends BaseActivity implements LoaderManager.Lo
             return true;
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mMobileView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
                     .setAction(android.R.string.ok, new View.OnClickListener() {
                         @Override
                         @TargetApi(Build.VERSION_CODES.M)
@@ -234,11 +234,11 @@ public class EmailLoginActivity extends BaseActivity implements LoaderManager.Lo
         }
 
         // Reset errors.
-        mMobileView.setError(null);
+        mEmailView.setError(null);
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String emailNumber = mMobileView.getText().toString();
+        String emailAddress = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
@@ -252,13 +252,13 @@ public class EmailLoginActivity extends BaseActivity implements LoaderManager.Lo
         }
 
         // Check for a valid email number.
-        if (TextUtils.isEmpty(emailNumber)) {
-            mMobileView.setError(getString(R.string.error_field_required));
-            focusView = mMobileView;
+        if (TextUtils.isEmpty(emailAddress)) {
+            mEmailView.setError(getString(R.string.error_field_required));
+            focusView = mEmailView;
             cancel = true;
-        } else if (!accountUtils.isPhoneValid(emailNumber)) {
-            mMobileView.setError(getString(R.string.error_invalid_email));
-            focusView = mMobileView;
+        } else if (!accountUtils.isEmailValid(emailAddress)) {
+            mEmailView.setError(getString(R.string.error_invalid_email));
+            focusView = mEmailView;
             cancel = true;
         }
 
@@ -285,12 +285,12 @@ public class EmailLoginActivity extends BaseActivity implements LoaderManager.Lo
         View focusView = null;
         boolean isValid = true;
         if(TextUtils.isEmpty(this.email)) {
-            mMobileView.setError(getString(R.string.error_field_required));
-            focusView = mMobileView;
+            mEmailView.setError(getString(R.string.error_field_required));
+            focusView = mEmailView;
             isValid = false;
         }else if (!accountUtils.isEmailValid(this.email)) {
-            mMobileView.setError(getString(R.string.error_invalid_email));
-            focusView = mMobileView;
+            mEmailView.setError(getString(R.string.error_invalid_email));
+            focusView = mEmailView;
             isValid = false;
         }
         if(!isValid){
@@ -347,11 +347,11 @@ public class EmailLoginActivity extends BaseActivity implements LoaderManager.Lo
 
                 // Select only email number.
                 ContactsContract.Contacts.Data.MIMETYPE +
-                        " = ?", new String[]{ContactsContract.CommonDataKinds.Phone
+                        " = ?", new String[]{ContactsContract.CommonDataKinds.Email
                 .CONTENT_ITEM_TYPE},
 
-                // Show primary email number first. Note that there won't be
-                // a primary email number if the user hasn't specified one.
+                // Show primary email address first. Note that there won't be
+                // a primary email address if the user hasn't specified one.
                 ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
     }
 
@@ -372,13 +372,13 @@ public class EmailLoginActivity extends BaseActivity implements LoaderManager.Lo
 
     }
 
-    private void addiEmailToAutoComplete(List<String> emailNumberCollection) {
+    private void addiEmailToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<>(EmailLoginActivity.this,
-                        android.R.layout.simple_dropdown_item_1line, emailNumberCollection);
+                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
-        mMobileView.setAdapter(adapter);
+        mEmailView.setAdapter(adapter);
     }
 
 
