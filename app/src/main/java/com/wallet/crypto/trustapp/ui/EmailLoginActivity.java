@@ -80,7 +80,7 @@ public class EmailLoginActivity extends BaseActivity implements LoaderManager.Lo
         setContentView(R.layout.activity_email_login);
         setupActionBar();
 
-        SharedPreferences prefs = getSharedPreferences("Account", MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("emailAccount", MODE_PRIVATE);
         emailAccountNum = prefs.getString("email", null);
         if(emailAccountNum != null && !emailAccountNum.equals("")){
             accountUtils.linkSuccessDialog(EmailLoginActivity.this);
