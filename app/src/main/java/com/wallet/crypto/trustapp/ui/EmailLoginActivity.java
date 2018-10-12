@@ -132,7 +132,7 @@ public class EmailLoginActivity extends BaseActivity implements LoaderManager.Lo
             @Override
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
-                email = mEmailAddress.getText().toString();
+                email = mEmailAddress.getText().toString().toLowerCase();
             }
         });
 
