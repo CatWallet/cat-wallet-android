@@ -55,6 +55,7 @@ import com.parse.ParseException;
 import com.wallet.crypto.trustapp.R;
 import com.wallet.crypto.trustapp.router.SettingsRouter;
 import com.wallet.crypto.trustapp.util.MyCountDownTimer;
+import com.wallet.crypto.trustapp.util.accountUtils;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -67,7 +68,7 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
-    private static final int SEND_CODE_WAIT_TIME = 10000;
+    private static final int SEND_CODE_WAIT_TIME = 25000;
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -80,7 +81,6 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
-    private SendCodeTask mSendTask = null;
 
     // UI references.
     private AutoCompleteTextView mMobileView;
@@ -101,7 +101,8 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
         SharedPreferences prefs = getSharedPreferences("phoneAccount", MODE_PRIVATE);
         phoneAccountNum = prefs.getString("phone", null);
         if(phoneAccountNum != null && !phoneAccountNum.equals("")){
-            linkSuccessDialog(MobileLoginActivity.this);
+            accountUtils.linkSuccessDialog(MobileLoginActivity.this);
+            //linkSuccessDialog(MobileLoginActivity.this);
         }
         //toolbar();
         // Set up the login form.
@@ -152,7 +153,7 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
             }
         });
 
-        final MyCountDownTimer myCountDownTimer = new MyCountDownTimer(mSendCode,SEND_CODE_WAIT_TIME,1000);
+        final MyCountDownTimer myCountDownTimer = new MyCountDownTimer(mSendCode, SEND_CODE_WAIT_TIME,1000);
         mSendCode.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -163,7 +164,7 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
 
                 if(checkValidInputPhone()){
                     Log.i("debug phone","check pass");
-                    sendCodeFromParse(phone);
+                    accountUtils.sendCodeFromParse("phone", phone, MobileLoginActivity.this);
                     myCountDownTimer.start();
                 }
                 Log.i("debug phone","end");
@@ -261,7 +262,7 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+        if (!TextUtils.isEmpty(password) && !accountUtils.isPasswordValid(password)) {
             //mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
@@ -272,7 +273,7 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
             mMobileView.setError(getString(R.string.error_field_required));
             focusView = mMobileView;
             cancel = true;
-        } else if (!isPhoneValid(phoneNumber)) {
+        } else if (!accountUtils.isPhoneValid(phoneNumber)) {
             mMobileView.setError(getString(R.string.error_invalid_phone_number));
             focusView = mMobileView;
             cancel = true;
@@ -304,7 +305,7 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
             mMobileView.setError(getString(R.string.error_field_required));
             focusView = mMobileView;
             isValid = false;
-        }else if (!isPhoneValid(this.phone)) {
+        }else if (!accountUtils.isPhoneValid(this.phone)) {
             mMobileView.setError(getString(R.string.error_invalid_phone_number));
             focusView = mMobileView;
             isValid = false;
@@ -316,15 +317,7 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
         return isValid;
     }
 
-    private boolean isPhoneValid(String phone) {
-        //TODO: Replace this with your own logic
-        return phone.matches("^(?:(?:\\+?1\\s*(?:[.-]\\s*)?)?(?:\\(\\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\\s*\\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\\s*(?:[.-]\\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\\s*(?:[.-]\\s*)?([0-9]{4})(?:\\s*(?:#|x\\.?|ext\\.?|extension)\\s*(\\d+))?$");
-    }
 
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return true;
-    }
 
     /**
      * Shows the progress UI and hides the login form.
@@ -422,8 +415,6 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-//        private final String mPhone;
-//        private final String mPassword;
         HashMap<String, String> params;
         boolean LoginSuccess;
 
@@ -457,20 +448,6 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
                 Log.e("Link Parse", e.getMessage());
                 LoginSuccess = false;
             }
-//            try {
-//                // Simulate network access.
-//                Thread.sleep(2000);
-//            } catch (InterruptedException e) {
-//                return false;
-//            }
-//
-//            for (String credential : DUMMY_CREDENTIALS) {
-//                String[] pieces = credential.split(":");
-//                if (pieces[0].equals(mPhone)) {
-//                    // Account exists, return true if the password matches.
-//                    return pieces[1].equals(mPassword);
-//                }
-//            }
 
             return LoginSuccess;
         }
@@ -484,7 +461,7 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
                 SharedPreferences.Editor phoneAccountEditor = getSharedPreferences("phoneAccount", Context.MODE_PRIVATE).edit();
                 phoneAccountEditor.putString("phone", phone)
                                   .apply();
-                linkSuccessDialog(MobileLoginActivity.this);
+                accountUtils.linkSuccessDialog(MobileLoginActivity.this);
                 //finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
@@ -497,125 +474,6 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
             mAuthTask = null;
             showProgress(false);
         }
-    }
-
-
-
-
-    protected Boolean sendCodeFunc(String phone, int waitTime) {
-        if(!mSendCode.isEnabled()) return false;
-        try {
-
-            Toast.makeText(MobileLoginActivity.this, "Send Code", Toast.LENGTH_LONG).show();
-            // Simulate network access.
-            mSendCode.setEnabled(false);
-            for(int i = waitTime; i>0;i--){
-                mSendCode.setText(i+"s");
-                Thread.sleep(1000);
-            }
-            mSendCode.setEnabled(true);
-            mSendCode.setText("Send Code");
-            Toast.makeText(MobileLoginActivity.this, "Send Code End", Toast.LENGTH_SHORT).show();
-        } catch (InterruptedException e) {
-            return false;
-        }
-        return true;
-    }
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class SendCodeTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mPhone;
-        private int waitTime;
-
-        SendCodeTask(String phone, int wait) {
-            mPhone = phone;
-            waitTime = wait;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            if(!mSendCode.isEnabled()) return false;
-            try {
-
-                // Simulate network access.
-                mSendCode.setEnabled(false);
-                for(int i = waitTime; i>0;i--){
-                    mSendCode.setText(i+"s");
-                    Thread.sleep(1000);
-                }
-                mSendCode.setEnabled(true);
-                mSendCode.setText("Send Code");
-            } catch (InterruptedException e) {
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mSendTask = null;
-
-            Toast.makeText(MobileLoginActivity.this, "Send Code", Toast.LENGTH_LONG).show();
-            if (success) {
-                Toast.makeText(MobileLoginActivity.this, "Send Code End", Toast.LENGTH_SHORT).show();
-                //finish();
-            } else {
-                Toast.makeText(MobileLoginActivity.this, "Send Code Error", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mSendTask = null;
-        }
-    }
-
-    public void sendCodeFromParse(String phone){
-        HashMap<String, String> params = new HashMap();
-        params.put("phone", phone);
-
-        ParseCloud.callFunctionInBackground("sendCode", params, new FunctionCallback<String>() {
-            @Override
-            public void done(String ret, ParseException e) {
-                if (e == null) {
-                    Log.i("Link Parse", "Send Code Success");
-                    Toast.makeText(MobileLoginActivity.this, "Code has been send...", Toast.LENGTH_LONG).show();
-                }else{
-                    Log.e("Link Parse", e.getMessage());
-                    Toast.makeText(MobileLoginActivity.this, "Code send failed, please check your internet connection", Toast.LENGTH_LONG).show();
-                }
-
-            }
-        });
-    }
-
-
-    public void linkSuccessDialog(Context context){
-        // 1. Instantiate an <code><a href="/reference/android/app/AlertDialog.Builder.html">AlertDialog.Builder</a></code> with its constructor
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        // 2. Chain together various setter methods to set the dialog characteristics
-        //builder.setTitle(R.string.link_phone_success);
-        builder.setMessage(R.string.link_phone_success);
-        // Add the buttons
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User clicked OK button
-                Intent intent;
-                try{
-                    intent = new Intent(context, SettingsActivity.class);
-                    startActivity(intent);
-                }catch (Exception e){
-                    Log.e("link Success Error",e.getMessage());
-                }
-                finish();
-            }
-        });
-        // 3. Get the <code><a href="/reference/android/app/AlertDialog.html">AlertDialog</a></code> from <code><a href="/reference/android/app/AlertDialog.Builder.html#create()">create()</a></code>
-        AlertDialog dialog = builder.create();
-        dialog.show();
     }
 
 }
