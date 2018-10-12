@@ -21,24 +21,45 @@
             android:icon="@mipmap/settings_currency"
             android:dialogTitle="@string/currency_label" />
 
-        <PreferenceCategory
-            android:title="@string/title_opensource"
-            android:key="pref_opensource_links" >
+    <PreferenceCategory
+        android:title="@string/title_link_account"
+        android:key="pref_account" >
 
-            <Preference
-                android:title="@string/title_source_code"
-                android:icon="@mipmap/settings_open_source">
-                <intent android:action="android.intent.action.VIEW"
-                    android:data="https://github.com/CatWallet/trust-wallet-android" />
-            </Preference>
+        <Preference
+            android:key="pref_mobile_account"
+            android:title="@string/title_mobile_account"
 
-            <Preference android:title="@string/title_report_bug"
-                        android:icon="@mipmap/settings_bug">
-                <intent android:action="android.intent.action.VIEW"
-                    android:data="https://github.com/CatWallet/trust-wallet-android/issues/new" />
-            </Preference>
+            android:icon="@mipmap/settings_twitter">
 
-        </PreferenceCategory>
+        </Preference>
+
+        <Preference
+            android:key="pref_email_account"
+            android:title="@string/title_email_account"
+            android:icon="@mipmap/settings_telegram">
+        </Preference>
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory
+        android:title="@string/title_opensource"
+        android:key="pref_opensource_links" >
+
+        <Preference
+            android:title="@string/title_source_code"
+            android:icon="@mipmap/settings_open_source">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="https://github.com/CatWallet/trust-wallet-android" />
+        </Preference>
+
+        <Preference android:title="@string/title_report_bug"
+            android:icon="@mipmap/settings_bug">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="https://github.com/CatWallet/trust-wallet-android/issues/new" />
+        </Preference>
+
+    </PreferenceCategory>
 
         <PreferenceCategory
             android:title="@string/title_community"

@@ -18,10 +18,10 @@ repositories {
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.2'
     defaultConfig {
         applicationId "com.cat.wallet.trust"
-        minSdkVersion 18
+        minSdkVersion 23
         targetSdkVersion 27
         versionCode 11
         versionName "1.15.03"
@@ -65,7 +65,7 @@ project.ext {
     rxJavaVersion = "2.1.6"
     rxAndroidVersion = "2.0.1"
     daggerVersion = "2.11"
-    parseVersion = "1.18.5"
+    parseVersion = "1.18.4"
 }
 
 dependencies {
@@ -87,6 +87,7 @@ dependencies {
     implementation "com.android.support:design:$project.supportVersion"
     implementation "com.android.support:support-vector-drawable:$project.supportVersion"
     implementation "com.android.support:recyclerview-v7:$project.supportVersion"
+    implementation "com.android.support:support-compat:$project.supportVersion"
     implementation "com.android.support:multidex:1.0.2"
     // Bar code scanning
     implementation "com.google.zxing:core:3.2.1"
@@ -94,7 +95,7 @@ dependencies {
     // Sugar
     implementation "com.android.support.constraint:constraint-layout:1.0.2"
     implementation "com.github.apl-devs:appintro:v4.2.2"
-    implementation 'com.romandanylyk:pageindicatorview:1.0.0'
+    implementation 'com.romandanylyk:pageindicatorview:1.0.2'
     implementation "com.journeyapps:zxing-android-embedded:3.2.0@aar"
     // ReactiveX
     implementation "io.reactivex.rxjava2:rxjava:$project.rxJavaVersion"
@@ -123,9 +124,26 @@ dependencies {
     implementation('com.crashlytics.sdk.android:answers:1.4.1@aar') {
         transitive = true;
     }
+
     // PW
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(":tn")
+
     // Parse
-    //implementation "com.github.parse-community.Parse-SDK-Android:parse:$project.parseVersion"
+    implementation "com.github.parse-community.Parse-SDK-Android:parse:$project.parseVersion"
+        // for FCM Push support (optional)
+    //implementation "com.github.parse-community.Parse-SDK-Android:fcm:$project.parseVersion"
+
+    implementation project(":tn")
+
+}
+
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == 'com.android.support') {
+            if (!requested.name.startsWith("multidex")) {
+                details.useVersion '27.0.2'
+            }
+        }
+    }
 }
