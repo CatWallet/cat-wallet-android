@@ -29,14 +29,14 @@
             android:key="pref_mobile_account"
             android:title="@string/title_mobile_account"
 
-            android:icon="@mipmap/settings_twitter">
+            android:icon="@mipmap/setting_link_phone">
 
         </Preference>
 
         <Preference
             android:key="pref_email_account"
             android:title="@string/title_email_account"
-            android:icon="@mipmap/settings_telegram">
+            android:icon="@mipmap/setting_link_email">
         </Preference>
 
     </PreferenceCategory>
