@@ -165,7 +165,7 @@
     <string name="toast_qr_code_no_address">QR code doesn\'t contain valid address</string>
     <string name="link_phone_success">Link Phone Success</string>
     <string name="link_email_success">Link Email Success</string>
-    <string name="link_success">Link Email Success</string>
+    <string name="link_success">Link Success</string>
     <!-- Intro resources-->
     <string name="intro_title_first_page"><![CDATA[Private & Secure]]></string>
     <string name="intro_title_second_page">Fully Transparent</string>
