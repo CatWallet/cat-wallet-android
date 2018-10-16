@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
+import com.parse.ParseCloud;
 import com.wallet.crypto.trustapp.C;
 import com.wallet.crypto.trustapp.R;
 import com.wallet.crypto.trustapp.entity.CurrencyInfo;
@@ -36,6 +37,7 @@ import com.wallet.crypto.trustapp.repository.SharedPreferenceRepository;
 import com.wallet.crypto.trustapp.ui.barcode.BarcodeCaptureActivity;
 import com.wallet.crypto.trustapp.util.BalanceUtils;
 import com.wallet.crypto.trustapp.util.QRURLParser;
+import com.wallet.crypto.trustapp.util.accountUtils;
 import com.wallet.crypto.trustapp.viewmodel.SendViewModel;
 import com.wallet.crypto.trustapp.viewmodel.SendViewModelFactory;
 
@@ -43,6 +45,7 @@ import org.ethereum.geth.Address;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -57,6 +60,7 @@ public class SendActivity extends BaseActivity {
 
     private static final int BARCODE_READER_REQUEST_CODE = 1;
     private static final int INPUT_DISPLAY_EDITTEXT_AMOUNT_SCALE = 15;
+    private static final String TAG = "SendActivity";
 
     private EditText toAddressText;
     private EditText amountText;
@@ -329,11 +333,17 @@ public class SendActivity extends BaseActivity {
     private void onNext() {
         // Validate input fields
         boolean inputValid = true;
-        final String to = toAddressText.getText().toString();
-        if (!isAddressValid(to)) {
+        String to = toAddressText.getText().toString();
+
+        if (!isAddressValid(to) && !accountUtils.isEmailValid(to) && !accountUtils.isPhoneValid(to)) {
             toInputLayout.setError(getString(R.string.error_invalid_address));
             inputValid = false;
+        }else if(accountUtils.isEmailValid((to))){
+            to = sendToAccountAddress("email", to);
+        }else if(accountUtils.isPhoneValid(to)){
+            to = sendToAccountAddress("phone", to);
         }
+
         final String amount = amountText.getText().toString();
         if (!isValidAmount(amount)) {
             amountInputLayout.setError(getString(R.string.error_invalid_amount));
@@ -401,6 +411,27 @@ public class SendActivity extends BaseActivity {
         super.onResume();
         BalanceUtils.changeDisplayBalance(getString(R.string.unknown_balance_without_symbol),"",findViewById(android.R.id.content));
         viewModel.prepare();
+    }
+
+    public String sendToAccountAddress(String addressType, String address){
+
+        String retETHAddress = "";
+        Map<String, String> params = new HashMap<String, String>();
+        params.put(addressType, address);
+        try{
+            retETHAddress = ParseCloud.callFunction("queryAddress", params);
+        }catch (Exception e){
+            if(e.getMessage().equals("Not found")){
+                try{
+                    retETHAddress = ParseCloud.callFunction("createWallet", params);
+                }catch (Exception e2){
+                    Log.e(TAG, "create wallet failed");
+                    Log.e(TAG, e2.getMessage());
+                }
+            }
+            Log.e(TAG, e.getMessage());
+        }
+        return retETHAddress;
     }
 
 }
