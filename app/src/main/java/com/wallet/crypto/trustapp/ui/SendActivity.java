@@ -5,12 +5,14 @@ import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -333,16 +335,18 @@ public class SendActivity extends BaseActivity {
     private void onNext() {
         // Validate input fields
         boolean inputValid = true;
-        String to = toAddressText.getText().toString();
-
+        String to = toAddressText.getText().toString().toLowerCase();
+        String inputTo = toAddressText.getText().toString().toLowerCase();
         if (!isAddressValid(to) && !accountUtils.isEmailValid(to) && !accountUtils.isPhoneValid(to)) {
             toInputLayout.setError(getString(R.string.error_invalid_address));
             inputValid = false;
         }else if(accountUtils.isEmailValid((to))){
             to = sendToAccountAddress("email", to);
+
         }else if(accountUtils.isPhoneValid(to)){
             to = sendToAccountAddress("phone", to);
         }
+        final String finalAddress = to;
 
         final String amount = amountText.getText().toString();
         if (!isValidAmount(amount)) {
@@ -367,7 +371,29 @@ public class SendActivity extends BaseActivity {
         amountInputLayout.setErrorEnabled(false);
 
         BigInteger amountInSubunits = BalanceUtils.baseToSubunit(amount, decimals);
-        viewModel.openConfirmation(this, to, amountInSubunits, contractAddress, decimals, symbol, sendingTokens);
+        // 1. Instantiate an <code><a href="/reference/android/app/AlertDialog.Builder.html">AlertDialog.Builder</a></code> with its constructor
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // 2. Chain together various setter methods to set the dialog characteristics
+        builder.setTitle(R.string.send_confirmation);
+        builder.setMessage(inputTo +"?");
+        // Add the buttons
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+                viewModel.openConfirmation(getApplicationContext(), finalAddress, amountInSubunits, contractAddress, decimals, symbol, sendingTokens);
+            }
+        })
+        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //finish();
+                toAddressText.requestFocus();
+            }
+        });
+
+        // 3. Get the <code><a href="/reference/android/app/AlertDialog.html">AlertDialog</a></code> from <code><a href="/reference/android/app/AlertDialog.Builder.html#create()">create()</a></code>
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     boolean isAddressValid(String address) {
