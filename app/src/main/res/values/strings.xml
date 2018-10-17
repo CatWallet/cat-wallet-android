@@ -130,6 +130,7 @@
     <string name="no_tokens">No tokens found.</string>
     <string name="title_email">Email us</string>
     <string name="send_reminder">Transfer Funds Cost = Gas * Gas Price + Transfer Value</string>
+    <string name="send_confirmation">You are going to send to</string>
     <!-- Titles -->
     <string name="title_item_detail">Item Detail</string>
     <string name="title_my_address">My Address</string>
@@ -182,7 +183,7 @@
     <string name="label_gas_price">Gas Price</string>
     <string name="label_network_fee">Network Fee</string>
     <string name="button_ok">OK</string>
-    <string name="hint_recipient_address">Recipient address</string>
+    <string name="hint_recipient_address">Recipient address(ETH address/Email/Phone)</string>
     <string name="hint_amount">ETH Amount</string>
     <string name="hint_currency_amount">USD Amount</string>
     <string name="hint_contract_address">Contract address</string>

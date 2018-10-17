@@ -5,12 +5,14 @@ import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -25,6 +27,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
+import com.parse.ParseCloud;
 import com.wallet.crypto.trustapp.C;
 import com.wallet.crypto.trustapp.R;
 import com.wallet.crypto.trustapp.entity.CurrencyInfo;
@@ -36,6 +39,7 @@ import com.wallet.crypto.trustapp.repository.SharedPreferenceRepository;
 import com.wallet.crypto.trustapp.ui.barcode.BarcodeCaptureActivity;
 import com.wallet.crypto.trustapp.util.BalanceUtils;
 import com.wallet.crypto.trustapp.util.QRURLParser;
+import com.wallet.crypto.trustapp.util.accountUtils;
 import com.wallet.crypto.trustapp.viewmodel.SendViewModel;
 import com.wallet.crypto.trustapp.viewmodel.SendViewModelFactory;
 
@@ -43,6 +47,7 @@ import org.ethereum.geth.Address;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -57,6 +62,7 @@ public class SendActivity extends BaseActivity {
 
     private static final int BARCODE_READER_REQUEST_CODE = 1;
     private static final int INPUT_DISPLAY_EDITTEXT_AMOUNT_SCALE = 15;
+    private static final String TAG = "SendActivity";
 
     private EditText toAddressText;
     private EditText amountText;
@@ -329,11 +335,21 @@ public class SendActivity extends BaseActivity {
     private void onNext() {
         // Validate input fields
         boolean inputValid = true;
-        final String to = toAddressText.getText().toString();
-        if (!isAddressValid(to)) {
+        String to = toAddressText.getText().toString().toLowerCase();
+        final String inputTo = toAddressText.getText().toString().toLowerCase();
+        String sendAddressType = "ETH";
+        if (!isAddressValid(to) && !accountUtils.isEmailValid(to) && !accountUtils.isPhoneValid(to)) {
             toInputLayout.setError(getString(R.string.error_invalid_address));
             inputValid = false;
+        }else if(accountUtils.isEmailValid((to))){
+            to = sendToAccountAddress("email", to);
+            sendAddressType = "email";
+        }else if(accountUtils.isPhoneValid(to)){
+            to = sendToAccountAddress("phone", to);
+            sendAddressType = "phone";
         }
+        final String finalAddress = to;
+        final String sendToAddressType = sendAddressType;
         final String amount = amountText.getText().toString();
         if (!isValidAmount(amount)) {
             amountInputLayout.setError(getString(R.string.error_invalid_amount));
@@ -357,7 +373,29 @@ public class SendActivity extends BaseActivity {
         amountInputLayout.setErrorEnabled(false);
 
         BigInteger amountInSubunits = BalanceUtils.baseToSubunit(amount, decimals);
-        viewModel.openConfirmation(this, to, amountInSubunits, contractAddress, decimals, symbol, sendingTokens);
+        // 1. Instantiate an <code><a href="/reference/android/app/AlertDialog.Builder.html">AlertDialog.Builder</a></code> with its constructor
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // 2. Chain together various setter methods to set the dialog characteristics
+        builder.setTitle(R.string.send_confirmation);
+        builder.setMessage(inputTo +"?");
+        // Add the buttons
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+                viewModel.openConfirmation(getApplicationContext(), finalAddress, amountInSubunits, contractAddress, decimals, symbol, sendingTokens, sendToAddressType, inputTo);
+            }
+        })
+        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //finish();
+                toAddressText.requestFocus();
+            }
+        });
+
+        // 3. Get the <code><a href="/reference/android/app/AlertDialog.html">AlertDialog</a></code> from <code><a href="/reference/android/app/AlertDialog.Builder.html#create()">create()</a></code>
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     boolean isAddressValid(String address) {
@@ -401,6 +439,27 @@ public class SendActivity extends BaseActivity {
         super.onResume();
         BalanceUtils.changeDisplayBalance(getString(R.string.unknown_balance_without_symbol),"",findViewById(android.R.id.content));
         viewModel.prepare();
+    }
+
+    public String sendToAccountAddress(String addressType, String address){
+
+        String retETHAddress = "";
+        Map<String, String> params = new HashMap<String, String>();
+        params.put(addressType, address);
+        try{
+            retETHAddress = ParseCloud.callFunction("queryAddress", params);
+        }catch (Exception e){
+            if(e.getMessage().equals("Not found")){
+                try{
+                    retETHAddress = ParseCloud.callFunction("createWallet", params);
+                }catch (Exception e2){
+                    Log.e(TAG, "create wallet failed");
+                    Log.e(TAG, e2.getMessage());
+                }
+            }
+            Log.e(TAG, e.getMessage());
+        }
+        return retETHAddress;
     }
 
 }
