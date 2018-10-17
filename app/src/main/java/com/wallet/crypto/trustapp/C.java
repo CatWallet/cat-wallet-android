@@ -83,6 +83,9 @@ public abstract class C {
     public static final int ETHER_DECIMALS = 18;
 
 
+    //Send Account
+    public static final String SEND_ACCOUNT_ADDRESS = "SEND_TO_ACCOUNT_ADDRESS";
+    public static final String SEND_ACCOUNT_TYPE = "SEND_TO_PHONE_OR_EMAIL_ACCOUNT";
     public interface ErrorCode {
 
         int UNKNOWN = 1;

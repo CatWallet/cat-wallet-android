@@ -63,8 +63,8 @@ public class SendViewModel extends BaseViewModel {
         return defaultWalletBalance;
     }
 
-    public void openConfirmation(Context context, String to, BigInteger amount, String contractAddress, int decimals, String symbol, boolean sendingTokens) {
-        confirmationRouter.open(context, to, amount, contractAddress, decimals, symbol, sendingTokens);
+    public void openConfirmation(Context context, String to, BigInteger amount, String contractAddress, int decimals, String symbol, boolean sendingTokens, String sendAddressType, String sendEmailOrPhoneAddress) {
+        confirmationRouter.open(context, to, amount, contractAddress, decimals, symbol, sendingTokens,sendAddressType, sendEmailOrPhoneAddress);
     }
 
     public void prepare() {

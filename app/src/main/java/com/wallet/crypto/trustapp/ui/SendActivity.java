@@ -336,18 +336,20 @@ public class SendActivity extends BaseActivity {
         // Validate input fields
         boolean inputValid = true;
         String to = toAddressText.getText().toString().toLowerCase();
-        String inputTo = toAddressText.getText().toString().toLowerCase();
+        final String inputTo = toAddressText.getText().toString().toLowerCase();
+        String sendAddressType = "ETH";
         if (!isAddressValid(to) && !accountUtils.isEmailValid(to) && !accountUtils.isPhoneValid(to)) {
             toInputLayout.setError(getString(R.string.error_invalid_address));
             inputValid = false;
         }else if(accountUtils.isEmailValid((to))){
             to = sendToAccountAddress("email", to);
-
+            sendAddressType = "email";
         }else if(accountUtils.isPhoneValid(to)){
             to = sendToAccountAddress("phone", to);
+            sendAddressType = "phone";
         }
         final String finalAddress = to;
-
+        final String sendToAddressType = sendAddressType;
         final String amount = amountText.getText().toString();
         if (!isValidAmount(amount)) {
             amountInputLayout.setError(getString(R.string.error_invalid_amount));
@@ -380,7 +382,7 @@ public class SendActivity extends BaseActivity {
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
-                viewModel.openConfirmation(getApplicationContext(), finalAddress, amountInSubunits, contractAddress, decimals, symbol, sendingTokens);
+                viewModel.openConfirmation(getApplicationContext(), finalAddress, amountInSubunits, contractAddress, decimals, symbol, sendingTokens, sendToAddressType, inputTo);
             }
         })
         .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
