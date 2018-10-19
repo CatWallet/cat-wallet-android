@@ -83,14 +83,14 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
     private UserLoginTask mAuthTask = null;
 
     // UI references.
-    private AutoCompleteTextView mMobileView;
+    private AutoCompleteTextView mPhoneNumber;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
     private Button mSendCode;
-    private EditText mPhoneNumber;
     private String phone;
-    private String phoneAccountNum;
+    private String phoneCode;
+    private String ADDRESS_TYPE = "phone";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,15 +98,9 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
         setContentView(R.layout.activity_mobile_login);
         setupActionBar();
 
-        SharedPreferences prefs = getSharedPreferences("phoneAccount", MODE_PRIVATE);
-        phoneAccountNum = prefs.getString("phone", null);
-        if(phoneAccountNum != null && !phoneAccountNum.equals("")){
-            accountUtils.linkSuccessDialog(MobileLoginActivity.this);
-            //linkSuccessDialog(MobileLoginActivity.this);
-        }
         //toolbar();
         // Set up the login form.
-        mMobileView = (AutoCompleteTextView) findViewById(R.id.phone_number);
+        mPhoneNumber = (AutoCompleteTextView) findViewById(R.id.phone_number);
         populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.activation_code);
@@ -132,8 +126,16 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
         mSendCode = (Button) findViewById(R.id.fetchActivationCode);
-        mPhoneNumber = (EditText) findViewById(R.id.phone_number);
 
+        SharedPreferences prefs = getSharedPreferences("phoneAccount", MODE_PRIVATE);
+        phone = prefs.getString("phone", null);
+        phoneCode = prefs.getString("phoneCode", null);
+        mPhoneNumber.setText(phone, TextView.BufferType.EDITABLE);
+        mPasswordView.setText(phoneCode, TextView.BufferType.EDITABLE);
+        if(phone != null && !phone.equals("") && phoneCode != null && !phoneCode.equals("")){
+            attemptLogin();
+            //linkSuccessDialog(MobileLoginActivity.this);
+        }
         mPhoneNumber.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -190,7 +192,7 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
             return true;
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mMobileView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(mPhoneNumber, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
                     .setAction(android.R.string.ok, new View.OnClickListener() {
                         @Override
                         @TargetApi(Build.VERSION_CODES.M)
@@ -251,11 +253,11 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
         }
 
         // Reset errors.
-        mMobileView.setError(null);
+        mPhoneNumber.setError(null);
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String phoneNumber = mMobileView.getText().toString();
+        String phoneNumber = mPhoneNumber.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
@@ -270,12 +272,12 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
 
         // Check for a valid phone number.
         if (TextUtils.isEmpty(phoneNumber)) {
-            mMobileView.setError(getString(R.string.error_field_required));
-            focusView = mMobileView;
+            mPhoneNumber.setError(getString(R.string.error_field_required));
+            focusView = mPhoneNumber;
             cancel = true;
         } else if (!accountUtils.isPhoneValid(phoneNumber)) {
-            mMobileView.setError(getString(R.string.error_invalid_phone_number));
-            focusView = mMobileView;
+            mPhoneNumber.setError(getString(R.string.error_invalid_phone_number));
+            focusView = mPhoneNumber;
             cancel = true;
         }
 
@@ -302,12 +304,12 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
         View focusView = null;
         boolean isValid = true;
         if(TextUtils.isEmpty(this.phone)) {
-            mMobileView.setError(getString(R.string.error_field_required));
-            focusView = mMobileView;
+            mPhoneNumber.setError(getString(R.string.error_field_required));
+            focusView = mPhoneNumber;
             isValid = false;
         }else if (!accountUtils.isPhoneValid(this.phone)) {
-            mMobileView.setError(getString(R.string.error_invalid_phone_number));
-            focusView = mMobileView;
+            mPhoneNumber.setError(getString(R.string.error_invalid_phone_number));
+            focusView = mPhoneNumber;
             isValid = false;
         }
         if(!isValid){
@@ -395,7 +397,7 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
                 new ArrayAdapter<>(MobileLoginActivity.this,
                         android.R.layout.simple_dropdown_item_1line, phoneNumberCollection);
 
-        mMobileView.setAdapter(adapter);
+        mPhoneNumber.setAdapter(adapter);
     }
 
 
@@ -460,8 +462,16 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
             if (success) {
                 SharedPreferences.Editor phoneAccountEditor = getSharedPreferences("phoneAccount", Context.MODE_PRIVATE).edit();
                 phoneAccountEditor.putString("phone", phone)
-                                  .apply();
-                accountUtils.linkSuccessDialog(MobileLoginActivity.this);
+                        .apply();
+
+                phoneAccountEditor.putString("phoneCode", params.get("code"))
+                        .apply();
+                Log.d("Link Parse phone", params.get("phone"));
+                Log.d("Link Parse code", params.get("code"));
+                SharedPreferences prefs = getSharedPreferences("phoneAccount", MODE_PRIVATE);
+                Log.d("Link Parse Pref phone", prefs.getString("phone", null));
+                Log.d("Link Parse Pref code", prefs.getString("phoneCode", null));
+                accountUtils.linkSuccessDialog(MobileLoginActivity.this, "phone", phone);
                 //finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

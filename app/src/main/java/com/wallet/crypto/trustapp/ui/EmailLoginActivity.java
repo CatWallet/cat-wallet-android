@@ -65,30 +65,28 @@ public class EmailLoginActivity extends BaseActivity implements LoaderManager.Lo
     private UserLoginTask mAuthTask = null;
 
     // UI references.
-    private AutoCompleteTextView mEmailView;
+    private AutoCompleteTextView mEmailAddress;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
     private Button mSendCode;
-    private EditText mEmailAddress;
     private String email;
+    private String emailCode;
     private String emailAccountNum;
+
+    private String ADDRESS_TYPE = "email";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email_login);
+
         setupActionBar();
 
-        SharedPreferences prefs = getSharedPreferences("emailAccount", MODE_PRIVATE);
-        emailAccountNum = prefs.getString("email", null);
-        if(emailAccountNum != null && !emailAccountNum.equals("")){
-            accountUtils.linkSuccessDialog(EmailLoginActivity.this);
-            //linkSuccessDialog(EmailLoginActivity.this);
-        }
+
         //toolbar();
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email_address);
+        mEmailAddress = (AutoCompleteTextView) findViewById(R.id.email_address);
         populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.activation_code);
@@ -115,7 +113,16 @@ public class EmailLoginActivity extends BaseActivity implements LoaderManager.Lo
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
         mSendCode = (Button) findViewById(R.id.fetchActivationCode);
-        mEmailAddress = (EditText) findViewById(R.id.email_address);
+
+        SharedPreferences prefs = getSharedPreferences("emailAccount", MODE_PRIVATE);
+        email = prefs.getString("email", null);
+        emailCode = prefs.getString("emailCode", null);
+        mEmailAddress.setText(email, TextView.BufferType.EDITABLE);
+        mPasswordView.setText(emailCode, TextView.BufferType.EDITABLE);
+        if(email != null && !email.equals("") && emailCode != null && !emailCode.equals("")){
+            //linkSuccessDialog(EmailLoginActivity.this);
+            attemptLogin();
+        }
 
         mEmailAddress.addTextChangedListener(new TextWatcher() {
 
@@ -173,7 +180,7 @@ public class EmailLoginActivity extends BaseActivity implements LoaderManager.Lo
             return true;
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(mEmailAddress, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
                     .setAction(android.R.string.ok, new View.OnClickListener() {
                         @Override
                         @TargetApi(Build.VERSION_CODES.M)
@@ -234,11 +241,11 @@ public class EmailLoginActivity extends BaseActivity implements LoaderManager.Lo
         }
 
         // Reset errors.
-        mEmailView.setError(null);
+        mEmailAddress.setError(null);
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String emailAddress = mEmailView.getText().toString();
+        String emailAddress = mEmailAddress.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
@@ -253,12 +260,12 @@ public class EmailLoginActivity extends BaseActivity implements LoaderManager.Lo
 
         // Check for a valid email number.
         if (TextUtils.isEmpty(emailAddress)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
+            mEmailAddress.setError(getString(R.string.error_field_required));
+            focusView = mEmailAddress;
             cancel = true;
         } else if (!accountUtils.isEmailValid(emailAddress)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
+            mEmailAddress.setError(getString(R.string.error_invalid_email));
+            focusView = mEmailAddress;
             cancel = true;
         }
 
@@ -285,12 +292,12 @@ public class EmailLoginActivity extends BaseActivity implements LoaderManager.Lo
         View focusView = null;
         boolean isValid = true;
         if(TextUtils.isEmpty(this.email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
+            mEmailAddress.setError(getString(R.string.error_field_required));
+            focusView = mEmailAddress;
             isValid = false;
         }else if (!accountUtils.isEmailValid(this.email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
+            mEmailAddress.setError(getString(R.string.error_invalid_email));
+            focusView = mEmailAddress;
             isValid = false;
         }
         if(!isValid){
@@ -378,7 +385,7 @@ public class EmailLoginActivity extends BaseActivity implements LoaderManager.Lo
                 new ArrayAdapter<>(EmailLoginActivity.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
-        mEmailView.setAdapter(adapter);
+        mEmailAddress.setAdapter(adapter);
     }
 
 
@@ -431,7 +438,9 @@ public class EmailLoginActivity extends BaseActivity implements LoaderManager.Lo
                 SharedPreferences.Editor emailAccountEditor = getSharedPreferences("emailAccount", Context.MODE_PRIVATE).edit();
                 emailAccountEditor.putString("email", email)
                         .apply();
-                accountUtils.linkSuccessDialog(EmailLoginActivity.this);
+                emailAccountEditor.putString("emailCode", params.get("code"))
+                        .apply();
+                accountUtils.linkSuccessDialog(EmailLoginActivity.this, "email", email);
                 //finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

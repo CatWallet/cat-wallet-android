@@ -11,16 +11,18 @@ import com.parse.FunctionCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.wallet.crypto.trustapp.R;
+import com.wallet.crypto.trustapp.router.AccountWalletGetterRouter;
 import com.wallet.crypto.trustapp.ui.BaseActivity;
 import com.wallet.crypto.trustapp.ui.MobileLoginActivity;
 import com.wallet.crypto.trustapp.ui.SettingsActivity;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class accountUtils extends BaseActivity {
 
 
-    public static void linkSuccessDialog(Context context){
+    public static void linkSuccessDialog(Context context, String accountType, String accountAddress){
         // 1. Instantiate an <code><a href="/reference/android/app/AlertDialog.Builder.html">AlertDialog.Builder</a></code> with its constructor
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         // 2. Chain together various setter methods to set the dialog characteristics
@@ -32,8 +34,14 @@ public class accountUtils extends BaseActivity {
                 // User clicked OK button
                 Intent intent;
                 try{
-                    intent = new Intent(context, SettingsActivity.class);
-                    context.startActivity(intent);
+//                    intent = new Intent(context, SettingsActivity.class);
+//                    context.startActivity(intent);
+//                    Map<String, String> params = new HashMap<String, String>();
+//                    params.put(accountType, accountAddress);
+//                    ParseCloud.callFunctionInBackground("logIn", params, new FunctionCallback<String>() {
+//                    });
+                    AccountWalletGetterRouter accountWalletGetterRouter = new AccountWalletGetterRouter();
+                    accountWalletGetterRouter.open(context,accountType, accountAddress);
                 }catch (Exception e){
                     Log.e("link Success Error",e.getMessage());
                 }
