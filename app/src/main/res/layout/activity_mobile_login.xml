@@ -64,7 +64,7 @@
                              android:imeActionId="6"
                              android:imeActionLabel="@string/action_link_short"
                              android:imeOptions="actionUnspecified"
-                             android:inputType="text"
+                             android:inputType="textPassword"
                              android:maxLines="1"
                              android:singleLine="true" />
 
