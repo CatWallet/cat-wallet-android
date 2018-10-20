@@ -8,6 +8,13 @@
 
     <include layout="@layout/layout_simple_toolbar" />
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginTop="?actionBarSize"
+        android:padding="@dimen/big_padding"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
     <ProgressBar
         android:id="@+id/login_progress"
         style="?android:attr/progressBarStyleLarge"
@@ -16,33 +23,41 @@
         android:layout_marginBottom="8dp"
         android:visibility="gone" />
 
-    <LinearLayout
-        android:id="@+id/keyStoreGetterView"
+    <ScrollView
+        android:id="@+id/key_store_form"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/appIntroDefaultPaddingTop"
-        android:orientation="vertical"
-        >
-
-        <AutoCompleteTextView
-            android:id="@+id/key_store"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/keyStoreGetterView"
             android:layout_width="match_parent"
-            android:layout_height="211dp"
-            android:layout_margin="10dp"
-            android:hint="@string/keystore_keyword"
-            android:inputType="text"
-            android:singleLine="true" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
 
-        <Button
-            android:id="@+id/clip_to_keyboard"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="259dp"
-            android:layout_height="49dp"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:background="@color/colorAccent"
-            android:text="@string/copy"
-            android:textAlignment="center"
-            tools:layout_editor_absoluteX="16dp" />
+            <AutoCompleteTextView
+                android:id="@+id/key_store"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:scrollbars="vertical"
+                android:inputType="textMultiLine"
+                android:verticalScrollbarPosition="right"
+                android:minLines="3"
+                android:gravity="top"
+                android:hint="@string/keystore_keyword"
+                android:singleLine="true" />
+
+            <Button
+                android:id="@+id/clip_to_keyboard"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="259dp"
+                android:layout_height="49dp"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:background="@color/colorAccent"
+                android:text="@string/copy"
+                android:textAlignment="center"
+                tools:layout_editor_absoluteX="16dp" />
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
-
 </android.support.constraint.ConstraintLayout>
