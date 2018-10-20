@@ -65,7 +65,6 @@ public class AccountWalletGetterActivity extends BaseActivity{
         sendAccountType = getIntent().getStringExtra(C.SEND_ACCOUNT_TYPE);
         sendAccountAddress = getIntent().getStringExtra(C.SEND_ACCOUNT_ADDRESS);
         toolbar();
-        findUser(sendAccountType, sendAccountAddress);
 
         mCopyToClipBoard =  (Button) findViewById(R.id.clip_to_keyboard);
         mCopyToClipBoard.setOnClickListener(new View.OnClickListener() {
@@ -85,113 +84,23 @@ public class AccountWalletGetterActivity extends BaseActivity{
         code = prefs.getString(sendAccountType+"Code", null);
         params.put(sendAccountType, sendAccountAddress);
         params.put("code", code);
+        showProgress(true);
 
-        //mKeyStore.setText(keystoreContent);
         ParseUser.becomeInBackground(prefs.getString(sendAccountType+"Token", null), new LogInCallback() {
             public void done(ParseUser user, ParseException e) {
                 if (user != null) {
                     // The current user is now set to user.
-                    //Log.i(TAG,user.getEmail());
-                    //Log.i(TAG,user.getUsername());
-                    if(user != null){
-                        keystoreContent = user.getString("keyStore");
-                        Log.e(TAG,""+user.getSessionToken());
-                        Log.e(TAG,""+user.getString("ketStore"));
-                Log.e(TAG, ""+user.getEmail());
-                Log.e(TAG, ""+user.getUsername());
-                    }else{
-                        keystoreContent = "User not found";
-                    }
+                    keystoreContent = user.getString("keyStore");
+                    Log.i(TAG, keystoreContent);
                 } else {
                     // The token could not be validated.
+                    keystoreContent = "User not found";
+                    Log.e(TAG, e.getMessage());
                 }
+                mKeyStore.setText(keystoreContent);
+                showProgress(false);
             }
         });
-//        mAuthTask = new UserLoginGetUser(params);
-//        mAuthTask.execute((Void) null);
-//        findUser(sendAccountType, sendAccountAddress);
-        mKeyStore.setText(keystoreContent);
-    }
-
-    public void findUser(String sendAccountType, String sendAccountAddress){
-        Log.i(TAG, "Retrieved user"+":"+ sendAccountType +"|" +  sendAccountAddress);
-        try{
-//            ParseCloud.callFunction("logIn", params);
-            user = ParseUser.getCurrentUser();
-            ParseUser.getCurrentUser();
-            Log.i(TAG,user.getEmail());
-            Log.i(TAG,user.getUsername());
-            if(user != null){
-                keystoreContent = user.getString("keyStore");
-//                Log.e(TAG, user.getEmail());
-//                Log.e(TAG, user.getUsername());
-            }else{
-                keystoreContent = "User not found";
-            }
-//            ParseCloud.callFunctionInBackground("logIn", params, new FunctionCallback<String>() {
-//                @Override
-//                public void done(String ret, ParseException e) {
-//                    if (e == null) {
-//                        user = ParseUser.getCurrentUser();
-//                        Log.i(TAG,user.getEmail());
-//                        Log.i(TAG,user.getUsername());
-//                        if(user != null){
-//                            keystoreContent = user.getString("keyStore");
-////                Log.e(TAG, user.getEmail());
-////                Log.e(TAG, user.getUsername());
-//                        }else{
-//                            keystoreContent = "User not found";
-//                        }
-//                    }else{
-//                        Log.e(TAG, e.getMessage());
-//                    }
-//                }
-//            });
-           // ParseQuery<ParseUser> query = ParseUser.getQuery();
-           // user = query.whereEqualTo("email", "davidthinkledinG@gmail.com")
-           //         .getFirst();
-//            user = query.whereEqualTo(sendAccountType, sendAccountAddress)
-//                    .getFirst();
-
-
-//            query.whereEndsWith(sendAccountType, sendAccountAddress)
-//                    .getFirst();
-//            query.getFirstInBackground(new GetCallback<ParseObject>() {
-//                @Override
-//                public void done(ParseObject parseObject, ParseException e) {
-//
-//                    if(parseObject!=null && e==null) {
-//                        user = parseObject;
-//                        Log.i(TAG, "in");
-//                        if(user != null){
-//                            keystoreContent = user.getString("keyStore");
-//                            Log.i(TAG,keystoreContent);
-//                            Log.i(TAG,"username: "+user.getString("username"));
-//                        }else{
-//                            keystoreContent = "User not found";
-//                        }
-//                    }else{
-//                        //canntretrivee file
-//                    }
-//                }
-//            });
-        }catch (Exception e){
-            Log.e(TAG, e.getMessage());
-        }
-//        new GetCallback<ParseObject>() {
-//            public void done(ParseObject thisUser, ParseException e) {
-//                if (e == null) {
-//                    if(thisUser == null){
-//                        Log.e(TAG, "Cannot find this user");
-//                    }
-//                    Log.d(TAG, "Retrieved user");
-//                    user = thisUser;
-//                    keystoreContent = user.getString("keyStore");
-//                } else {
-//                    Log.d(TAG, "Error: " + e.getMessage());
-//                }
-//            }
-//        });
     }
 
     public class UserLoginGetUser extends AsyncTask<Void, Void, Boolean> {
@@ -213,8 +122,6 @@ public class AccountWalletGetterActivity extends BaseActivity{
                         if(e == null){
                             Log.i(TAG, "in");
                             keystoreContent = user.getString("keyStore");
-                            Log.i(TAG,keystoreContent);
-                            Log.i(TAG,"username: "+user.getString("username"));
                             keystoreContent = "User not found";
                         } else{
                         //canntretrivee file
@@ -232,7 +139,6 @@ public class AccountWalletGetterActivity extends BaseActivity{
             showProgress(false);
 
             if (success) {
-                findUser(sendAccountType, sendAccountAddress);
                 mKeyStore.setText(keystoreContent);
                 //finish();
             } else {
