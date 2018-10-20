@@ -52,6 +52,7 @@ import com.parse.FunctionCallback;
 import com.parse.Parse;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
+import com.parse.ParseUser;
 import com.wallet.crypto.trustapp.R;
 import com.wallet.crypto.trustapp.router.SettingsRouter;
 import com.wallet.crypto.trustapp.util.MyCountDownTimer;
@@ -418,6 +419,7 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         HashMap<String, String> params;
+        String token;
         boolean LoginSuccess;
 
         UserLoginTask(HashMap<String, String> params) {
@@ -443,7 +445,7 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
 //                        }
 //                    }
 //                });
-                ParseCloud.callFunction("logIn", this.params);
+                token = ParseCloud.callFunction("logIn", this.params);
                 LoginSuccess = true;
                 Log.i("Link Parse", "Login Success");
             } catch(Exception e){
@@ -466,11 +468,10 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
 
                 phoneAccountEditor.putString("phoneCode", params.get("code"))
                         .apply();
-                Log.d("Link Parse phone", params.get("phone"));
-                Log.d("Link Parse code", params.get("code"));
+                phoneAccountEditor.putString("phoneToken", token)
+                        .apply();
+                Log.i("Parse Link email", token);
                 SharedPreferences prefs = getSharedPreferences("phoneAccount", MODE_PRIVATE);
-                Log.d("Link Parse Pref phone", prefs.getString("phone", null));
-                Log.d("Link Parse Pref code", prefs.getString("phoneCode", null));
                 accountUtils.linkSuccessDialog(MobileLoginActivity.this, "phone", phone);
                 //finish();
             } else {
