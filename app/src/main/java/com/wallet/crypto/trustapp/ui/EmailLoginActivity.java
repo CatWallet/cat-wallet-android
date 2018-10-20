@@ -407,6 +407,7 @@ public class EmailLoginActivity extends BaseActivity implements LoaderManager.Lo
 
         HashMap<String, String> params;
         boolean LoginSuccess;
+        String token;
 
         UserLoginTask(HashMap<String, String> params) {
             this.params = params;
@@ -418,7 +419,7 @@ public class EmailLoginActivity extends BaseActivity implements LoaderManager.Lo
             // TODO: attempt authentication against a network service.
 
             try{
-                ParseCloud.callFunction("logIn", this.params);
+                token = ParseCloud.callFunction("logIn", this.params);
                 LoginSuccess = true;
                 Log.i("Link Parse", "Login Success");
             } catch(Exception e){
@@ -440,6 +441,9 @@ public class EmailLoginActivity extends BaseActivity implements LoaderManager.Lo
                         .apply();
                 emailAccountEditor.putString("emailCode", params.get("code"))
                         .apply();
+                emailAccountEditor.putString("emailToken", token)
+                        .apply();
+                Log.i("Parse Link phone", token);
                 accountUtils.linkSuccessDialog(EmailLoginActivity.this, "email", email);
                 //finish();
             } else {
