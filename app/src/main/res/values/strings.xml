@@ -243,7 +243,6 @@
     <string name="prompt_email">Email Address</string>
     <string name="prompt_mobile">Phone Number</string>
     <string name="prompt_password">Activation Code</string>
-    <string name="import_wallet_prompt_password">Password</string>
     <string name="action_link">Link</string>
     <string name="action_link_short">Link</string>
     <string name="title_activity_mobile_login">Link Phone Number</string>>
