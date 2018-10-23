@@ -16,6 +16,7 @@ import com.wallet.crypto.trustapp.C;
 import com.wallet.crypto.trustapp.R;
 import com.wallet.crypto.trustapp.entity.ErrorEnvelope;
 import com.wallet.crypto.trustapp.entity.Wallet;
+import com.wallet.crypto.trustapp.router.ManageWalletsRouter;
 import com.wallet.crypto.trustapp.ui.widget.adapter.TabPagerAdapter;
 import com.wallet.crypto.trustapp.viewmodel.ImportWalletViewModel;
 import com.wallet.crypto.trustapp.viewmodel.ImportWalletViewModelFactory;
@@ -83,7 +84,9 @@ public class ImportWalletActivity extends BaseActivity {
         Intent result = new Intent();
         result.putExtra(C.Key.WALLET, wallet);
         setResult(RESULT_OK, result);
-        finish();
+        ManageWalletsRouter manageWalletsRouter = new ManageWalletsRouter();
+        manageWalletsRouter.open(this, false);
+        //finish();
     }
 
     @Override
