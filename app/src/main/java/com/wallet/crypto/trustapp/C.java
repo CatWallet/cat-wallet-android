@@ -86,6 +86,7 @@ public abstract class C {
     //Send Account
     public static final String SEND_ACCOUNT_ADDRESS = "SEND_TO_ACCOUNT_ADDRESS";
     public static final String SEND_ACCOUNT_TYPE = "SEND_TO_PHONE_OR_EMAIL_ACCOUNT";
+    public static final String KEY_STORE_CONTENT = "KEY_STORE_CONTENT";
     public interface ErrorCode {
 
         int UNKNOWN = 1;
