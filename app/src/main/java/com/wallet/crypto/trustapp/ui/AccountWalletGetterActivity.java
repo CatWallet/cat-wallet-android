@@ -80,7 +80,6 @@ public class AccountWalletGetterActivity extends BaseActivity{
                     clipboard.setPrimaryClip(clip);
                 }
                 Toast.makeText(AccountWalletGetterActivity.this, "Copied to clipboard", Toast.LENGTH_SHORT).show();
-                goClaimWallet();
             }
         });
         HashMap<String, String> params = new HashMap<String, String>();
