@@ -11,6 +11,7 @@ import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.Preference;
+import android.support.annotation.StringDef;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,6 +32,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.wallet.crypto.trustapp.C;
 import com.wallet.crypto.trustapp.R;
+import com.wallet.crypto.trustapp.router.ImportWalletRouter;
 
 import org.web3j.crypto.Hash;
 
@@ -42,11 +44,13 @@ public class AccountWalletGetterActivity extends BaseActivity{
 
     private AutoCompleteTextView mKeyStore;
     private Button mCopyToClipBoard;
+    private Button mGoClaimWallet;
     private View mKeystoreGetterView;
     private View mProgressView;
     private String sendAccountType;
     private String sendAccountAddress;
     private String code;
+
     public ParseUser user;
     private UserLoginGetUser mAuthTask = null;
 
@@ -76,6 +80,7 @@ public class AccountWalletGetterActivity extends BaseActivity{
                     clipboard.setPrimaryClip(clip);
                 }
                 Toast.makeText(AccountWalletGetterActivity.this, "Copied to clipboard", Toast.LENGTH_SHORT).show();
+                goClaimWallet();
             }
         });
         HashMap<String, String> params = new HashMap<String, String>();
@@ -99,6 +104,18 @@ public class AccountWalletGetterActivity extends BaseActivity{
                 }
                 mKeyStore.setText(keystoreContent);
                 showProgress(false);
+            }
+        });
+
+        mGoClaimWallet = (Button)findViewById(R.id.go_claim_wallet);
+        mGoClaimWallet.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                if(keystoreContent != null && !keystoreContent.equals("User not found") && !keystoreContent.equals("")){
+                    goClaimWallet();
+                }else{
+                    Toast.makeText(AccountWalletGetterActivity.this, "Error: User not found", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -189,4 +206,10 @@ public class AccountWalletGetterActivity extends BaseActivity{
             mKeystoreGetterView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
+
+    private void goClaimWallet(){
+        ImportWalletRouter importWalletRouter = new ImportWalletRouter();
+        importWalletRouter.openToClaimWalletViaKeyStore(this, mKeyStore.getText().toString());
+    }
+
 }

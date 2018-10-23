@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.parse.ParseUser;
 import com.wallet.crypto.trustapp.R;
 import com.wallet.crypto.trustapp.router.TransactionsRouter;
 
@@ -26,6 +27,7 @@ public class SettingsActivity extends BaseActivity implements HasFragmentInjecto
         setContentView(R.layout.activity_settings);
         toolbar();
         // Display the fragment as the main content.
+        ParseUser.logOut();
         getFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new SettingsFragment())
                 .commit();
