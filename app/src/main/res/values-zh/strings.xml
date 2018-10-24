@@ -259,6 +259,6 @@
     <string name="amount_send">金额</string>
     <string name="paste">粘贴</string>
     <string name="clear">清空</string>
-    <string name="max">全部转</string>
+    <string name="max">最大值</string>
 
 </resources>
