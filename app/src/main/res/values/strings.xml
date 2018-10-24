@@ -260,7 +260,7 @@
     </string>
     <string name="send_activation_code">Send Code</string>
     <string name="resend_code">Resend Code</string>
-    <string name="go_claim_wallet">Claim Wallet</string>
+    <string name="go_claim_wallet">Go Claim Wallet</string>
 
     <string name="error_find_keystore">Error Finding Keystore</string>
 </resources>
