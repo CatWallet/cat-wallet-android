@@ -131,8 +131,8 @@ public class SendActivity extends BaseActivity {
 //        amountInputLayout.setHint(getString(R.string.hint_amount));
 //        currencyInputLayout.setHint(getString(R.string.hint_currency_amount));
 
-        amountInputLayout.setHint(currentCoin + " Amount");
-        currencyInputLayout.setHint(currencyAbbr +" Amount");
+        amountInputLayout.setHint(currentCoin +" "+ getString(R.string.amount_send));
+        currencyInputLayout.setHint(currencyAbbr +" "+ getString(R.string.amount_send));
 
         // Populate to address if it has been passed forward
         String toAddress = getIntent().getStringExtra(C.EXTRA_ADDRESS);

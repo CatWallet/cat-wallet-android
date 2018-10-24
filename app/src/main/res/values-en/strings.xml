@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">CAT Wallet</string>
+    <string name="balance">Balance</string>
     <string name="title_send">Send</string>
     <string name="title_transactions">Transactions</string>
     <string name="title_browser">Browser</string>
@@ -105,7 +106,7 @@
     <string name="unlock_screen_prompt_android">Please unlock your Android device to continue.</string>
     <string name="sending_progress">Sending...</string>
 
-    <string name="backup_new_password_text">Think of a password that will be installed on the backup. The password will be available for this wallet.</string>
+    <string name="backup_new_password_text">Think of a password that will be installed on the backup.\nThe password will be available for this wallet.</string>
     <string name="do_manage_make_backup">Did you manage to make a backup?</string>
     <string name="yes_continue">Yes, continue</string>
     <string name="no_repeat">No, repeat</string>
@@ -254,13 +255,14 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email completions.\n    "</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
     <string name="send_activation_code">Send Code</string>
     <string name="resend_code">Resend Code</string>
     <string name="go_claim_wallet">Go Claim Wallet</string>
 
     <string name="error_find_keystore">Error Finding Keystore</string>
-    <string name="balance">Balance</string>
     <string name="amount_send">Amount</string>
     <string name="paste">Paste</string>
     <string name="clear">Clear</string>
