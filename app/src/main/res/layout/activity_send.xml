@@ -44,13 +44,13 @@
                 style="@style/Widget.AppCompat.Button"
                 android:layout_width="59dp"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/scan_barcode_button"
                 android:layout_alignTop="@+id/to_input_layout"
+                android:layout_alignEnd="@+id/scan_barcode_button"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="49dp"
                 android:background="?attr/selectableItemBackground"
                 android:onClick="pasteFromClipboard"
-                android:text="Paste"
+                android:text="@string/paste"
                 android:textColor="@android:color/holo_blue_dark" />
             <ImageButton
                 android:id="@+id/scan_barcode_button"
@@ -97,12 +97,12 @@
                 style="@style/Widget.AppCompat.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/amount_input_layout"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_alignTop="@+id/amount_input_layout"
                 android:background="?attr/selectableItemBackground"
                 android:onClick="setToMaxTransferAmount"
-                android:text="Max"
+                android:text="@string/max"
                 android:textColor="@android:color/holo_blue_dark" />
         </RelativeLayout>
         <RelativeLayout
@@ -130,17 +130,18 @@
                     android:maxLength="15"
                     />
             </android.support.design.widget.TextInputLayout>
+
             <Button
                 android:id="@+id/clear_button"
                 style="@style/Widget.AppCompat.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/currency_amount_input_layout"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_alignTop="@+id/currency_amount_input_layout"
                 android:background="?attr/selectableItemBackground"
                 android:onClick="clearAmount"
-                android:text="Clear"
+                android:text="@string/clear"
                 android:textColor="@android:color/holo_blue_dark" />
         </RelativeLayout>
         <TextView
