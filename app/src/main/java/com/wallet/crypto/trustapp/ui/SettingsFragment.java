@@ -1,19 +1,22 @@
 package com.wallet.crypto.trustapp.ui;
 
-import android.app.Application;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.Pair;
 import android.widget.Toast;
 
 import com.wallet.crypto.trustapp.C;
@@ -23,6 +26,12 @@ import com.wallet.crypto.trustapp.entity.NetworkInfo;
 import com.wallet.crypto.trustapp.interact.FindDefaultWalletInteract;
 import com.wallet.crypto.trustapp.repository.EthereumNetworkRepositoryType;
 import com.wallet.crypto.trustapp.router.ManageWalletsRouter;
+import com.wallet.crypto.trustapp.router.SettingsRouter;
+import com.wallet.crypto.trustapp.util.LanguageUtils;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -79,12 +88,21 @@ public class SettingsFragment extends PreferenceFragment
         //change currency setting
         final ListPreference listCurrencyPreference = (ListPreference) findPreference("pref_currency");
         // THIS IS REQUIRED IF YOU DON'T HAVE 'entries' and 'entryValues' in your XML
-        setCurrencyPreferenceData(listCurrencyPreference  );
+        setCurrencyPreferenceData(listCurrencyPreference);
         listCurrencyPreference.setOnPreferenceClickListener(currencyPreference -> {
             setCurrencyPreferenceData(listCurrencyPreference);
             return false;
         });
 
+
+        //change language setting
+        final ListPreference listLanguagePreference = (ListPreference) findPreference("pref_language");
+        // THIS IS REQUIRED IF YOU DON'T HAVE 'entries' and 'entryValues' in your XML
+        setLanguagePreferenceData(listLanguagePreference);
+        listLanguagePreference.setOnPreferenceClickListener(languagePreference -> {
+            setLanguagePreferenceData(listLanguagePreference);
+            return false;
+        });
 
         final Preference linkPhone = findPreference("pref_mobile_account");
        // setCurrencyPreferenceData(getPhone());
@@ -246,6 +264,15 @@ public class SettingsFragment extends PreferenceFragment
                 }
             }
         }
+
+        if (key.equals("pref_language")){
+            Preference languagePref = findPreference(key);
+            String selectLanguage = sharedPreferences.getString(key, "");
+            languagePref.setSummary(selectLanguage);
+            LanguageUtils.setLanguage(this.getContext(), selectLanguage);
+            SettingsRouter settingsRouter = new SettingsRouter();
+            settingsRouter.open(this.getContext());
+        }
     }
 
     private void setRpcServerPreferenceData(ListPreference lp) {
@@ -291,6 +318,29 @@ public class SettingsFragment extends PreferenceFragment
         lp.setEntryValues(entryValues);
     }
 
+    private void setLanguagePreferenceData(ListPreference lp) {
+        Map<String, String> languages = new HashMap<String, String>();
+        languages.put("en", "English");
+        languages.put("zh", "简体中文");
+        int size = languages.size();
+        CharSequence[] entries = new CharSequence[size];
+        CharSequence[] entryValues = new CharSequence[size];
+
+        int i = 0;
+        for(String key : languages.keySet()){
+            entryValues[i] = key;
+            entries[i] = languages.get(key);
+            i++;
+        }
+
+        String currentLanguage = lp.getValue();
+
+        lp.setEntries(entries);
+        lp.setDefaultValue(currentLanguage);
+        lp.setValue(currentLanguage);
+        lp.setSummary(languages.get(currentLanguage));
+        lp.setEntryValues(entryValues);
+    }
     public String getVersion() {
         String version = "N/A";
         try {
@@ -323,5 +373,15 @@ public class SettingsFragment extends PreferenceFragment
         }
         return email;
     }
+
+    public void setLocale(String lang) {
+        Locale myLocale = new Locale(lang);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.locale = myLocale;
+        res.updateConfiguration(conf, dm);
+    }
+
 }
 
