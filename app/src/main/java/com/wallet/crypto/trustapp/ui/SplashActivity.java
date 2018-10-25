@@ -10,6 +10,7 @@ import com.wallet.crypto.trustapp.BuildConfig;
 import com.wallet.crypto.trustapp.entity.Wallet;
 import com.wallet.crypto.trustapp.router.ManageWalletsRouter;
 import com.wallet.crypto.trustapp.router.TransactionsRouter;
+import com.wallet.crypto.trustapp.util.LanguageUtils;
 import com.wallet.crypto.trustapp.viewmodel.SplashViewModel;
 import com.wallet.crypto.trustapp.viewmodel.SplashViewModelFactory;
 
@@ -29,8 +30,10 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
+
         Fabric.with(this, new Crashlytics.Builder()
                 .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build(), new Crashlytics());
+        LanguageUtils.setLanguage(this.getApplicationContext(), LanguageUtils.getLanguage());
 
         splashViewModel = ViewModelProviders.of(this, splashViewModelFactory)
                 .get(SplashViewModel.class);

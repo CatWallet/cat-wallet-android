@@ -260,5 +260,6 @@
     <string name="paste">粘贴</string>
     <string name="clear">清空</string>
     <string name="max">最大值</string>
+    <string name="app_language">语言</string>
 
 </resources>

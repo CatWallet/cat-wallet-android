@@ -21,6 +21,12 @@
             android:icon="@mipmap/settings_currency"
             android:dialogTitle="@string/currency_label" />
 
+        <ListPreference
+            android:key="pref_language"
+            android:title="@string/app_language"
+            android:icon="@mipmap/setting_language"
+            android:dialogTitle="@string/app_language" />
+
     <PreferenceCategory
         android:title="@string/title_link_account"
         android:key="pref_account" >

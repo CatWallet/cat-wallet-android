@@ -265,4 +265,5 @@
     <string name="paste">Paste</string>
     <string name="clear">Clear</string>
     <string name="max">Max</string>
+    <string name="app_language">language</string>
 </resources>
