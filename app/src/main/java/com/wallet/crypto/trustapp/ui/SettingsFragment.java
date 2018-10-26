@@ -268,7 +268,7 @@ public class SettingsFragment extends PreferenceFragment
         if (key.equals("pref_language")){
             Preference languagePref = findPreference(key);
             String selectLanguage = sharedPreferences.getString(key, "");
-            languagePref.setSummary(selectLanguage);
+            //languagePref.setSummary(selectLanguage);
             LanguageUtils.setLanguage(this.getContext(), selectLanguage);
             SettingsRouter settingsRouter = new SettingsRouter();
             settingsRouter.open(this.getContext());
@@ -372,15 +372,6 @@ public class SettingsFragment extends PreferenceFragment
             e.printStackTrace();
         }
         return email;
-    }
-
-    public void setLocale(String lang) {
-        Locale myLocale = new Locale(lang);
-        Resources res = getResources();
-        DisplayMetrics dm = res.getDisplayMetrics();
-        Configuration conf = res.getConfiguration();
-        conf.locale = myLocale;
-        res.updateConfiguration(conf, dm);
     }
 
 }
