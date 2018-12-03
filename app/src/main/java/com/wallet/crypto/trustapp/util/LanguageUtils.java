@@ -5,14 +5,17 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 
 import java.util.Locale;
 
 public class LanguageUtils {
 
-    public static String getLanguage(){
-        return Locale.getDefault().getDisplayLanguage();
+    public static String getLanguage(Context context){
+        SharedPreferences pref =  PreferenceManager.getDefaultSharedPreferences(context);
+        String retLanguege = pref.getString("pref_language", Locale.getDefault().getDisplayLanguage()); //default language is the same with device language
+        return retLanguege;
     }
 
     public static void setLanguage(Context context, String lang){

@@ -33,14 +33,14 @@ public class SplashActivity extends AppCompatActivity {
 
         Fabric.with(this, new Crashlytics.Builder()
                 .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build(), new Crashlytics());
-        LanguageUtils.setLanguage(this.getApplicationContext(), LanguageUtils.getLanguage());
-
         splashViewModel = ViewModelProviders.of(this, splashViewModelFactory)
                 .get(SplashViewModel.class);
         splashViewModel.wallets().observe(this, this::onWallets);
+        LanguageUtils.setLanguage(this, LanguageUtils.getLanguage(this.getApplicationContext()));
     }
 
     private void onWallets(Wallet[] wallets) {
+
         // Start home activity
         if (wallets.length == 0) {
             new ManageWalletsRouter().open(this, true);
