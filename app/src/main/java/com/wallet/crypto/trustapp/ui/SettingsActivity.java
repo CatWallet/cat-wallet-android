@@ -28,6 +28,7 @@ public class SettingsActivity extends BaseActivity implements HasFragmentInjecto
         toolbar();
         // Display the fragment as the main content.
         ParseUser.logOut();
+        setTitle(R.string.title_activity_settings);
         getFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new SettingsFragment())
                 .commit();

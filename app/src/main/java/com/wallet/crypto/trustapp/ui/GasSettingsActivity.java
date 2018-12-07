@@ -44,7 +44,7 @@ public class GasSettingsActivity extends BaseActivity {
 
         setContentView(R.layout.activity_gas_settings);
         toolbar();
-
+        setTitle(R.string.gas_fee_title);
         SeekBar gasPriceSlider = findViewById(R.id.gas_price_slider);
         SeekBar gasLimitSlider = findViewById(R.id.gas_limit_slider);
         gasPriceText = findViewById(R.id.gas_price_text);

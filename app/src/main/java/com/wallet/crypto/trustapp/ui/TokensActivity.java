@@ -42,7 +42,7 @@ public class TokensActivity extends BaseActivity implements View.OnClickListener
         setContentView(R.layout.activity_tokens);
 
         toolbar();
-
+        setTitle(R.string.title_my_tokens);
         adapter = new TokensAdapter(this::onTokenClick);
         SwipeRefreshLayout refreshLayout = findViewById(R.id.refresh_layout);
         systemView = findViewById(R.id.system_view);
