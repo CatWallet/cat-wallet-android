@@ -45,7 +45,7 @@ public class AddTokenActivity extends BaseActivity implements View.OnClickListen
         setContentView(R.layout.activity_add_token);
 
         toolbar();
-
+        setTitle(R.string.title_add_token);
         addressLayout = findViewById(R.id.address_input_layout);
         address = findViewById(R.id.address);
         symbolLayout = findViewById(R.id.symbol_input_layout);
