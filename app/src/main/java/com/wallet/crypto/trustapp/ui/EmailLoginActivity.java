@@ -82,7 +82,7 @@ public class EmailLoginActivity extends BaseActivity implements LoaderManager.Lo
         setContentView(R.layout.activity_email_login);
 
         setupActionBar();
-
+        setTitle(R.string.title_email);
 
         //toolbar();
         // Set up the login form.

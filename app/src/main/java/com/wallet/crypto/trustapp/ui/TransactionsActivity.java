@@ -73,6 +73,7 @@ public class TransactionsActivity extends BaseNavigationActivity implements View
         setContentView(R.layout.activity_transactions);
 
         toolbar();
+        setTitle(R.string.title_transactions);
 
         BalanceUtils.changeDisplayBalance("","",findViewById(android.R.id.content));
         initBottomNavigation();

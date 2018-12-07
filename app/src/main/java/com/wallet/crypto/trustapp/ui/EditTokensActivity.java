@@ -42,7 +42,7 @@ public class EditTokensActivity extends BaseActivity implements View.OnClickList
         setContentView(R.layout.activity_edit_tokens);
 
         toolbar();
-
+        setTitle(R.string.title_edit_tokens);
         adapter = new TokensAdapter(this::onTokenClick);
         SwipeRefreshLayout refreshLayout = findViewById(R.id.refresh_layout);
         systemView = findViewById(R.id.system_view);

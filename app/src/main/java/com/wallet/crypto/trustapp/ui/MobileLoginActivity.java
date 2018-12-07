@@ -98,7 +98,7 @@ public class MobileLoginActivity extends BaseActivity implements LoaderCallbacks
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mobile_login);
         setupActionBar();
-
+        setTitle(R.string.title_mobile_account);
         //toolbar();
         // Set up the login form.
         mPhoneNumber = (AutoCompleteTextView) findViewById(R.id.phone_number);

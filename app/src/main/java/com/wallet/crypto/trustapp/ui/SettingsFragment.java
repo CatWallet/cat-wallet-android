@@ -54,6 +54,7 @@ public class SettingsFragment extends PreferenceFragment
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
 
