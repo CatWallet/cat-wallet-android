@@ -2,24 +2,21 @@
 
 buildscript {
     repositories {
+        google()
         jcenter { url "http://jcenter.bintray.com/"}
         mavenCentral()
         maven { url 'https://jitpack.io' }
-        google()
     }
     dependencies {
-<<<<<<< HEAD
-=======
-        classpath 'com.android.tools.build:gradle:3.2.0'
->>>>>>> release: 1.15.03
         classpath "io.realm:realm-gradle-plugin:4.3.1"
+        classpath 'com.android.tools.build:gradle:3.2.1'
     }
 }
 
 allprojects {
     repositories {
-        jcenter { url "http://jcenter.bintray.com/"}
         google()
+        jcenter { url "http://jcenter.bintray.com/"}
         mavenCentral()
         maven { url 'https://jitpack.io' }
     }
