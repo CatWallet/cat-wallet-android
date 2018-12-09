@@ -80,6 +80,7 @@ public class SendActivity extends BaseActivity {
     private TextInputLayout toInputLayout;
     private TextInputLayout amountInputLayout;
     private TextInputLayout currencyInputLayout;
+    private Button btnGotoContacts;
 
     NetworkInfo networkInfo;
 
@@ -91,6 +92,7 @@ public class SendActivity extends BaseActivity {
     private String tickerPrice;
     private BigDecimal networkFee;
     public PreferenceRepositoryType preferenceRepositoryType;
+    public String address;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -150,12 +152,10 @@ public class SendActivity extends BaseActivity {
 
         Button max_amount_button = findViewById(R.id.max_button);
 
-
-
         BalanceUtils.changeDisplayBalance("","",findViewById(android.R.id.content));
 
-        Button gotoContacts = findViewById(R.id.btn_contacts);
-        gotoContacts.setOnClickListener(new View.OnClickListener() {
+        btnGotoContacts = findViewById(R.id.btn_contacts);
+        btnGotoContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new ContactsRouter().open(getApplicationContext());

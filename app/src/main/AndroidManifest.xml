@@ -132,13 +132,21 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.wallet.crypto.trustapp.ui.SettingsActivity" />
         </activity>
-        <activity android:name=".ui.ContactsActivity"
+        <activity
+            android:name=".ui.ContactsActivity"
             android:label="@string/title_contacts"
             android:parentActivityName=".ui.SendActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.wallet.crypto.trustapp.ui.SendActivity" />
         </activity>
+        <activity android:name=".ui.AddContactActivity"
+            android:label="@string/add_contact"
+            android:parentActivityName=".ui.ContactsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.wallet.crypto.trustapp.ui.ContactsActivity" />
+            ></activity>
     </application>
 
 </manifest>
