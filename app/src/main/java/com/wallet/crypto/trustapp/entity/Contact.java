@@ -1,4 +1,4 @@
-package com.wallet.crypto.trustapp.repository.entity;
+package com.wallet.crypto.trustapp.entity;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 

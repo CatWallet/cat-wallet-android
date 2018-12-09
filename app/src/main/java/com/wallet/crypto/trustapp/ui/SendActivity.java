@@ -36,6 +36,7 @@ import com.wallet.crypto.trustapp.entity.NetworkInfo;
 import com.wallet.crypto.trustapp.entity.Wallet;
 import com.wallet.crypto.trustapp.repository.PreferenceRepositoryType;
 import com.wallet.crypto.trustapp.repository.SharedPreferenceRepository;
+import com.wallet.crypto.trustapp.router.ContactsRouter;
 import com.wallet.crypto.trustapp.ui.barcode.BarcodeCaptureActivity;
 import com.wallet.crypto.trustapp.util.BalanceUtils;
 import com.wallet.crypto.trustapp.util.QRURLParser;
@@ -134,6 +135,7 @@ public class SendActivity extends BaseActivity {
         amountInputLayout.setHint(currentCoin +" "+ getString(R.string.amount_send));
         currencyInputLayout.setHint(currencyAbbr +" "+ getString(R.string.amount_send));
 
+
         // Populate to address if it has been passed forward
         String toAddress = getIntent().getStringExtra(C.EXTRA_ADDRESS);
         if (toAddress != null) {
@@ -152,6 +154,13 @@ public class SendActivity extends BaseActivity {
 
         BalanceUtils.changeDisplayBalance("","",findViewById(android.R.id.content));
 
+        Button gotoContacts = findViewById(R.id.btn_contacts);
+        gotoContacts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new ContactsRouter().open(getApplicationContext());
+            }
+        });
 
         viewModel.defaultWalletBalance().observe(this, this::onBalanceChanged);
         viewModel.gasSettings().observe(this, this::getGasSettings);

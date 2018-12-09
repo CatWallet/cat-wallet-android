@@ -267,5 +267,9 @@
     <string name="paste">Paste</string>
     <string name="clear">Clear</string>
     <string name="max">Max</string>
-    <string name="app_language">language</string>
+    <string name="app_language">Language</string>
+    <string name="title_contacts">Contacts</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="add_contact">Add Contact</string>
 </resources>

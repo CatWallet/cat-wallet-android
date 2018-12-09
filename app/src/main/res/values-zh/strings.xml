@@ -261,5 +261,9 @@
     <string name="clear">清空</string>
     <string name="max">最大值</string>
     <string name="app_language">语言</string>
+    <string name="title_contacts">联系人</string>
+    <string name="edit">编辑</string>
+    <string name="delete">删除</string>
+    <string name="add_contact">添加联系人</string>
 
 </resources>

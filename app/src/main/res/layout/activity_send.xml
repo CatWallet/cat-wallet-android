@@ -153,6 +153,13 @@
             android:fontFamily="sans-serif-condensed"
             android:text="@string/send_reminder"
             android:textStyle="italic" />
+
+        <Button
+            android:id="@+id/btn_contacts"
+            style="@android:style/Widget.Material.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_contacts" />
     </LinearLayout>
 
 
