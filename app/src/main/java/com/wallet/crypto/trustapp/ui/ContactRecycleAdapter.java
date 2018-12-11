@@ -5,9 +5,10 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.wallet.crypto.trustapp.R;
+import com.wallet.crypto.trustapp.entity.Contact;
 
 public class ContactRecycleAdapter extends RecyclerView.Adapter<ContactRecycleAdapter.MyViewHolder> {
-    private String[] mDataset;
+    private Contact[] mDataset;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -22,7 +23,7 @@ public class ContactRecycleAdapter extends RecyclerView.Adapter<ContactRecycleAd
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public ContactRecycleAdapter(String[] myDataset) {
+    public ContactRecycleAdapter(Contact[] myDataset) {
         mDataset = myDataset;
     }
 
@@ -32,7 +33,7 @@ public class ContactRecycleAdapter extends RecyclerView.Adapter<ContactRecycleAd
                                                      int viewType) {
         // create a new view
         TextView v = (TextView) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.my_text_view, parent, false);
+                .inflate(R.layout.contact_single, parent, false);
         MyViewHolder vh = new MyViewHolder(v);
         return vh;
     }
@@ -42,7 +43,7 @@ public class ContactRecycleAdapter extends RecyclerView.Adapter<ContactRecycleAd
     public void onBindViewHolder(MyViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.mTextView.setText(mDataset[position]);
+        holder.mTextView.setText(mDataset[position].getName());
 
     }
 
