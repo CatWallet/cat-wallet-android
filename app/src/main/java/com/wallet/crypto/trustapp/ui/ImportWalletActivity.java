@@ -10,12 +10,15 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.widget.ProgressBar;
 
+import com.parse.ParseUser;
 import com.wallet.crypto.trustapp.C;
 import com.wallet.crypto.trustapp.R;
 import com.wallet.crypto.trustapp.entity.ErrorEnvelope;
 import com.wallet.crypto.trustapp.entity.Wallet;
+import com.wallet.crypto.trustapp.router.ManageWalletsRouter;
 import com.wallet.crypto.trustapp.ui.widget.adapter.TabPagerAdapter;
 import com.wallet.crypto.trustapp.viewmodel.ImportWalletViewModel;
 import com.wallet.crypto.trustapp.viewmodel.ImportWalletViewModelFactory;
@@ -32,6 +35,7 @@ public class ImportWalletActivity extends BaseActivity {
     private static final int KEYSTORE_FORM_INDEX = 0;
     private static final int PRIVATE_KEY_FORM_INDEX = 1;
 
+    private static final String TAG = "Parse Wallet Import";
     private final List<Pair<String, Fragment>> pages = new ArrayList<>();
 
     @Inject
@@ -83,7 +87,17 @@ public class ImportWalletActivity extends BaseActivity {
         Intent result = new Intent();
         result.putExtra(C.Key.WALLET, wallet);
         setResult(RESULT_OK, result);
-        finish();
+        ManageWalletsRouter manageWalletsRouter = new ManageWalletsRouter();
+        manageWalletsRouter.open(this, false);
+        try{
+            ParseUser user = ParseUser.getCurrentUser();
+            user.put("claimed", "True");
+            user.saveEventually();
+        }catch(Exception e){
+            Log.e(TAG, "Set claimed error");
+            Log.e(TAG, e.getMessage());
+        }
+        //finish();
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.wallet.crypto.trustapp.R;
+import com.wallet.crypto.trustapp.entity.CurrencyInfo;
 import com.wallet.crypto.trustapp.entity.NetworkInfo;
 import com.wallet.crypto.trustapp.entity.Transaction;
 import com.wallet.crypto.trustapp.entity.Wallet;
@@ -60,6 +61,7 @@ public class TransactionsAdapter extends RecyclerView.Adapter<BinderViewHolder> 
 
     private Wallet wallet;
     private NetworkInfo network;
+    private CurrencyInfo currency;
 
     public TransactionsAdapter(OnTransactionClickListener onTransactionClickListener) {
         this.onTransactionClickListener = onTransactionClickListener;
@@ -102,6 +104,11 @@ public class TransactionsAdapter extends RecyclerView.Adapter<BinderViewHolder> 
 
     public void setDefaultWallet(Wallet wallet) {
         this.wallet = wallet;
+        notifyDataSetChanged();
+    }
+
+    public void setDefaultCurrency(CurrencyInfo currency){
+        this.currency = currency;
         notifyDataSetChanged();
     }
 

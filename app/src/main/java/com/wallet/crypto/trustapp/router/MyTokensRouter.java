@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.wallet.crypto.trustapp.entity.Wallet;
+import com.wallet.crypto.trustapp.ui.EditTokensActivity;
 import com.wallet.crypto.trustapp.ui.TokensActivity;
 
 import static com.wallet.crypto.trustapp.C.Key.WALLET;

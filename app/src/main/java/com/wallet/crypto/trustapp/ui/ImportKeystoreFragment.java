@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.wallet.crypto.trustapp.C;
 import com.wallet.crypto.trustapp.R;
 import com.wallet.crypto.trustapp.ui.widget.OnImportKeystoreListener;
 
@@ -39,6 +40,11 @@ public class ImportKeystoreFragment extends Fragment implements View.OnClickList
 
         keystore = view.findViewById(R.id.keystore);
         password = view.findViewById(R.id.password);
+        String keyStoreContent = getActivity().getIntent().getStringExtra(C.KEY_STORE_CONTENT);
+        if(keyStoreContent != null && !keyStoreContent.equals("")){
+            keystore.setText(keyStoreContent, null);
+            password.requestFocus();
+        }
         view.findViewById(R.id.import_action).setOnClickListener(this);
     }
 

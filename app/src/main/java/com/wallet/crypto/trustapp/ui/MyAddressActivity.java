@@ -46,6 +46,7 @@ public class MyAddressActivity extends BaseActivity implements View.OnClickListe
         setContentView(R.layout.activity_my_address);
 
         toolbar();
+        setTitle(R.string.title_my_address);
 
         wallet = getIntent().getParcelableExtra(WALLET);
         NetworkInfo networkInfo = ethereumNetworkRepository.getDefaultNetwork();

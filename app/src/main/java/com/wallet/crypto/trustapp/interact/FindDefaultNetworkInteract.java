@@ -1,5 +1,6 @@
 package com.wallet.crypto.trustapp.interact;
 
+import com.wallet.crypto.trustapp.entity.CurrencyInfo;
 import com.wallet.crypto.trustapp.entity.NetworkInfo;
 import com.wallet.crypto.trustapp.repository.EthereumNetworkRepositoryType;
 
@@ -15,7 +16,14 @@ public class FindDefaultNetworkInteract {
     }
 
     public Single<NetworkInfo> find() {
+        //findCurrency();
         return Single.just(ethereumNetworkRepository.getDefaultNetwork())
                 .observeOn(AndroidSchedulers.mainThread());
     }
+
+    public Single<CurrencyInfo> findCurrency() {
+        return Single.just(ethereumNetworkRepository.getDefaultCurrency())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
 }

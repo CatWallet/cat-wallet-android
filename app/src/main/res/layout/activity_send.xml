@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
-    <include layout="@layout/layout_simple_toolbar" />
+
+    <include layout="@layout/layout_app_bar" />
     <LinearLayout
         android:padding="16dp"
         android:orientation="vertical"
@@ -37,6 +38,20 @@
                     android:layout_height="wrap_content"
                     />
             </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/paste_button"
+                style="@style/Widget.AppCompat.Button"
+                android:layout_width="59dp"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/to_input_layout"
+                android:layout_alignEnd="@+id/scan_barcode_button"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="49dp"
+                android:background="?attr/selectableItemBackground"
+                android:onClick="pasteFromClipboard"
+                android:text="@string/paste"
+                android:textColor="@android:color/holo_blue_dark" />
             <ImageButton
                 android:id="@+id/scan_barcode_button"
                 android:src="@mipmap/qr_code_icon"
@@ -48,22 +63,106 @@
                 android:layout_height="wrap_content"
                 />
         </RelativeLayout>
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/amount_input_layout"
+        <RelativeLayout
+            android:id="@+id/send_amout_layout"
             android:layout_marginTop="@dimen/big_margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             >
-            <EditText
-                android:id="@+id/send_amount"
-                android:hint="@string/hint_amount"
-                android:imeActionLabel="@string/action_sign_in_short"
-                android:imeOptions="actionUnspecified"
-                android:inputType="numberDecimal"
-                android:maxLines="1"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/amount_input_layout"
+                android:layout_marginTop="@dimen/big_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                />
-        </android.support.design.widget.TextInputLayout>
+                >
+
+                <EditText
+                    android:id="@+id/send_amount"
+                    style="@style/Widget.AppCompat.EditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:hint="@string/hint_amount"
+                    android:imeActionLabel="@string/action_sign_in_short"
+                    android:imeOptions="actionUnspecified"
+                    android:inputType="numberDecimal"
+                    android:maxLength="15"
+                    android:maxLines="1" />
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/max_button"
+                style="@style/Widget.AppCompat.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/amount_input_layout"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="?attr/selectableItemBackground"
+                android:onClick="setToMaxTransferAmount"
+                android:text="@string/max"
+                android:textColor="@android:color/holo_blue_dark" />
+        </RelativeLayout>
+        <RelativeLayout
+                android:id="@+id/send_USD_amout_layout"
+                android:layout_marginTop="@dimen/big_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/currency_amount_input_layout"
+                android:layout_marginTop="@dimen/big_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+                <EditText
+                    android:id="@+id/send_amount_currency"
+                    android:hint="@string/hint_currency_amount"
+                    android:imeActionLabel="@string/action_sign_in_short"
+                    android:imeOptions="actionUnspecified"
+                    android:inputType="numberDecimal"
+                    android:maxLines="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLength="15"
+                    />
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/clear_button"
+                style="@style/Widget.AppCompat.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/currency_amount_input_layout"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="?attr/selectableItemBackground"
+                android:onClick="clearAmount"
+                android:text="@string/clear"
+                android:textColor="@android:color/holo_blue_dark" />
+        </RelativeLayout>
+        <TextView
+            android:id="@+id/reminderTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:alpha="0.7"
+            android:fontFamily="sans-serif-condensed"
+            android:text="@string/send_reminder"
+            android:textStyle="italic" />
+
+        <Button
+            android:id="@+id/btn_contacts"
+            style="@android:style/Widget.Material.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_contacts" />
     </LinearLayout>
+
+
+
+
 </FrameLayout>

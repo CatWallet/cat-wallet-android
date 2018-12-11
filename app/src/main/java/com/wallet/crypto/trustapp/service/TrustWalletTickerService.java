@@ -15,12 +15,11 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 
 public class TrustWalletTickerService implements TickerService {
-
-    private static final String TRUST_API_URL = "https://api.trustwalletapp.com";
 
     private final OkHttpClient httpClient;
     private final Gson gson;
@@ -31,7 +30,7 @@ public class TrustWalletTickerService implements TickerService {
             Gson gson) {
         this.httpClient = httpClient;
         this.gson = gson;
-        buildApiClient(TRUST_API_URL);
+        buildApiClient("https://api.trustwalletapp.com/");
     }
 
     private void buildApiClient(String baseUrl) {
@@ -45,9 +44,9 @@ public class TrustWalletTickerService implements TickerService {
     }
 
     @Override
-    public Observable<Ticker> fetchTickerPrice(String symbols) {
+    public Observable<Ticker> fetchTickerPrice(String currency, String symbols) {
         return apiClient
-                .fetchTickerPrice(symbols)
+                .fetchTickerPrice(currency, symbols)
                 .lift(apiError())
                 .map(r -> r.response[0])
                 .subscribeOn(Schedulers.io());
@@ -59,8 +58,15 @@ public class TrustWalletTickerService implements TickerService {
     }
 
     public interface ApiClient {
-        @GET("prices?currency=USD&")
-        Observable<Response<TrustResponse>> fetchTickerPrice(@Query("symbols") String symbols);
+        //@GET("prices?currency=USD&")
+        //String currency = "USD";
+        //String symbol = "ETH";
+        //@GET("prices?currency={currency}&symbols={symbol}")
+        //@GET("prices?")
+        @GET("prices")
+        //Observable<Response<TrustResponse>> fetchTickerPrice(@Path("currency") String currency, @Path("symbol") String symbol);
+        Observable<Response<TrustResponse>> fetchTickerPrice(@Query("currency") String currency, @Query("symbols") String symbol);
+        //Observable<Response<TrustResponse>> fetchTickerPrice(@Query("symbol") String symbol);
     }
 
     private static class TrustResponse {

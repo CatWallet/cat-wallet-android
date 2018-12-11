@@ -2,6 +2,7 @@ package com.wallet.crypto.trustapp.ui;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -15,6 +16,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,11 +24,16 @@ import android.widget.Toast;
 
 import com.wallet.crypto.trustapp.C;
 import com.wallet.crypto.trustapp.R;
+import com.wallet.crypto.trustapp.entity.CurrencyInfo;
 import com.wallet.crypto.trustapp.entity.ErrorEnvelope;
 import com.wallet.crypto.trustapp.entity.NetworkInfo;
 import com.wallet.crypto.trustapp.entity.Transaction;
 import com.wallet.crypto.trustapp.entity.Wallet;
+import com.wallet.crypto.trustapp.repository.PreferenceRepositoryType;
+import com.wallet.crypto.trustapp.repository.SharedPreferenceRepository;
+import com.wallet.crypto.trustapp.router.MyAddressRouter;
 import com.wallet.crypto.trustapp.ui.widget.adapter.TransactionsAdapter;
+import com.wallet.crypto.trustapp.util.BalanceUtils;
 import com.wallet.crypto.trustapp.util.RootUtil;
 import com.wallet.crypto.trustapp.viewmodel.BaseNavigationActivity;
 import com.wallet.crypto.trustapp.viewmodel.TransactionsViewModel;
@@ -35,6 +42,7 @@ import com.wallet.crypto.trustapp.widget.DepositView;
 import com.wallet.crypto.trustapp.widget.EmptyTransactionsView;
 import com.wallet.crypto.trustapp.widget.SystemView;
 
+import java.util.Currency;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -53,6 +61,9 @@ public class TransactionsActivity extends BaseNavigationActivity implements View
     private SystemView systemView;
     private TransactionsAdapter adapter;
     private Dialog dialog;
+    private String currencyAbbr;
+    private String currencySymbol;
+    public PreferenceRepositoryType preferenceRepositoryType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,8 +73,9 @@ public class TransactionsActivity extends BaseNavigationActivity implements View
         setContentView(R.layout.activity_transactions);
 
         toolbar();
-        setTitle(getString(R.string.unknown_balance_with_symbol));
-        setSubtitle("");
+        setTitle(R.string.title_transactions);
+
+        BalanceUtils.changeDisplayBalance("","",findViewById(android.R.id.content));
         initBottomNavigation();
         dissableDisplayHomeAsUp();
 
@@ -84,11 +96,20 @@ public class TransactionsActivity extends BaseNavigationActivity implements View
         viewModel.progress().observe(this, systemView::showProgress);
         viewModel.error().observe(this, this::onError);
         viewModel.defaultNetwork().observe(this, this::onDefaultNetwork);
+        viewModel.defaultCurrency().observe(this, this::onDefaultCurrency);
         viewModel.defaultWalletBalance().observe(this, this::onBalanceChanged);
         viewModel.defaultWallet().observe(this, this::onDefaultWallet);
         viewModel.transactions().observe(this, this::onTransactions);
 
         refreshLayout.setOnRefreshListener(viewModel::fetchTransactions);
+        preferenceRepositoryType = new SharedPreferenceRepository(this.getApplicationContext());
+//        if(preferenceRepositoryType.getDefaultCurrency() == null){
+//            viewModel.defaultCurrency();
+//        }
+        currencySymbol = preferenceRepositoryType.getDefaultCurrencySymbol() == null ? "$":preferenceRepositoryType.getDefaultCurrencySymbol();;
+        //currencySymbol = getIntent().getStringExtra(C.CURRENCT_CURRENCY_ABBR);
+        //currencyAbbr = currencyAbbr == null ? C.USD_ABBR : currencyAbbr;
+        currencyAbbr= preferenceRepositoryType.getDefaultCurrencyAbbr() == null ? "USD":preferenceRepositoryType.getDefaultCurrencyAbbr();
     }
 
     private void onTransactionClick(View view, Transaction transaction) {
@@ -99,8 +120,7 @@ public class TransactionsActivity extends BaseNavigationActivity implements View
     protected void onResume() {
         super.onResume();
 
-        setTitle(getString(R.string.unknown_balance_without_symbol));
-        setSubtitle("");
+        BalanceUtils.changeDisplayBalance(getString(R.string.unknown_balance_without_symbol),"",findViewById(android.R.id.content));
         adapter.clear();
         viewModel.prepare();
         checkRoot();
@@ -166,8 +186,17 @@ public class TransactionsActivity extends BaseNavigationActivity implements View
                 viewModel.showSend(this);
                 return true;
             }
+            case R.id.action_my_browser:{
+                viewModel.showBrowser(this, true);
+                return true;
+            }
         }
         return false;
+    }
+
+
+    public void clickMyAddress(View view){
+        viewModel.showMyAddress(this);
     }
 
     private void onBalanceChanged(Map<String, String> balance) {
@@ -177,12 +206,14 @@ public class TransactionsActivity extends BaseNavigationActivity implements View
         if (actionBar == null || networkInfo == null || wallet == null) {
             return;
         }
-        if (TextUtils.isEmpty(balance.get(C.USD_SYMBOL))) {
-            actionBar.setTitle(balance.get(networkInfo.symbol) + " " + networkInfo.symbol);
-            actionBar.setSubtitle("");
+        if (TextUtils.isEmpty(balance.get(currencyAbbr))) {
+            //actionBar.setTitle(balance.get(networkInfo.symbol) + " " + networkInfo.symbol);
+            //actionBar.setSubtitle("");
+            BalanceUtils.changeDisplayBalance(balance.get(networkInfo.symbol) + " " + networkInfo.symbol, "", findViewById(android.R.id.content));
         } else {
-            actionBar.setTitle("$" + balance.get(C.USD_SYMBOL));
-            actionBar.setSubtitle(balance.get(networkInfo.symbol) + " " + networkInfo.symbol);
+            //actionBar.setTitle("$" + balance.get(C.USD_SYMBOL));
+            //actionBar.setSubtitle(balance.get(networkInfo.symbol) + " " + networkInfo.symbol);
+            BalanceUtils.changeDisplayBalance(currencySymbol + balance.get(currencyAbbr), balance.get(networkInfo.symbol) + " " + networkInfo.symbol, findViewById(android.R.id.content));
         }
     }
 
@@ -203,6 +234,10 @@ public class TransactionsActivity extends BaseNavigationActivity implements View
     private void onDefaultNetwork(NetworkInfo networkInfo) {
         adapter.setDefaultNetwork(networkInfo);
         setBottomMenu(R.menu.menu_main_network);
+    }
+
+    private void onDefaultCurrency(CurrencyInfo currencyInfo){
+        adapter.setDefaultCurrency(currencyInfo);
     }
 
     private void onError(ErrorEnvelope errorEnvelope) {
@@ -240,4 +275,5 @@ public class TransactionsActivity extends BaseNavigationActivity implements View
     private void onDepositClick(View view, Uri uri) {
         viewModel.openDeposit(this, uri);
     }
+
 }

@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android" >
-
-        <Preference
+    <Preference
             android:key="pref_wallet"
             android:icon="@mipmap/settings_backup"
             android:title="@string/action_wallets"
@@ -16,24 +15,57 @@
             android:icon="@mipmap/settings_server"
             android:dialogTitle="@string/network_label" />
 
-        <PreferenceCategory
-            android:title="@string/title_opensource"
-            android:key="pref_opensource_links" >
+        <ListPreference
+            android:key="pref_currency"
+            android:title="@string/currency_label"
+            android:icon="@mipmap/settings_currency"
+            android:dialogTitle="@string/currency_label" />
 
-            <Preference
-                android:title="@string/title_source_code"
-                android:icon="@mipmap/settings_open_source">
-                <intent android:action="android.intent.action.VIEW"
-                    android:data="https://github.com/TrustWallet/trust-wallet-android" />
-            </Preference>
+        <ListPreference
+            android:key="pref_language"
+            android:title="@string/app_language"
+            android:icon="@mipmap/setting_language"
+            android:dialogTitle="@string/app_language" />
 
-            <Preference android:title="@string/title_report_bug"
-                        android:icon="@mipmap/settings_bug">
-                <intent android:action="android.intent.action.VIEW"
-                    android:data="https://github.com/TrustWallet/trust-wallet-android/issues/new" />
-            </Preference>
+    <PreferenceCategory
+        android:title="@string/title_link_account"
+        android:key="pref_account" >
 
-        </PreferenceCategory>
+        <Preference
+            android:key="pref_mobile_account"
+            android:title="@string/title_mobile_account"
+
+            android:icon="@mipmap/setting_link_phone">
+
+        </Preference>
+
+        <Preference
+            android:key="pref_email_account"
+            android:title="@string/title_email_account"
+            android:icon="@mipmap/setting_link_email">
+        </Preference>
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory
+        android:title="@string/title_opensource"
+        android:key="pref_opensource_links" >
+
+        <Preference
+            android:title="@string/title_source_code"
+            android:icon="@mipmap/settings_open_source">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="https://github.com/CatWallet/trust-wallet-android" />
+        </Preference>
+
+        <Preference android:title="@string/title_report_bug"
+            android:icon="@mipmap/settings_bug">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="https://github.com/CatWallet/trust-wallet-android/issues/new" />
+        </Preference>
+
+    </PreferenceCategory>
 
         <PreferenceCategory
             android:title="@string/title_community"
@@ -47,10 +79,9 @@
             </Preference>
 
             <Preference
+                android:key="pref_telegram"
                 android:title="@string/telegram"
                 android:icon="@mipmap/settings_telegram">
-                <intent android:action="android.intent.action.VIEW"
-                    android:data="https://t.me/joinchat/AAMtrQ_wtd918mm_mU0BRQ" />
             </Preference>
 
             <Preference
@@ -67,6 +98,11 @@
             >
 
             <Preference
+                android:key="pref_share"
+                android:icon="@mipmap/settings_share"
+                android:title="@string/title_share" />
+
+            <Preference
                 android:key="pref_rate"
                 android:icon="@mipmap/settings_rating"
                 android:title="@string/title_rate" />
@@ -77,23 +113,17 @@
                 android:title="@string/title_email" />
 
             <Preference
-                android:key="pref_donate"
-                android:icon="@mipmap/settings_donate"
-                android:title="@string/title_donate">
-            </Preference>
-
-            <Preference
                 android:title="@string/title_privacy_policy"
                 android:icon="@mipmap/settings_privacy_policy">
                 <intent android:action="android.intent.action.VIEW"
-                    android:data="https://trustwalletapp.com/privacy-policy.html" />
+                    android:data="https://support.catwallet.com/portal/kb/articles/privacy-policy" />
             </Preference>
 
             <Preference
                 android:title="@string/title_terms"
                 android:icon="@mipmap/settings_terms">
                 <intent android:action="android.intent.action.VIEW"
-                    android:data="https://trustwalletapp.com/terms.html" />
+                    android:data="https://support.catwallet.com/portal/kb/articles/terms-of-use" />
             </Preference>
 
             <Preference

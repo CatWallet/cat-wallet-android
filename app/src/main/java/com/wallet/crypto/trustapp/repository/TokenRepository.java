@@ -85,7 +85,6 @@ public class TokenRepository implements TokenRepositoryType {
                                 try {
                                     balance = getBalance(wallet, items[i]);
                                 } catch (Exception e1) {
-                                    Log.d("TOKEN", "Err", e1);
                                     /* Quietly */
                                 }
                                 result[i] = new Token(items[i], balance);

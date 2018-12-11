@@ -1,5 +1,7 @@
 package com.wallet.crypto.trustapp.interact;
 
+import android.util.Log;
+
 import com.wallet.crypto.trustapp.entity.Wallet;
 import com.wallet.crypto.trustapp.repository.EthereumNetworkRepositoryType;
 import com.wallet.crypto.trustapp.repository.WalletRepositoryType;
@@ -38,8 +40,16 @@ public class GetDefaultWalletBalance {
                         .getTicker()
                         .observeOn(Schedulers.io())
                         .flatMap(ticker -> {
+                            Log.i("network balance name", ethereumNetworkRepository.getDefaultNetwork().name);
+                            Log.i("network balance symbol", ethereumNetworkRepository.getDefaultNetwork().symbol);
+                            Log.i("network balance ticker", ticker.price);
+                            Log.i("network balance ", balances.toString());
+
                             String ethBallance = balances.get(ethereumNetworkRepository.getDefaultNetwork().symbol);
-                            balances.put(USD_SYMBOL, BalanceUtils.ethToUsd(ticker.price, ethBallance));
+                            balances.put(ethereumNetworkRepository.getDefaultCurrency().currencySymbol, BalanceUtils.ethToUsd(ticker.price, ethBallance, 2));
+                            balances.put(ethereumNetworkRepository.getDefaultCurrency().abbreviation, BalanceUtils.ethToUsd(ticker.price, ethBallance, 2));
+                            balances.put(ethereumNetworkRepository.getDefaultNetwork().symbol+"To"+ethereumNetworkRepository.getDefaultCurrency().abbreviation, ticker.price);
+                            //Log.i("Balance", ethereumNetworkRepository.getDefaultNetwork()+" - "+ethereumNetworkRepository.getDefaultCurrency().abbreviation+" - "+ ethereumNetworkRepository.getTicker().toString());
                             return Single.just(balances);
                         })
                         .onErrorResumeNext(throwable -> Single.just(balances)))

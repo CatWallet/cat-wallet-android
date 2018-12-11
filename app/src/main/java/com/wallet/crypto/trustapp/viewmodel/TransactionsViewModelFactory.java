@@ -11,6 +11,7 @@ import com.wallet.crypto.trustapp.interact.GetDefaultWalletBalance;
 import com.wallet.crypto.trustapp.router.ExternalBrowserRouter;
 import com.wallet.crypto.trustapp.router.ManageWalletsRouter;
 import com.wallet.crypto.trustapp.router.MyAddressRouter;
+import com.wallet.crypto.trustapp.router.MyBrowserRouter;
 import com.wallet.crypto.trustapp.router.MyTokensRouter;
 import com.wallet.crypto.trustapp.router.SendRouter;
 import com.wallet.crypto.trustapp.router.SettingsRouter;
@@ -29,6 +30,7 @@ public class TransactionsViewModelFactory implements ViewModelProvider.Factory {
     private final MyAddressRouter myAddressRouter;
     private final MyTokensRouter myTokensRouter;
     private final ExternalBrowserRouter externalBrowserRouter;
+    private final MyBrowserRouter myBrowserRouter;
 
     public TransactionsViewModelFactory(
             FindDefaultNetworkInteract findDefaultNetworkInteract,
@@ -41,7 +43,8 @@ public class TransactionsViewModelFactory implements ViewModelProvider.Factory {
             TransactionDetailRouter transactionDetailRouter,
             MyAddressRouter myAddressRouter,
             MyTokensRouter myTokensRouter,
-            ExternalBrowserRouter externalBrowserRouter) {
+            ExternalBrowserRouter externalBrowserRouter,
+            MyBrowserRouter myBrowserRouter) {
         this.findDefaultNetworkInteract = findDefaultNetworkInteract;
         this.findDefaultWalletInteract = findDefaultWalletInteract;
         this.getDefaultWalletBalance = getDefaultWalletBalance;
@@ -53,6 +56,7 @@ public class TransactionsViewModelFactory implements ViewModelProvider.Factory {
         this.myAddressRouter = myAddressRouter;
         this.myTokensRouter = myTokensRouter;
         this.externalBrowserRouter = externalBrowserRouter;
+        this.myBrowserRouter = myBrowserRouter;
     }
 
     @NonNull
@@ -69,6 +73,8 @@ public class TransactionsViewModelFactory implements ViewModelProvider.Factory {
                 transactionDetailRouter,
                 myAddressRouter,
                 myTokensRouter,
-                externalBrowserRouter);
+                externalBrowserRouter,
+                myBrowserRouter
+        );
     }
 }

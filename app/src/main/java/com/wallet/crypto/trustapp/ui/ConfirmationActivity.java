@@ -9,12 +9,17 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.parse.FunctionCallback;
+import com.parse.ParseCloud;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.wallet.crypto.trustapp.C;
 import com.wallet.crypto.trustapp.R;
 import com.wallet.crypto.trustapp.entity.ErrorEnvelope;
@@ -25,7 +30,11 @@ import com.wallet.crypto.trustapp.viewmodel.ConfirmationViewModel;
 import com.wallet.crypto.trustapp.viewmodel.ConfirmationViewModelFactory;
 import com.wallet.crypto.trustapp.viewmodel.GasSettingsViewModel;
 
+import org.web3j.crypto.Hash;
+
 import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -50,6 +59,8 @@ public class ConfirmationActivity extends BaseActivity {
     private int decimals;
     private String contractAddress;
     private boolean confirmationForTokenTransfer = false;
+    private String toAddress;
+    private final String TAG = "confirmation";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,7 +70,7 @@ public class ConfirmationActivity extends BaseActivity {
 
         setContentView(R.layout.activity_confirm);
         toolbar();
-
+        setTitle(R.string.title_activity_confirmation);
         fromAddressText = findViewById(R.id.text_from);
         toAddressText = findViewById(R.id.text_to);
         valueText = findViewById(R.id.text_value);
@@ -70,7 +81,7 @@ public class ConfirmationActivity extends BaseActivity {
 
         sendButton.setOnClickListener(view -> onSend());
 
-        String toAddress = getIntent().getStringExtra(C.EXTRA_TO_ADDRESS);
+        toAddress = getIntent().getStringExtra(C.EXTRA_TO_ADDRESS);
         contractAddress = getIntent().getStringExtra(C.EXTRA_CONTRACT_ADDRESS);
         amount = new BigInteger(getIntent().getStringExtra(C.EXTRA_AMOUNT));
         decimals = getIntent().getIntExtra(C.EXTRA_DECIMALS, -1);
@@ -165,6 +176,7 @@ public class ConfirmationActivity extends BaseActivity {
 
     private void onTransaction(String hash) {
         hideDialog();
+        sendTransactionAlertToReceiver();
         dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.transaction_succeeded)
                 .setMessage(hash)
@@ -179,6 +191,21 @@ public class ConfirmationActivity extends BaseActivity {
                 })
                 .create();
         dialog.show();
+    }
+
+    private void sendTransactionAlertToReceiver(){
+        Map<String, String> params = new HashMap<String, String>();
+        params.put(getIntent().getStringExtra(C.SEND_ACCOUNT_TYPE), getIntent().getStringExtra(C.SEND_ACCOUNT_ADDRESS));
+        ParseCloud.callFunctionInBackground("notifyNewPaidWallet", params,  new FunctionCallback<String>() {
+            @Override
+                public void done(String ret, ParseException e) {
+                    if (e == null) {
+                        Log.i(TAG, "Send Msg to Receiver Success");
+                    }else{
+                        Log.e(TAG, e.getMessage());
+                    }
+                }
+            });
     }
 
     private void onGasSettings(GasSettings gasSettings) {

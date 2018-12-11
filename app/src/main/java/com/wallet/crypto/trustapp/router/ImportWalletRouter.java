@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import com.wallet.crypto.trustapp.C;
 import com.wallet.crypto.trustapp.ui.ImportWalletActivity;
 
 public class ImportWalletRouter {
@@ -16,5 +17,11 @@ public class ImportWalletRouter {
 	public void openForResult(Activity activity, int requestCode) {
 		Intent intent = new Intent(activity, ImportWalletActivity.class);
 		activity.startActivityForResult(intent, requestCode);
+	}
+
+	public void openToClaimWalletViaKeyStore(Context context, String keyStore){
+		Intent intent = new Intent(context, ImportWalletActivity.class);
+		intent.putExtra(C.KEY_STORE_CONTENT, keyStore);
+		context.startActivity(intent);
 	}
 }

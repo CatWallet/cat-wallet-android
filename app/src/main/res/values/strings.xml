@@ -1,31 +1,22 @@
 <resources>
-    <string name="app_name">Trust</string>
-    <string name="balance">Balance</string>
+    <string name="app_name">CAT Wallet</string>
     <string name="title_send">Send</string>
+    <string name="title_transactions">Transactions</string>
+    <string name="title_browser">Browser</string>
     <string name="title_request">My Address</string>
     <string name="title_import">Import Wallet</string>
     <string name="title_create">Create</string>
     <string name="title_account">Wallets</string>
+    <string name="title_link_account">Account</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="title_activity_create_account">New Wallet</string>
 
     <!-- Strings relatedwalletount creation -->
-    <string name="prompt_email">Wallet name</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Create</string>
-    <string name="action_sign_in_short">Create</string>
 
     <!-- String related to sending -->
     <string name="prompt_to">To</string>
     <string name="action_send">Send</string>
 
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
     <string name="title_activity_account_list">AccountListActivity</string>
     <string name="action_settings">Settings</string>
     <string name="action_select_account">Wallets</string>
@@ -46,8 +37,10 @@
     <string name="menu_refresh">Refresh</string>
     <string name="sent">Sent</string>
     <string name="received">Received</string>
+    <string name="pending">Pending</string>
     <string name="title_activity_settings">Settings</string>
     <string name="network_label">Network</string>
+    <string name="currency_label">Currency</string>
     <string name="app_intro">Intro</string>
 
     <string name="title_trust">Trust</string>
@@ -74,6 +67,7 @@
     <string name="title_report_bug">Report a bug</string>
     <string name="title_rate">Rate us on Play Store</string>
     <string name="title_support">Support</string>
+    <string name="title_share">Share With Friends</string>
     <string name="title_donate">Donate</string>
     <string name="account_already_imported">Wallet with this address already exists</string>
     <string name="message_delete_account">Permanently deleting wallet. Make sure that it has been exported and stored elsewhere.</string>
@@ -84,9 +78,12 @@
         Since only you control your money, you\'ll need to save your backup keystore in case this app is deleted. \n\n
         Your wallet is never saved to cloud storage or standard device backups.
     </string>
+    <string name="share_message">
+        Here is the app I use to store my ETH and ERC20 tokens. https://catwallet.com
+    </string>
     <string name="message_no_backup">No backup, no Ethereum.</string>
     <string name="error_deleting_account">Error deleting wallet</string>
-	<string name="error_deleting_account_with_details">Error deleting wallet %s</string>
+    <string name="error_deleting_account_with_details">Error deleting wallet %s</string>
     <string name="error_passwords_must_match">Passwords must match.</string>
     <string name="label_confirm_new_password">Confirm new password</string>
     <string name="label_new_password">New password</string>
@@ -108,33 +105,36 @@
     <string name="unlock_screen_prompt_android">Please unlock your Android device to continue.</string>
     <string name="sending_progress">Sending...</string>
 
-    <string name="backup_new_password_text">Think of a password that will be installed on the backup.\nThe password will be available for this wallet.</string>
+    <string name="backup_new_password_text">Think of a password that will be installed on the backup. The password will be available for this wallet.</string>
     <string name="do_manage_make_backup">Did you manage to make a backup?</string>
     <string name="yes_continue">Yes, continue</string>
     <string name="no_repeat">No, repeat</string>
     <string name="unable_unblock_device">Unable to unlock the device.</string>
     <string name="skip">Skip</string>
     <string name="root_title">DEVICE SECURITY COMPROMISED</string>
-    <string name="root_body">Any \'rooted\' app can access Trust\'s keychain data and steal your wallet! Wipe this wallet immediately and restore on a secure device.</string>
+    <string name="root_body">Any \'rooted\' app can access Cat Wallet\'s keychain data and steal your wallet! Wipe this wallet immediately and restore on a secure device.</string>
     <string name="gas_fee_title">Gas Fee (Gwei)</string>
     <string name="transfer">Transfer %s</string>
     <string name="action_buy">Buy</string>
     <string name="title_deposit">How would you like to buy?</string>
-	<string name="empty"/>
-	<string name="try_again">Try again</string>
-	<string name="already_have_account">Already have a wallet?</string>
-	<string name="title_add_account">Add wallet</string>
-	<string name="action_create_new_account">Create new wallet</string>
-	<string name="unknown_error">An error has occurred.</string>
-	<string name="action_backup_wallet">Backup Wallet</string>
-	<string name="action_backup_later">Do it later</string>
-	<string name="set_account_default">Do want to make a new wallet the main one?</string>
+    <string name="empty" />
+    <string name="try_again">Try again</string>
+    <string name="already_have_account">Already have a wallet?</string>
+    <string name="title_add_account">Add wallet</string>
+    <string name="action_create_new_account">Create new wallet</string>
+    <string name="unknown_error">An error has occurred.</string>
+    <string name="action_backup_wallet">Backup Wallet</string>
+    <string name="action_backup_later">Do it later</string>
+    <string name="set_account_default">Do want to make a new wallet the main one?</string>
     <string name="no_tokens">No tokens found.</string>
     <string name="title_email">Email us</string>
+    <string name="send_reminder">Transfer Funds Cost = Gas * Gas Price + Transfer Value</string>
+    <string name="send_confirmation">You are going to send to</string>
     <!-- Titles -->
     <string name="title_item_detail">Item Detail</string>
     <string name="title_my_address">My Address</string>
     <string name="title_my_tokens">My Tokens</string>
+    <string name="title_edit_tokens">Tokens</string>
     <string name="title_activity_send">Send</string>
     <string name="title_activity_confirmation">Confirm</string>
     <string name="title_transaction_details">Transaction Details</string>
@@ -159,10 +159,13 @@
     <string name="title_dialog_deposit">How would you like to buy?</string>
     <!-- Dialog messages-->
     <string name="dialog_message">Enter the password to encrypt your wallet</string>
-    <string name="dialog_message_unrecoverable_message">If this device is replaced or this app is deleted, neither you nor Trust Wallet can recover your funds without a backup.</string>
+    <string name="dialog_message_unrecoverable_message">If this device is replaced or this app is deleted, neither you nor Cat Wallet can recover your funds without a backup.</string>
     <string name="toast_message_wallet_imported">The wallet was imported</string>
     <string name="toast_message_wallet_exported">A backup was created</string>
     <string name="toast_qr_code_no_address">QR code doesn\'t contain valid address</string>
+    <string name="link_phone_success">Link Phone Success</string>
+    <string name="link_email_success">Link Email Success</string>
+    <string name="link_success">Link Success</string>
     <!-- Intro resources-->
     <string name="intro_title_first_page"><![CDATA[Private & Secure]]></string>
     <string name="intro_title_second_page">Fully Transparent</string>
@@ -179,8 +182,9 @@
     <string name="label_gas_price">Gas Price</string>
     <string name="label_network_fee">Network Fee</string>
     <string name="button_ok">OK</string>
-    <string name="hint_recipient_address">Recipient address</string>
-    <string name="hint_amount">Amount</string>
+    <string name="hint_recipient_address">Recipient address(ETH address/Email/Phone)</string>
+    <string name="hint_amount">ETH Amount</string>
+    <string name="hint_currency_amount">USD Amount</string>
     <string name="hint_contract_address">Contract address</string>
     <string name="hint_contract_symbol">Symbol</string>
     <string name="hint_contract_decimals">Decimals</string>
@@ -202,12 +206,14 @@
     <string name="action_next">Next</string>
     <string name="action_edit">Edit</string>
     <string name="action_save">Save</string>
+    <string name="action_home">Home</string>
     <!-- Subject -->
     <string name="subject_transaction_detail">Transaction detail</string>
     <string name="error_fail_load_transaction">Failed to load transaction list</string>
     <string name="error_fail_generate_qr">Could not generate qr code.</string>
     <string name="error_invalid_address">Invalid address</string>
     <string name="error_invalid_amount">Invalid amount</string>
+    <string name="error_insufficient_funds">Insufficient funds</string>
     <string name="error_transaction_failed">Transaction error</string>
     <string name="error_must_numeric">must be a numeric value.</string>
     <string name="transaction_succeeded">Transaction successful</string>
@@ -230,4 +236,38 @@
     <string name="title_activity_barcode">Barcode Scan</string>
     <string name="error_add_token">Could not add token.</string>
     <string name="facebook">Facebook</string>
+    <!--Push notifications-->
+    <string name="default_notification_channel_id">default channel</string>
+    <!--Account-->
+    <string name="prompt_email">Email Address</string>
+    <string name="prompt_mobile">Phone Number</string>
+    <string name="prompt_password">Activation Code</string>
+    <string name="import_wallet_prompt_password">Password</string>
+    <string name="action_link">Link</string>
+    <string name="action_link_short">Link</string>
+    <string name="title_activity_mobile_login">Link Phone Number</string>>
+    <string name="title_activity_email_login">Link Email</string>>
+    <string name="title_mobile_account">Link Mobile Phone</string>
+    <string name="title_email_account">Link Email</string>
+    <string name="error_invalid_phone_number">This phone number is invalid</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions.\n    "</string>
+    <string name="send_activation_code">Send Code</string>
+    <string name="resend_code">Resend Code</string>
+    <string name="go_claim_wallet">Go Claim Wallet</string>
+
+    <string name="error_find_keystore">Error Finding Keystore</string>
+    <string name="balance">Balance</string>
+    <string name="amount_send">Amount</string>
+    <string name="paste">Paste</string>
+    <string name="clear">Clear</string>
+    <string name="max">Max</string>
+    <string name="app_language">Language</string>
+    <string name="title_contacts">Contacts</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="add_contact">Add Contact</string>
 </resources>

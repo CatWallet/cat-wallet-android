@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.net.Uri;
 
+import com.wallet.crypto.trustapp.entity.CurrencyInfo;
 import com.wallet.crypto.trustapp.entity.NetworkInfo;
 import com.wallet.crypto.trustapp.entity.Transaction;
 import com.wallet.crypto.trustapp.entity.Wallet;
@@ -15,6 +16,7 @@ import com.wallet.crypto.trustapp.interact.GetDefaultWalletBalance;
 import com.wallet.crypto.trustapp.router.ExternalBrowserRouter;
 import com.wallet.crypto.trustapp.router.ManageWalletsRouter;
 import com.wallet.crypto.trustapp.router.MyAddressRouter;
+import com.wallet.crypto.trustapp.router.MyBrowserRouter;
 import com.wallet.crypto.trustapp.router.MyTokensRouter;
 import com.wallet.crypto.trustapp.router.SendRouter;
 import com.wallet.crypto.trustapp.router.SettingsRouter;
@@ -30,6 +32,7 @@ public class TransactionsViewModel extends BaseViewModel {
     private static final long GET_BALANCE_INTERVAL = 8;
     private static final long FETCH_TRANSACTIONS_INTERVAL = 10;
     private final MutableLiveData<NetworkInfo> defaultNetwork = new MutableLiveData<>();
+    private final MutableLiveData<CurrencyInfo> defaultCurrency = new MutableLiveData<>();
     private final MutableLiveData<Wallet> defaultWallet = new MutableLiveData<>();
     private final MutableLiveData<Transaction[]> transactions = new MutableLiveData<>();
     private final MutableLiveData<Map<String, String>> defaultWalletBalance = new MutableLiveData<>();
@@ -46,6 +49,7 @@ public class TransactionsViewModel extends BaseViewModel {
     private final MyAddressRouter myAddressRouter;
     private final MyTokensRouter myTokensRouter;
     private final ExternalBrowserRouter externalBrowserRouter;
+    private final MyBrowserRouter myBrowserRouter;
     private Disposable balanceDisposable;
     private Disposable transactionDisposable;
 
@@ -60,7 +64,8 @@ public class TransactionsViewModel extends BaseViewModel {
             TransactionDetailRouter transactionDetailRouter,
             MyAddressRouter myAddressRouter,
             MyTokensRouter myTokensRouter,
-            ExternalBrowserRouter externalBrowserRouter) {
+            ExternalBrowserRouter externalBrowserRouter,
+            MyBrowserRouter myBrowserRouter) {
         this.findDefaultNetworkInteract = findDefaultNetworkInteract;
         this.findDefaultWalletInteract = findDefaultWalletInteract;
         this.getDefaultWalletBalance = getDefaultWalletBalance;
@@ -72,6 +77,7 @@ public class TransactionsViewModel extends BaseViewModel {
         this.myAddressRouter = myAddressRouter;
         this.myTokensRouter = myTokensRouter;
         this.externalBrowserRouter = externalBrowserRouter;
+        this.myBrowserRouter = myBrowserRouter;
     }
 
     @Override
@@ -85,6 +91,7 @@ public class TransactionsViewModel extends BaseViewModel {
     public LiveData<NetworkInfo> defaultNetwork() {
         return defaultNetwork;
     }
+    public LiveData<CurrencyInfo> defaultCurrency() { return defaultCurrency;}
 
     public LiveData<Wallet> defaultWallet() {
         return defaultWallet;
@@ -103,6 +110,9 @@ public class TransactionsViewModel extends BaseViewModel {
         disposable = findDefaultNetworkInteract
                 .find()
                 .subscribe(this::onDefaultNetwork, this::onError);
+        findDefaultNetworkInteract
+                .findCurrency()
+                .subscribe(this::onDefaultCurrency, this::onError);
     }
 
     public void fetchTransactions() {
@@ -125,6 +135,13 @@ public class TransactionsViewModel extends BaseViewModel {
 
     private void onDefaultNetwork(NetworkInfo networkInfo) {
         defaultNetwork.postValue(networkInfo);
+        disposable = findDefaultWalletInteract
+                .find()
+                .subscribe(this::onDefaultWallet, this::onError);
+    }
+
+    private void onDefaultCurrency(CurrencyInfo currencyInfo) {
+        defaultCurrency.postValue(currencyInfo);
         disposable = findDefaultWalletInteract
                 .find()
                 .subscribe(this::onDefaultWallet, this::onError);
@@ -165,5 +182,13 @@ public class TransactionsViewModel extends BaseViewModel {
 
     public void openDeposit(Context context, Uri uri) {
         externalBrowserRouter.open(context, uri);
+    }
+
+    public void showExternalBrowser(Context context, Uri uri){
+        externalBrowserRouter.open(context, uri);
+    }
+
+    public void showBrowser(Context context, boolean isCleanStack){
+        myBrowserRouter.open(context, isCleanStack);
     }
 }

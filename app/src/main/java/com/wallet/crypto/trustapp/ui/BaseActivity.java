@@ -4,6 +4,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.wallet.crypto.trustapp.R;
 
@@ -71,4 +72,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 		}
 		return true;
 	}
+
+	protected  void setDisplayCurrencyBalance(View view, String currency){
+		
+	}
+
+
 }

@@ -6,19 +6,54 @@ public abstract class C {
     public static final int EXPORT_REQUEST_CODE = 1002;
     public static final int SHARE_REQUEST_CODE = 1003;
 
+    public static String CURRENT_NETWORK_NAME = "Ethereum";
     public static final String ETHEREUM_NETWORK_NAME = "Ethereum";
     public static final String CLASSIC_NETWORK_NAME = "Ethereum Classic";
     public static final String POA_NETWORK_NAME = "POA Network";
     public static final String KOVAN_NETWORK_NAME = "Kovan (Test)";
     public static final String ROPSTEN_NETWORK_NAME = "Ropsten (Test)";
+    public static final String RINKEBY_NETWORK_NAME = "Rinkeby (Test)";
+    public static final String CALLISTO_NETWORK_NAME = "Callisto";
+    public static final String GOCHAIN_NETWORK_NAME = "GoChain";
 
     public static final String ETHEREUM_TIKER = "ethereum";
     public static final String POA_TIKER = "poa";
 
+    //Currency
+    public static String CURRENCT_CURRENCY_SYMBOL = "$";
     public static final String USD_SYMBOL = "$";
+    public static final String CNY_SYMBOL = "￥";
+    public static final String EUR_SYMBOL = "€";
+    public static final String HKD_SYMBOL = "HK$";
+    public static final String AUD_SYMBOL = "AU$";
+    public static final String RUB_SYMBOL = "\u20BD";
+    public static final String KRW_SYMBOL = "₩";
+
+    public static String CURRENCT_CURRENCY_ABBR = "USD";
+    public static final String USD_ABBR = "USD";
+    public static final String CNY_ABBR = "CNY";
+    public static final String EUR_ABBR = "EUR";
+    public static final String HKD_ABBR = "HKD";
+    public static final String AUD_ABBR = "AUD";
+    public static final String RUB_ABBR = "RUB";
+    public static final String KRW_ABBR = "KRW";
+
+    public static String CURRENCT_CURRENCY_Name = "US Dollar";
+    public static final String USD_NAME = "US Dollar";
+    public static final String CNY_NAME = "Chinese Yuan";
+    public static final String EUR_NAME = "Europe Euro";
+    public static final String HKD_NAME = "Hongkong Dollar";
+    public static final String AUD_NAME = "Australian Dollar";
+    public static final String RUB_NAME = "Russian Ruble";
+    public static final String KRW_NAME = "South Korean Won";
+
+    //Coin
+    public static String CURRENT_COIN_SYMBOL = "ETH";
     public static final String ETH_SYMBOL = "ETH";
     public static final String POA_SYMBOL = "POA";
     public static final String ETC_SYMBOL = "ETC";
+    public static final String CLO_SYMBOL = "CLO";
+    public static final String GO_SYMBOL = "GO";
 
     public static final String GWEI_UNIT = "Gwei";
 
@@ -37,6 +72,7 @@ public abstract class C {
     public static final String CHANGELLY_REF_ID = "968d4f0f0bf9";
     public static final String DONATION_ADDRESS = "0x9f8284ce2cf0c8ce10685f537b1fff418104a317";
 
+    //Gas
     public static final String DEFAULT_GAS_PRICE = "21000000000";
     public static final String DEFAULT_GAS_LIMIT = "90000";
     public static final String DEFAULT_GAS_LIMIT_FOR_TOKENS = "144000";
@@ -46,6 +82,11 @@ public abstract class C {
     public static final long NETWORK_FEE_MAX = 20000000000000000L;
     public static final int ETHER_DECIMALS = 18;
 
+
+    //Send Account
+    public static final String SEND_ACCOUNT_ADDRESS = "SEND_TO_ACCOUNT_ADDRESS";
+    public static final String SEND_ACCOUNT_TYPE = "SEND_TO_PHONE_OR_EMAIL_ACCOUNT";
+    public static final String KEY_STORE_CONTENT = "KEY_STORE_CONTENT";
     public interface ErrorCode {
 
         int UNKNOWN = 1;

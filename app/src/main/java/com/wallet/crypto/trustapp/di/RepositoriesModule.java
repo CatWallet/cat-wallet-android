@@ -35,7 +35,7 @@ import dagger.Provides;
 import okhttp3.OkHttpClient;
 
 @Module
-public class RepositoriesModule {
+public class   RepositoriesModule {
 	@Singleton
 	@Provides
 	PreferenceRepositoryType providePreferenceRepository(Context context) {
